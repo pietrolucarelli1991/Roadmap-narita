@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Roadmap Narita → Ryogoku | Famiglia Lucarelli</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-flag">🇯🇵</div>
+      <div class="header-text">
+        <h1>Narita <span class="arrow">→</span> Ryogoku</h1>
+        <p class="header-sub">Famiglia Lucarelli • 14 Dic 2026 • 2 adulti + 2 bimbe</p>
+      </div>
+      <div class="header-meta">
+        <span class="badge">8 tappe</span>
+        <span class="badge badge-cost">~21–25€</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN LAYOUT -->
+  <div class="app-layout">
+
+    <!-- LEFT: MAPPA VERTICALE -->
+    <aside class="map-panel">
+      <div class="map-title">Percorso</div>
+      <div class="map-line">
+        {% for step in steps %}
+        <div class="map-node {% if loop.first %}active{% endif %}" data-step="{{ step.n }}" onclick="selectStep({{ step.n }})">
+          <div class="node-circle">
+            <span class="node-emoji">{{ step.emoji }}</span>
+            <span class="node-num">{{ step.n }}</span>
+          </div>
+          <div class="node-info">
+            <div class="node-title">{{ step.title.split('—')[0].split('→')[0].strip() }}</div>
+            <div class="node-time">{{ step.time }}</div>
+          </div>
+          {% if not loop.last %}
+          <div class="node-connector"></div>
+          {% endif %}
+        </div>
+        {% endfor %}
+        <div class="map-destination">
+          <div class="dest-dot">🏨</div>
+          <div class="dest-label">Ryogoku View Hotel<br><small>2-19-1 Ryogoku</small></div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- RIGHT: DETTAGLIO STEP -->
+    <main class="detail-panel">
+
+      <!-- STEP HEADER -->
+      <div class="step-header" id="step-header">
+        {% set step = steps[0] %}
+        <div class="step-num-big">{{ step.n }}</div>
+        <div class="step-header-info">
+          <h2 id="step-title">{{ step.title }}</h2>
+          <div class="step-meta-row" id="step-meta">
+            <span class="meta-chip">📍 {{ step.location }}</span>
+            <span class="meta-chip">⏱ {{ step.time }}</span>
+            <span class="meta-chip cost-chip">💴 {{ step.cost }} <em>{{ step.cost_detail }}</em></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- TABS -->
+      <div class="tabs">
+        <button class="tab active" onclick="showTab('azioni')">Azioni</button>
+        <button class="tab" onclick="showTab('cartelli')">Cartelli</button>
+        <button class="tab" onclick="showTab('giapponese')">Giapponese</button>
+        <button class="tab" onclick="showTab('bimbe')">Bimbe</button>
+      </div>
+
+      <!-- TAB: AZIONI -->
+      <div class="tab-content active" id="tab-azioni">
+        <ul class="action-list" id="action-list"></ul>
+      </div>
+
+      <!-- TAB: CARTELLI -->
+      <div class="tab-content" id="tab-cartelli">
+        <div class="signs-grid" id="signs-grid"></div>
+      </div>
+
+      <!-- TAB: GIAPPONESE -->
+      <div class="tab-content" id="tab-giapponese">
+        <div class="japanese-list" id="japanese-list"></div>
+        <div class="japanese-tip">
+          <span class="tip-icon">💡</span>
+          <span>Mostra lo schermo al telefono — non devi pronunciare perfettamente.</span>
+        </div>
+      </div>
+
+      <!-- TAB: BIMBE -->
+      <div class="tab-content" id="tab-bimbe">
+        <div class="kids-list" id="kids-list"></div>
+        <div class="kids-banner">
+          <span>👨‍👩‍👧‍👶</span>
+          <span>Bimba 5a GRATIS su tutti i treni fino al 6° compleanno — regola JR ufficiale</span>
+        </div>
+      </div>
+
+      <!-- NAVIGAZIONE -->
+      <div class="step-nav">
+        <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Precedente</button>
+        <span class="nav-counter" id="nav-counter">1 / 8</span>
+        <button class="nav-btn nav-btn-next" id="btn-next" onclick="navigate(1)">Successivo →</button>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- TAXI CARD MODAL -->
+  <div class="modal-overlay" id="taxi-modal" onclick="closeTaxiModal()">
+    <div class="taxi-card" onclick="event.stopPropagation()">
+      <div class="taxi-card-header">
+        <span>🚕 Mostra al tassista</span>
+        <button onclick="closeTaxiModal()">✕</button>
+      </div>
+      <div class="taxi-address">
+        両国ビューホテルまで<br>お願いします
+      </div>
+      <div class="taxi-detail">
+        墨田区両国2-19-1<br>
+        JR両国駅西口から1分<br>
+        Tel: 03-3631-3241
+      </div>
+      <div class="taxi-note">Porte automatiche • Non toccare la maniglia</div>
+    </div>
+  </div>
+
+  <!-- FLOATING TAXI BUTTON (visibile solo sullo step 7) -->
+  <button class="taxi-fab" id="taxi-fab" onclick="openTaxiModal()" style="display:none">
+    🚕 Mostra al tassista
+  </button>
+
+  <!-- RIEPILOGO COSTI FISSO -->
+  <div class="cost-bar">
+    <span>💴 Totale famiglia:</span>
+    <strong>3.540–4.040 ¥</strong>
+    <span class="cost-bar-detail">~21–25€ • bimbe gratis</span>
+  </div>
+
+  <script>
+    const STEPS = {{ steps | tojson }};
+    let currentStep = 1;
+    let currentTab = 'azioni';
+
+    function selectStep(n) {
+      currentStep = n;
+      updateUI();
+    }
+
+    function navigate(dir) {
+      const next = currentStep + dir;
+      if (next >= 1 && next <= STEPS.length) {
+        currentStep = next;
+        updateUI();
+      }
+    }
+
+    function showTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById('tab-' + tab).classList.add('active');
+    }
+
+    function updateUI() {
+      const step = STEPS.find(s => s.n === currentStep);
+      if (!step) return;
+
+      // Map nodes
+      document.querySelectorAll('.map-node').forEach(node => {
+        node.classList.toggle('active', parseInt(node.dataset.step) === currentStep);
+        node.classList.toggle('done', parseInt(node.dataset.step) < currentStep);
+      });
+
+      // Header
+      document.getElementById('step-title').textContent = step.title;
+      document.getElementById('step-header').querySelector('.step-num-big').textContent = step.n;
+      document.getElementById('step-meta').innerHTML = `
+        <span class="meta-chip">📍 ${step.location}</span>
+        <span class="meta-chip">⏱ ${step.time}</span>
+        <span class="meta-chip cost-chip">💴 ${step.cost} <em>${step.cost_detail}</em></span>
+      `;
+
+      // Azioni
+      const actionList = document.getElementById('action-list');
+      actionList.innerHTML = step.actions.map((a, i) => `
+        <li class="action-item" onclick="this.classList.toggle('checked')">
+          <span class="action-check"></span>
+          <span class="action-text">${a}</span>
+        </li>
+      `).join('');
+
+      // Cartelli
+      const signsGrid = document.getElementById('signs-grid');
+      signsGrid.innerHTML = step.signs.map(s => `
+        <div class="sign-card">
+          <div class="sign-icon">${s.icon}</div>
+          <div class="sign-info">
+            <div class="sign-en">${s.en}</div>
+            <div class="sign-jp">${s.jp}</div>
+            ${s.note ? `<div class="sign-note">${s.note}</div>` : ''}
+          </div>
+        </div>
+      `).join('');
+
+      // Giapponese
+      const japList = document.getElementById('japanese-list');
+      japList.innerHTML = step.japanese.map(j => `
+        <div class="jap-card">
+          <div class="jap-label">${j.label}</div>
+          <div class="jap-text">${j.text.replace(/\n/g, '<br>')}</div>
+        </div>
+      `).join('');
+
+      // Bimbe
+      const kidsList = document.getElementById('kids-list');
+      kidsList.innerHTML = step.kids.map(k => `
+        <div class="kids-item">
+          <span class="kids-icon">🧒</span>
+          <span>${k}</span>
+        </div>
+      `).join('');
+
+      // Nav
+      document.getElementById('btn-prev').disabled = currentStep === 1;
+      document.getElementById('btn-next').disabled = currentStep === STEPS.length;
+      document.getElementById('nav-counter').textContent = `${currentStep} / ${STEPS.length}`;
+
+      // Taxi FAB
+      document.getElementById('taxi-fab').style.display = currentStep === 7 ? 'flex' : 'none';
+
+      // Scroll map node into view
+      const activeNode = document.querySelector('.map-node.active');
+      if (activeNode) activeNode.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+    }
+
+    function openTaxiModal() {
+      document.getElementById('taxi-modal').classList.add('open');
+    }
+
+    function closeTaxiModal() {
+      document.getElementById('taxi-modal').classList.remove('open');
+    }
+
+    // Init
+    updateUI();
+  </script>
+</body>
+</html>
