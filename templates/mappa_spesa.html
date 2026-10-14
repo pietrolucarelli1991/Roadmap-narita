@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#17191e">
+  <title>Spesa per le bimbe — Ryogoku</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+JP:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/spesa.css') }}?v={{ app_version }}">
+</head>
+<body>
+
+  <header class="topbar">
+    <a class="topbar-back" href="/">
+      <span aria-hidden="true">←</span> Roadmap
+    </a>
+    <div class="topbar-title">
+      <h1>Spesa per le bimbe</h1>
+      <p>Negozi verificati intorno al Ryogoku View Hotel</p>
+    </div>
+    <div class="topbar-clock" aria-live="polite">
+      <span class="clock-label">A Tokyo sono le</span>
+      <span class="clock-time" id="tokyo-clock">--:--</span>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- MAPPA -->
+    <section class="map-wrap" aria-label="Mappa dei negozi">
+      <div id="map"></div>
+      <div class="map-note">
+        <span class="map-note-ring" aria-hidden="true"></span>
+        I cerchi indicano i minuti a piedi col passeggino
+      </div>
+      <button class="map-recenter" id="btn-recenter" type="button">Torna all'hotel</button>
+    </section>
+
+    <!-- PANNELLO -->
+    <section class="panel">
+      <div class="tabs" role="tablist" aria-label="Sezioni">
+        <button class="tab is-active" role="tab" aria-selected="true" aria-controls="view-negozi" id="tab-negozi" data-view="negozi">Negozi</button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="view-lista" id="tab-lista" data-view="lista">
+          Lista spesa <span class="tab-badge" id="cart-badge" hidden>0</span>
+        </button>
+        <button class="tab" role="tab" aria-selected="false" aria-controls="view-frasi" id="tab-frasi" data-view="frasi">Taglie e frasi</button>
+      </div>
+
+      <!-- VISTA: NEGOZI -->
+      <div class="view is-active" id="view-negozi" role="tabpanel" aria-labelledby="tab-negozi">
+        <div id="shops-browse">
+          <div class="filters" id="filters" role="group" aria-label="Filtra i negozi"></div>
+          <p class="filters-note" id="filters-note" hidden></p>
+          <ol class="shop-list" id="shop-list"></ol>
+          <p class="data-note">
+            Posizioni e orari controllati a ottobre 2026. Gli orari segnati come "da verificare"
+            vanno confermati su Google Maps prima di uscire.
+          </p>
+        </div>
+        <div id="shop-detail" hidden></div>
+      </div>
+
+      <!-- VISTA: LISTA SPESA -->
+      <div class="view" id="view-lista" role="tabpanel" aria-labelledby="tab-lista" hidden>
+        <p class="lead">
+          Aggiungi quello che ti serve e vedi subito quanto spendi. Prezzi di riferimento 2026,
+          IVA inclusa, presi dai negozi online di Create SD e Matsumoto Kiyoshi: in negozio possono variare un po'.
+        </p>
+        <div id="product-groups"></div>
+        <div class="cart-bar">
+          <div class="cart-total">
+            <span class="cart-total-label">Totale stimato</span>
+            <span class="cart-total-yen" id="cart-yen">0 ¥</span>
+            <span class="cart-total-eur" id="cart-eur">≈ 0 €</span>
+          </div>
+          <label class="cart-rate">
+            1 € =
+            <input type="number" id="rate" min="50" max="400" step="1" inputmode="numeric" aria-label="Cambio yen per euro">
+            ¥
+          </label>
+          <div class="cart-actions">
+            <a class="btn btn-primary" id="btn-share" href="#" target="_blank" rel="noopener">Invia la lista su WhatsApp</a>
+            <button class="btn btn-ghost" id="btn-clear" type="button">Svuota</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISTA: TAGLIE E FRASI -->
+      <div class="view" id="view-frasi" role="tabpanel" aria-labelledby="tab-frasi" hidden>
+        <section class="block">
+          <h2>Che taglia prendere</h2>
+          <label class="weight-input">
+            Quanto pesa la bimba?
+            <input type="number" id="weight" min="4" max="25" step="0.5" value="10" inputmode="decimal">
+            kg
+          </label>
+          <div class="size-scale" id="size-scale" aria-hidden="true"></div>
+          <p class="size-advice" id="size-advice"></p>
+          <p class="fine">
+            Fasce indicative delle mutandine Merries. Sul pacco trovi sempre i chili scritti così: 9〜14kg.
+          </p>
+        </section>
+
+        <section class="block">
+          <h2>Parole da riconoscere sugli scaffali</h2>
+          <dl class="words" id="words"></dl>
+        </section>
+
+        <section class="block">
+          <h2>Frasi da mostrare al commesso</h2>
+          <p class="fine">Tocca una frase per ingrandirla a tutto schermo.</p>
+          <div class="phrases" id="phrases"></div>
+        </section>
+
+        <section class="block block-note">
+          <h2>Tax-free: non serve per questa spesa</h2>
+          <p>
+            Dal 1° novembre 2026 in Giappone si paga il prezzo pieno e il rimborso si chiede in aeroporto alla partenza.
+            Pannolini, cibo e tutto quello che usate durante il viaggio non danno diritto al rimborso,
+            quindi per la spesa delle bimbe non serve mostrare il passaporto.
+          </p>
+        </section>
+      </div>
+
+      <footer class="panel-footer">Roadmap Lucarelli · v{{ app_version }}</footer>
+    </section>
+  </main>
+
+  <!-- MOSTRA A TUTTO SCHERMO (frasi e indirizzi) -->
+  <div class="show" id="show" role="dialog" aria-modal="true" aria-labelledby="show-jp" hidden>
+    <button class="show-close" id="show-close" type="button">Chiudi</button>
+    <div class="show-body">
+      <p class="show-jp" id="show-jp"></p>
+      <p class="show-romaji" id="show-romaji"></p>
+      <p class="show-it" id="show-it"></p>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <script>
+    window.SPESA = {{ dati | tojson }};
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="{{ url_for('static', filename='js/spesa.js') }}?v={{ app_version }}"></script>
+</body>
+</html>

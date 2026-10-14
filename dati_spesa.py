@@ -1,0 +1,298 @@
+"""
+Dati della Mappa Spesa — Famiglia Lucarelli, Ryogoku.
+
+Per aggiungere o modificare un negozio basta cambiare le liste qui sotto:
+non serve toccare HTML, CSS o JavaScript.
+
+Verifica fatta a ottobre 2026:
+- coordinate e indirizzi: Mapion (mapion.co.jp) e NAVITIME
+- orari: Tokubai, siti ufficiali delle catene
+- prezzi: negozi online Create SD e Matsumoto Kiyoshi (IVA inclusa)
+
+Campo "hours": fasce orarie in ora di Tokyo, es. [["09:00", "24:00"]].
+Se è None vuol dire che l'orario non è confermato: l'app lo mostra come "da verificare".
+Campo "approx": True quando la posizione sulla mappa è indicativa.
+"""
+
+HOTEL = {
+    "name": "Ryogoku View Hotel",
+    "name_jp": "両国ビューホテル",
+    "address_jp": "東京都墨田区両国2-19-1",
+    "lat": 35.6954,
+    "lng": 139.7926,
+}
+
+CATEGORIES = {
+    "farmacia": {
+        "label": "Farmacie",
+        "glyph": "薬",
+        "color": "#2b4c7e",
+        "hint": "Cerca il kanji 薬 sull'insegna: vuol dire farmacia",
+    },
+    "conbini": {
+        "label": "Conbini",
+        "glyph": "コ",
+        "color": "#2f7d4f",
+        "hint": "Aperti a ogni ora, ma con scorte piccole",
+    },
+    "supermercato": {
+        "label": "Supermercati",
+        "glyph": "食",
+        "color": "#a8641c",
+        "hint": "Frutta, latte, yogurt e cena pronta",
+    },
+    "baby": {
+        "label": "Negozi baby",
+        "glyph": "赤",
+        "color": "#c0392b",
+        "hint": "Tutto per bimbi, con fasciatoio e sala allattamento",
+    },
+}
+
+SHOPS = [
+    {
+        "id": "seims",
+        "name": "Drug Seims Sumida Ryogoku",
+        "name_jp": "ドラッグセイムス 墨田両国店",
+        "category": "farmacia",
+        "lat": 35.69388073,
+        "lng": 139.79270159,
+        "address_jp": "東京都墨田区両国2-10-14 両国シティコア1F",
+        "phone": "03-5638-0571",
+        "hours": [["00:00", "03:00"], ["04:00", "24:00"]],
+        "hours_text": "Quasi 24 ore: chiude solo dalle 3 alle 4 di notte",
+        "featured": True,
+        "why": "La prima scelta: farmacia grande a pochi minuti dall'hotel, aperta anche di notte.",
+        "finds": ["Pannolini di tutte le taglie", "Salviette", "Pappe pronte", "Latte in polvere", "Farmaci per bimbi"],
+        "tip": "Vende anche acqua, snack e cibo a buon prezzo, quindi in un solo giro fai quasi tutto. Accetta carte e pagamenti con lo smartphone.",
+        "maps_query": "ドラッグセイムス 墨田両国店 東京都墨田区両国2-10-14",
+    },
+    {
+        "id": "famima",
+        "name": "FamilyMart Ryogoku Eki Nishiguchi",
+        "name_jp": "ファミリーマート 両国駅西口店",
+        "category": "conbini",
+        "lat": 35.69556574,
+        "lng": 139.79271132,
+        "address_jp": "東京都墨田区両国2-21-5",
+        "phone": "03-5638-7707",
+        "hours": None,
+        "hours_text": "Di solito aperto 24 ore (da verificare)",
+        "why": "A un minuto dall'hotel: la scorta d'emergenza quando è notte fonda.",
+        "finds": ["Pannolini in confezione piccola (non sempre)", "Salviette", "Latte, yogurt, onigiri", "Acqua e succhi"],
+        "tip": "I pannolini dei conbini sono in pacchi piccoli e costano di più: usali solo per l'emergenza, la farmacia Drug Seims è a pochi minuti.",
+        "maps_query": "ファミリーマート 両国駅西口店 東京都墨田区両国2-21-5",
+    },
+    {
+        "id": "seven",
+        "name": "7-Eleven Ryogoku Edo Noren",
+        "name_jp": "セブン-イレブン 両国江戸のれん店",
+        "category": "conbini",
+        "lat": 35.6961,
+        "lng": 139.7925,
+        "approx": True,
+        "address_jp": "東京都墨田区横網1-3-20 両国-江戸NOREN",
+        "phone": "03-5610-6145",
+        "hours": None,
+        "hours_text": "Orari da verificare",
+        "why": "Dentro l'edificio Edo Noren, all'uscita ovest della stazione: comodo per l'ATM.",
+        "finds": ["ATM Seven Bank per carte estere", "Snack e bevande", "Salviette"],
+        "tip": "Gli ATM dei 7-Eleven accettano le carte italiane: qui prelevi contanti senza cercare una banca.",
+        "maps_query": "セブンイレブン 両国江戸のれん店",
+    },
+    {
+        "id": "create",
+        "name": "Create SD JR Ryogoku Eki Higashiguchi",
+        "name_jp": "クリエイトSD JR両国駅東口店",
+        "category": "farmacia",
+        "lat": 35.69568837,
+        "lng": 139.79442127,
+        "address_jp": "東京都墨田区横網1-3-3",
+        "phone": "03-5625-3061",
+        "hours": None,
+        "hours_text": "Orari da verificare (indicativamente 10–22)",
+        "why": "Farmacia accanto all'uscita est della stazione JR, comoda quando rientrate dalle gite.",
+        "finds": ["Pannolini", "Salviette", "Pappe", "Bevande per bimbi"],
+        "tip": "Molti prezzi della lista spesa vengono dal suo negozio online: in negozio possono essere un po' diversi.",
+        "maps_query": "クリエイトSD JR両国駅東口店 東京都墨田区横網1-3-3",
+    },
+    {
+        "id": "matsukiyo",
+        "name": "Matsumoto Kiyoshi Asakusabashi Ekimae",
+        "name_jp": "マツモトキヨシ 浅草橋駅前店",
+        "category": "farmacia",
+        "lat": 35.6973,
+        "lng": 139.7866,
+        "approx": True,
+        "address_jp": None,
+        "phone": "03-5823-3926",
+        "hours": [["09:00", "23:00"]],
+        "hours_text": "9:00–23:00",
+        "why": "Davanti alla stazione di Asakusabashi, dove scendete dal treno il giorno dell'arrivo.",
+        "finds": ["Pannolini", "Salviette", "Pappe", "Farmaci"],
+        "tip": "Se arrivate senza scorte, compra qui il primo pacco prima di prendere il taxi per l'hotel (step 7 della roadmap).",
+        "maps_query": "マツモトキヨシ 浅草橋駅前店",
+    },
+    {
+        "id": "papas",
+        "name": "Drug Papas Ryogoku",
+        "name_jp": "どらっぐぱぱす 両国店",
+        "category": "farmacia",
+        "lat": 35.69613017,
+        "lng": 139.80347958,
+        "address_jp": "東京都墨田区亀沢3-1-16",
+        "phone": "03-3622-4193",
+        "hours": None,
+        "hours_text": "Orari da verificare (aperta anche la sera e nel weekend)",
+        "why": "Alternativa se nelle altre farmacie manca la taglia giusta.",
+        "finds": ["Pannolini", "Salviette", "Creme per la pelle"],
+        "tip": "Si trova verso est, sulla strada per Kinshicho: utile se state andando da quella parte.",
+        "maps_query": "どらっぐぱぱす 両国店 東京都墨田区亀沢3-1-16",
+    },
+    {
+        "id": "summit",
+        "name": "Summit Store Ryogoku Ishihara",
+        "name_jp": "サミットストア 両国石原店",
+        "category": "supermercato",
+        "lat": 35.70164582,
+        "lng": 139.79881326,
+        "address_jp": "東京都墨田区石原1-40-6",
+        "phone": "03-5611-3331",
+        "hours": [["09:00", "24:00"]],
+        "hours_text": "9:00–24:00",
+        "why": "Un supermercato vero: frutta, latte, yogurt e piatti pronti per la cena in camera.",
+        "finds": ["Frutta e verdura", "Latte e yogurt", "Piatti pronti", "Spesso un piccolo angolo baby"],
+        "tip": "Dopo le 19–20 i piatti pronti hanno spesso l'adesivo sconto: perfetto per una cena in camera dopo una giornata lunga.",
+        "maps_query": "サミットストア 両国石原店 東京都墨田区石原1-40-6",
+    },
+    {
+        "id": "akachan",
+        "name": "Akachan Honpo Arcakit Kinshicho",
+        "name_jp": "アカチャンホンポ アルカキット錦糸町店",
+        "category": "baby",
+        "lat": 35.697356,
+        "lng": 139.812665,
+        "address_jp": "東京都墨田区錦糸2-2-1 アルカキット錦糸町5F",
+        "phone": "03-3829-5381",
+        "hours": [["10:00", "21:00"]],
+        "hours_text": "10:00–21:00, tutti i giorni",
+        "transit": "1 fermata di treno JR Sobu fino a Kinshicho, poi 1 minuto dall'uscita nord",
+        "why": "Il paradiso dei bimbi: un piano intero di pannolini, pappe, vestiti e giochi.",
+        "finds": ["Tutte le marche di pannolini", "Pappe per ogni età", "Vestiti e scarpine", "Sala allattamento e fasciatoio"],
+        "tip": "Danno l'acqua calda per il latte in polvere e c'è una zona gioco. Nello stesso edificio, al piano interrato, c'è anche la farmacia Sundrug.",
+        "maps_query": "アカチャンホンポ アルカキット錦糸町店",
+    },
+]
+
+# Prezzi di riferimento, IVA inclusa, letti sui negozi online nel 2026.
+# In negozio possono variare un po'.
+PRODUCTS = [
+    {
+        "id": "merries-l",
+        "group": "Pannolini",
+        "name": "Merries mutandina L, 44 pezzi (9–14 kg)",
+        "jp": "メリーズ パンツ L 44枚",
+        "price": 1317,
+        "src": "Create SD",
+    },
+    {
+        "id": "merries-premium-l",
+        "group": "Pannolini",
+        "name": "Merries First Premium mutandina L, 36 pezzi",
+        "jp": "メリーズ ファーストプレミアム パンツ L",
+        "price": 1848,
+        "src": "Matsumoto Kiyoshi",
+    },
+    {
+        "id": "moony-wipes",
+        "group": "Salviette",
+        "name": "Salviette Moony, ricarica 76 × 3",
+        "jp": "ムーニー おしりふき つめかえ 76枚×3",
+        "price": 415,
+        "src": "Create SD",
+    },
+    {
+        "id": "googoo-80",
+        "group": "Pappa",
+        "name": "Pappa pronta Wakodo GooGoo Kitchen 80 g (da 12 mesi)",
+        "jp": "和光堂 具たっぷりグーグーキッチン",
+        "price": 116,
+        "src": "Create SD",
+    },
+    {
+        "id": "googoo-big",
+        "group": "Pappa",
+        "name": "Pappa pronta Wakodo BIG GooGoo Kitchen 130 g",
+        "jp": "和光堂 BIGグーグーキッチン",
+        "price": 149,
+        "src": "Create SD",
+    },
+    {
+        "id": "pigeon-apple",
+        "group": "Bere",
+        "name": "Succo di mela Pigeon 125 ml × 3",
+        "jp": "ピジョン りんご100 125ml×3",
+        "price": 213,
+        "src": "Create SD",
+    },
+    {
+        "id": "pigeon-mugicha",
+        "group": "Bere",
+        "name": "Tè d'orzo per bimbi Pigeon 500 ml",
+        "jp": "ピジョン ベビー麦茶 500ml",
+        "price": 105,
+        "src": "Create SD",
+    },
+    {
+        "id": "aicreo-milk",
+        "group": "Latte",
+        "name": "Latte liquido pronto Aicreo 125 ml",
+        "jp": "アイクレオ 赤ちゃんミルク 125ml",
+        "price": 224,
+        "src": "Create SD",
+    },
+    {
+        "id": "chilmil",
+        "group": "Latte",
+        "name": "Latte di crescita Morinaga Chilmil 800 g",
+        "jp": "森永 チルミル 800g",
+        "price": 1706,
+        "src": "Create SD",
+    },
+    {
+        "id": "vaseline",
+        "group": "Cura",
+        "name": "Vaselina per bimbi 60 g",
+        "jp": "ベビーワセリン 60g",
+        "price": 547,
+        "src": "Create SD",
+    },
+]
+
+# Fasce indicative delle mutandine Merries. Fa fede quello che c'è scritto sul pacco.
+DIAPER_SIZES = [
+    {"size": "M", "min": 6, "max": 11, "verified": False},
+    {"size": "L", "min": 9, "max": 14, "verified": True},
+    {"size": "Big", "min": 12, "max": 22, "verified": False},
+]
+
+WORDS = [
+    {"jp": "おむつ", "romaji": "omutsu", "it": "pannolini"},
+    {"jp": "パンツ", "romaji": "pantsu", "it": "a mutandina, si infilano"},
+    {"jp": "テープ", "romaji": "tēpu", "it": "con gli adesivi"},
+    {"jp": "おしりふき", "romaji": "oshirifuki", "it": "salviette"},
+    {"jp": "つめかえ用", "romaji": "tsumekae-yō", "it": "ricarica"},
+    {"jp": "12ヶ月から", "romaji": "jūni-kagetsu kara", "it": "dai 12 mesi"},
+    {"jp": "夜用", "romaji": "yoru-yō", "it": "per la notte"},
+    {"jp": "授乳室", "romaji": "junyū-shitsu", "it": "sala allattamento"},
+    {"jp": "おむつ替え", "romaji": "omutsu-gae", "it": "fasciatoio"},
+]
+
+PHRASES = [
+    {"jp": "おむつはどこですか？", "romaji": "Omutsu wa doko desu ka?", "it": "Dove sono i pannolini?"},
+    {"jp": "パンツタイプのLサイズはありますか？", "romaji": "Pantsu taipu no eru saizu wa arimasu ka?", "it": "Avete i pannolini a mutandina taglia L?"},
+    {"jp": "1歳の子ども用です", "romaji": "Issai no kodomo-yō desu", "it": "Sono per una bambina di 1 anno"},
+    {"jp": "ベビーフードはどこですか？", "romaji": "Bebī fūdo wa doko desu ka?", "it": "Dove sono le pappe per bambini?"},
+    {"jp": "ミルク用のお湯をいただけますか？", "romaji": "Miruku-yō no oyu o itadakemasu ka?", "it": "Posso avere acqua calda per il latte?"},
+    {"jp": "袋をください", "romaji": "Fukuro o kudasai", "it": "Un sacchetto, per favore (costa pochi yen)"},
+]

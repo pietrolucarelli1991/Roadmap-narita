@@ -84,6 +84,7 @@ body {
 }
 
 .badge-cost { background: var(--red); color: white; }
+.badge-shop { background: var(--green); color: white; text-decoration: none; }
 
 /* ─── APP LAYOUT ─── */
 .app-layout {
@@ -672,3 +673,33 @@ body {
   .signs-grid { grid-template-columns: 1fr; }
   .cost-bar-detail { display: none; }
 }
+
+/* ─── INVITO ALLA MAPPA SPESA (step 8) ─── */
+.next-mission {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1.1rem;
+  background: var(--ink);
+  color: var(--white);
+  text-decoration: none;
+  border-radius: var(--radius);
+  border-left: 4px solid var(--red);
+}
+.next-mission:hover { background: #000; }
+.next-mission-kanji {
+  font-family: 'Noto Serif JP', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  background: #2b4c7e;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+.next-mission-text { display: flex; flex-direction: column; gap: 2px; font-size: 0.8rem; color: #c9ccd2; }
+.next-mission-text strong { font-size: 0.95rem; color: var(--white); }
+.next-mission[hidden] { display: none; }

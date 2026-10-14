@@ -1,5 +1,9 @@
 from flask import Flask, render_template, jsonify
 
+from dati_spesa import HOTEL, CATEGORIES, SHOPS, PRODUCTS, DIAPER_SIZES, WORDS, PHRASES
+
+APP_VERSION = "1.1.0"
+
 app = Flask(__name__)
 
 STEPS = [
@@ -231,13 +235,36 @@ STEPS = [
     }
 ]
 
+
+@app.context_processor
+def inject_version():
+    # Rende disponibile la versione in tutte le pagine HTML
+    return {"app_version": APP_VERSION}
+
+
 @app.route("/")
 def index():
     return render_template("index.html", steps=STEPS)
 
+
+@app.route("/spesa")
+def mappa_spesa():
+    dati = {
+        "hotel": HOTEL,
+        "categories": CATEGORIES,
+        "shops": SHOPS,
+        "products": PRODUCTS,
+        "sizes": DIAPER_SIZES,
+        "words": WORDS,
+        "phrases": PHRASES,
+    }
+    return render_template("mappa_spesa.html", dati=dati)
+
+
 @app.route("/api/steps")
 def api_steps():
     return jsonify(STEPS)
+
 
 @app.route("/api/step/<int:n>")
 def api_step(n):
@@ -245,6 +272,17 @@ def api_step(n):
     if step:
         return jsonify(step)
     return jsonify({"error": "Step not found"}), 404
+
+
+@app.route("/api/shops")
+def api_shops():
+    return jsonify(SHOPS)
+
+
+@app.route("/api/version")
+def api_version():
+    return jsonify({"version": APP_VERSION})
+
 
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
