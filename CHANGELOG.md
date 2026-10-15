@@ -6,6 +6,26 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 2.0.0 — 15 ottobre 2026
+
+Il primo numero cambia perché l'app cambia faccia: la pagina iniziale ora è "Oggi"
+e la roadmap dell'arrivo si è spostata su /arrivo.
+
+Aggiunto
+- App installabile sul telefono e utilizzabile senza internet (service worker)
+- Avviso "È pronta una nuova versione" quando pubblichi un aggiornamento
+- Barra in basso con 4 sezioni: Oggi, Viaggio, Arrivo, Spesa
+- Pagina Oggi: calendario del viaggio a 13 caselle che si aprono un giorno alla volta
+- Timbri rossi da collezionare ogni giorno, con album
+- Pagina Viaggio: itinerario dei 12 giorni con luoghi, frasi del giorno e note personali
+- "Prova un giorno del viaggio" per vedere il calendario prima di partire
+- Icona dell'app per la schermata Home
+
+Modificato
+- La roadmap dell'arrivo è ora su /arrivo (prima era la pagina iniziale)
+- Font uguali in tutte le pagine
+- I pezzi di mappa già visti restano salvati per l'uso offline
+
 ## 1.1.0 — 14 ottobre 2026
 
 Aggiunto

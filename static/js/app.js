@@ -1,0 +1,187 @@
+/* ==========================================================================
+   Tokyo 2026 — parti comuni a tutte le pagine
+   - salva l'app sul telefono per l'uso offline (service worker)
+   - avvisa quando c'è una nuova versione
+   - mostra "Sei offline"
+   - piccoli aiuti usati da Oggi e Itinerario (window.TokyoApp)
+   ========================================================================== */
+(function () {
+  "use strict";
+
+  /* ---------- Offline e aggiornamenti ---------- */
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      var userAskedUpdate = false;
+
+      navigator.serviceWorker.register("/sw.js").then(function (reg) {
+        function offerUpdate(worker) {
+          var bar = document.getElementById("update-bar");
+          if (!bar) return;
+          bar.hidden = false;
+          document.getElementById("btn-update").onclick = function () {
+            userAskedUpdate = true;
+            worker.postMessage("SKIP_WAITING");
+          };
+        }
+        if (reg.waiting && navigator.serviceWorker.controller) offerUpdate(reg.waiting);
+        reg.addEventListener("updatefound", function () {
+          var w = reg.installing;
+          if (!w) return;
+          w.addEventListener("statechange", function () {
+            if (w.state === "installed" && navigator.serviceWorker.controller) offerUpdate(w);
+          });
+        });
+        // Controlla se c'è una versione nuova ogni volta che l'app torna in primo piano
+        document.addEventListener("visibilitychange", function () {
+          if (document.visibilityState === "visible") reg.update().catch(function () {});
+        });
+      }).catch(function () { /* il browser non permette l'offline: l'app funziona online */ });
+
+      navigator.serviceWorker.addEventListener("controllerchange", function () {
+        if (userAskedUpdate) location.reload();
+      });
+    });
+  }
+
+  var pill = document.getElementById("offline-pill");
+  function updateOnline() { if (pill) pill.hidden = navigator.onLine; }
+  window.addEventListener("online", updateOnline);
+  window.addEventListener("offline", updateOnline);
+  updateOnline();
+
+  // Su Android il browser propone l'installazione: teniamo l'evento per il pulsante "Installa"
+  window.addEventListener("beforeinstallprompt", function (e) {
+    e.preventDefault();
+    window.__installPrompt = e;
+    document.dispatchEvent(new CustomEvent("tokyo:installable"));
+  });
+
+  /* ---------- Aiuti condivisi ---------- */
+  var STATE_KEY = "tokyo-viaggio-v1";
+  var SIM_KEY = "tokyo-sim-date";
+  var WD_LONG = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
+  var WD_SHORT = ["dom", "lun", "mar", "mer", "gio", "ven", "sab"];
+  var MONTHS = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio",
+                "agosto", "settembre", "ottobre", "novembre", "dicembre"];
+
+  function esc(s) {
+    return String(s == null ? "" : s)
+      .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  function parts(iso) {
+    var p = iso.split("-").map(Number);
+    var d = new Date(Date.UTC(p[0], p[1] - 1, p[2]));
+    return { y: p[0], m: p[1], d: p[2], wd: d.getUTCDay(), time: d.getTime() };
+  }
+  function daysBetween(a, b) { return Math.round((parts(b).time - parts(a).time) / 86400000); }
+
+  function realTokyoToday() {
+    return new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Tokyo", year: "numeric", month: "2-digit", day: "2-digit"
+    }).format(new Date());
+  }
+  function simDate() {
+    try { return sessionStorage.getItem(SIM_KEY); } catch (e) { return null; }
+  }
+  function setSimDate(iso) {
+    try {
+      if (iso) sessionStorage.setItem(SIM_KEY, iso); else sessionStorage.removeItem(SIM_KEY);
+    } catch (e) { /* ignora */ }
+  }
+  function tokyoToday() { return simDate() || realTokyoToday(); }
+
+  function clock(tz) {
+    return new Intl.DateTimeFormat("it-IT", { timeZone: tz, hour: "2-digit", minute: "2-digit" }).format(new Date());
+  }
+  function tokyoHour() {
+    return parseInt(new Intl.DateTimeFormat("en-GB", { timeZone: "Asia/Tokyo", hour: "2-digit", hourCycle: "h23" }).format(new Date()), 10);
+  }
+
+  function longDate(iso) {
+    var p = parts(iso);
+    return WD_LONG[p.wd] + " " + p.d + " " + MONTHS[p.m - 1];
+  }
+
+  function loadState() {
+    var base = { opened: [], stamps: [], notes: {} };
+    try {
+      var s = JSON.parse(localStorage.getItem(STATE_KEY) || "null");
+      if (s && typeof s === "object") {
+        base.opened = Array.isArray(s.opened) ? s.opened : [];
+        base.stamps = Array.isArray(s.stamps) ? s.stamps : [];
+        base.notes = s.notes && typeof s.notes === "object" ? s.notes : {};
+      }
+    } catch (e) { /* memoria non disponibile: si riparte vuoti */ }
+    return base;
+  }
+  function saveState(state) {
+    try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (e) { /* ignora */ }
+  }
+
+  function mapsUrl(q) {
+    return "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(q);
+  }
+
+  /* Avviso breve in basso */
+  var toastEl = null, toastTimer = null;
+  function toast(msg) {
+    if (!toastEl) {
+      toastEl = document.createElement("div");
+      toastEl.className = "t-toast";
+      toastEl.setAttribute("role", "status");
+      document.body.appendChild(toastEl);
+    }
+    toastEl.textContent = msg;
+    toastEl.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.hidden = true; }, 2600);
+  }
+
+  /* Frase a tutto schermo, da mostrare a chi non parla italiano */
+  var showEl = null, showOpener = null;
+  function closeShow() {
+    if (!showEl) return;
+    showEl.hidden = true;
+    document.body.style.overflow = "";
+    if (showOpener) showOpener.focus();
+  }
+  function openShow(item, opener) {
+    if (!showEl) {
+      showEl = document.createElement("div");
+      showEl.className = "t-show";
+      showEl.setAttribute("role", "dialog");
+      showEl.setAttribute("aria-modal", "true");
+      showEl.innerHTML = '<button type="button" class="t-show-close">Chiudi</button>' +
+        '<div class="t-show-body"><p class="t-show-jp" lang="ja"></p><p class="t-show-romaji"></p><p class="t-show-it"></p></div>';
+      document.body.appendChild(showEl);
+      showEl.querySelector(".t-show-close").addEventListener("click", closeShow);
+      showEl.addEventListener("click", function (e) { if (e.target === showEl) closeShow(); });
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape" && !showEl.hidden) { e.preventDefault(); closeShow(); }
+      });
+    }
+    // Se è aperta una scheda (dialog), la frase va dentro la scheda per stare sopra
+    var host = document.querySelector("dialog[open]") || document.body;
+    if (showEl.parentNode !== host) host.appendChild(showEl);
+    showOpener = opener || null;
+    showEl.querySelector(".t-show-jp").textContent = item.jp;
+    showEl.querySelector(".t-show-romaji").textContent = item.romaji || "";
+    showEl.querySelector(".t-show-it").textContent = item.it || "";
+    showEl.hidden = false;
+    document.body.style.overflow = "hidden";
+    showEl.querySelector(".t-show-close").focus();
+  }
+
+  window.TokyoApp = {
+    esc: esc, parts: parts, daysBetween: daysBetween,
+    tokyoToday: tokyoToday, realTokyoToday: realTokyoToday,
+    simDate: simDate, setSimDate: setSimDate,
+    clock: clock, tokyoHour: tokyoHour, longDate: longDate,
+    WD_LONG: WD_LONG, WD_SHORT: WD_SHORT, MONTHS: MONTHS,
+    loadState: loadState, saveState: saveState,
+    mapsUrl: mapsUrl, toast: toast, openShow: openShow,
+    reduceMotion: window.matchMedia("(prefers-reduced-motion: reduce)")
+  };
+})();

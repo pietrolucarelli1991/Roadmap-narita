@@ -4,7 +4,9 @@ App web della Famiglia Lucarelli per il viaggio del 14 dicembre 2026.
 
 ## Pagine
 
-- `/` — la roadmap in 8 step dall'aeroporto all'hotel
+- `/` — Oggi: calendario del viaggio con i timbri
+- `/itinerario` — il programma dei 12 giorni
+- `/arrivo` — la roadmap in 8 step dall'aeroporto all'hotel
 - `/spesa` — mappa dei negozi per pannolini e spesa bimbe
 
 ## Struttura
@@ -13,6 +15,7 @@ App web della Famiglia Lucarelli per il viaggio del 14 dicembre 2026.
 roadmap_app/
 ├── app.py              # Server Flask e step della roadmap
 ├── dati_spesa.py       # Negozi, prezzi, frasi: si modificano qui
+├── dati_viaggio.py     # Itinerario dei 12 giorni: si modifica qui
 ├── requirements.txt    # Librerie Python (flask, gunicorn)
 ├── CHANGELOG.md        # Diario delle versioni
 ├── templates/
@@ -35,10 +38,17 @@ Poi apri http://localhost:5000
 
 ## Pubblicare un aggiornamento
 
+1. In `app.py` aumenta `APP_VERSION` (es. da "2.0.0" a "2.0.1")
+2. Scrivi la novità in `CHANGELOG.md`
+3. Pubblica:
+
 ```
 git add .
-git commit -m "cosa hai cambiato"
+git commit -m "v2.0.1: cosa hai cambiato"
+git tag v2.0.1
 git push
+git push --tags
 ```
 
-Render si aggiorna da solo in 1–2 minuti.
+Render si aggiorna da solo in 1–2 minuti. Sui telefoni comparirà
+"È pronta una nuova versione": basta toccare Aggiorna.

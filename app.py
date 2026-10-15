@@ -1,8 +1,17 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, url_for, make_response
 
 from dati_spesa import HOTEL, CATEGORIES, SHOPS, PRODUCTS, DIAPER_SIZES, WORDS, PHRASES
+from dati_viaggio import TRIP, DAYS
 
-APP_VERSION = "1.1.0"
+# Ad ogni rilascio aumenta questo numero (e usa lo stesso per il tag git):
+# così i telefoni vedono "Nuova versione pronta" e scaricano l'app aggiornata.
+APP_VERSION = "2.0.0"
+
+# Font e mappe usati da tutte le pagine (salvati anche per l'uso offline)
+FONTS_URL = ("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700"
+             "&family=Noto+Serif+JP:wght@500;700;900&display=swap")
+LEAFLET_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
+LEAFLET_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
 
 app = Flask(__name__)
 
@@ -237,14 +246,35 @@ STEPS = [
 
 
 @app.context_processor
-def inject_version():
-    # Rende disponibile la versione in tutte le pagine HTML
-    return {"app_version": APP_VERSION}
+def inject_globals():
+    # Disponibili in tutte le pagine HTML
+    return {"app_version": APP_VERSION, "fonts_url": FONTS_URL,
+            "leaflet_css": LEAFLET_CSS, "leaflet_js": LEAFLET_JS}
 
+
+def static_v(filename):
+    """Indirizzo di un file statico con la versione, es. /static/css/app.css?v=2.0.0"""
+    return url_for("static", filename=filename) + "?v=" + APP_VERSION
+
+
+app.jinja_env.globals["static_v"] = static_v
+
+
+# ---------- Pagine dell'app ----------
 
 @app.route("/")
-def index():
-    return render_template("index.html", steps=STEPS)
+def oggi():
+    return render_template("oggi.html", viaggio={"trip": TRIP, "days": DAYS}, tab="oggi")
+
+
+@app.route("/itinerario")
+def itinerario():
+    return render_template("itinerario.html", viaggio={"trip": TRIP, "days": DAYS}, tab="viaggio")
+
+
+@app.route("/arrivo")
+def arrivo():
+    return render_template("index.html", steps=STEPS, tab="arrivo")
 
 
 @app.route("/spesa")
@@ -258,8 +288,52 @@ def mappa_spesa():
         "words": WORDS,
         "phrases": PHRASES,
     }
-    return render_template("mappa_spesa.html", dati=dati)
+    return render_template("mappa_spesa.html", dati=dati, tab="spesa")
 
+
+# ---------- App installabile e offline ----------
+
+@app.route("/manifest.webmanifest")
+def manifest():
+    data = {
+        "name": "Tokyo 2026",
+        "short_name": "Tokyo 2026",
+        "description": "Il nostro viaggio a Tokyo: arrivo, itinerario e spesa per le bimbe",
+        "lang": "it",
+        "start_url": "/",
+        "scope": "/",
+        "display": "standalone",
+        "orientation": "portrait",
+        "background_color": "#f7f5f0",
+        "theme_color": "#1b2a47",
+        "icons": [
+            {"src": static_v("icons/icon-192.png"), "sizes": "192x192", "type": "image/png"},
+            {"src": static_v("icons/icon-512.png"), "sizes": "512x512", "type": "image/png"},
+            {"src": static_v("icons/icon-maskable-512.png"), "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+        ],
+    }
+    resp = jsonify(data)
+    resp.mimetype = "application/manifest+json"
+    return resp
+
+
+@app.route("/sw.js")
+def service_worker():
+    # Il "service worker" è il pezzo che salva l'app sul telefono per usarla offline
+    pages = ["/", "/itinerario", "/arrivo", "/spesa"]
+    assets = [static_v(f) for f in [
+        "css/app.css", "css/style.css", "css/spesa.css",
+        "js/app.js", "js/oggi.js", "js/itinerario.js", "js/spesa.js",
+        "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
+    ]] + ["/manifest.webmanifest", FONTS_URL, LEAFLET_CSS, LEAFLET_JS]
+    body = render_template("sw.js", pages=pages, assets=assets)
+    resp = make_response(body)
+    resp.headers["Content-Type"] = "application/javascript; charset=utf-8"
+    resp.headers["Cache-Control"] = "no-cache"
+    return resp
+
+
+# ---------- Dati in formato JSON ----------
 
 @app.route("/api/steps")
 def api_steps():
@@ -277,6 +351,11 @@ def api_step(n):
 @app.route("/api/shops")
 def api_shops():
     return jsonify(SHOPS)
+
+
+@app.route("/api/itinerario")
+def api_itinerario():
+    return jsonify({"trip": TRIP, "days": DAYS})
 
 
 @app.route("/api/version")

@@ -126,13 +126,13 @@
     var cartoUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
     var osmUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
     var attrib = '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>';
-    var tiles = L.tileLayer(cartoUrl, { attribution: attrib, maxZoom: 19 }).addTo(map);
+    var tiles = L.tileLayer(cartoUrl, { attribution: attrib, maxZoom: 19, crossOrigin: true }).addTo(map);
     var swapped = false;
     tiles.on("tileerror", function () {
       if (swapped) return;
       swapped = true;
       map.removeLayer(tiles);
-      L.tileLayer(osmUrl, { attribution: attrib, maxZoom: 19 }).addTo(map);
+      L.tileLayer(osmUrl, { attribution: attrib, maxZoom: 19, crossOrigin: true }).addTo(map);
     });
 
     // Cerchi dei minuti a piedi

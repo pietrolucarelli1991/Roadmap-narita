@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  {% set theme = '#17191e' %}
+  {% include '_head.html' %}
+  <title>Il viaggio — Tokyo 2026</title>
+</head>
+<body class="app-page page-viaggio has-nav">
+
+  <header class="trip-head">
+    <h1>Il viaggio</h1>
+    <p>
+      12 notti a Ryogoku, dal 14 al 26 dicembre 2026. È una bozza da sistemare insieme:
+      le date fisse sono Harry Potter il 17 e la Jump Festa il 19, mentre il Fuji si sposta in base al meteo.
+    </p>
+    <ul class="legend" aria-label="Tipi di giornata">
+      <li><i class="mood-dot mood-leggera" aria-hidden="true"></i>Giornata leggera</li>
+      <li><i class="mood-dot mood-piena" aria-hidden="true"></i>Giornata piena</li>
+      <li><i class="mood-dot mood-jolly" aria-hidden="true"></i>Giorno jolly</li>
+    </ul>
+  </header>
+
+  <main class="trip-list" id="trip-list"></main>
+
+  <p class="app-version">Tokyo 2026, versione {{ app_version }}</p>
+
+  {% include '_nav.html' %}
+  <script>window.VIAGGIO = {{ viaggio | tojson }};</script>
+  <script src="{{ static_v('js/itinerario.js') }}" defer></script>
+</body>
+</html>

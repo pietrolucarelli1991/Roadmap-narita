@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  {% set theme = '#1b2a47' %}
+  {% include '_head.html' %}
+  <title>Oggi — Tokyo 2026</title>
+</head>
+<body class="app-page page-oggi has-nav">
+
+  <div class="sim-bar" id="sim-bar" hidden>
+    <span id="sim-text"></span>
+    <button type="button" id="sim-exit">Torna a oggi</button>
+  </div>
+
+  <header class="sky">
+    <div class="sky-top">
+      <p class="sky-greet">
+        <span class="sky-greet-jp" id="greet-jp" lang="ja">こんにちは</span>
+        <span id="greet-it">Buongiorno</span>
+      </p>
+      <p class="sky-clocks">
+        <span>Tokyo <b id="clock-tokyo">--:--</b></span>
+        <span>Italia <b id="clock-italy">--:--</b></span>
+      </p>
+    </div>
+
+    <h1 class="sky-title" id="sky-title">Il calendario del viaggio</h1>
+    <p class="sky-sub" id="sky-sub"></p>
+
+    <div class="doors" id="doors" role="list" aria-label="Caselle dei giorni del viaggio"></div>
+
+    <svg class="sky-fuji" viewBox="0 0 400 70" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 70 L140 70 L178 18 C186 9 214 9 222 18 L260 70 L400 70 Z" fill="currentColor"/>
+      <path d="M178 18 C186 9 214 9 222 18 L232 31 L221 27 L212 34 L200 27 L188 34 L179 27 L168 31 Z" fill="#f7f5f0" opacity=".9"/>
+    </svg>
+  </header>
+
+  <main class="page-body">
+    <section class="album" aria-labelledby="album-title">
+      <div class="album-head">
+        <h2 id="album-title">Album dei timbri</h2>
+        <span class="album-count" id="album-count">0 su 13</span>
+      </div>
+      <div class="album-grid" id="album"></div>
+      <p class="album-hint">A fine giornata aprite la casella del giorno e premete "Prendi il timbro".</p>
+    </section>
+
+    <section class="shortcuts" aria-label="Scorciatoie">
+      <a class="shortcut" href="/arrivo">
+        <span class="shortcut-glyph" aria-hidden="true">着</span>
+        <span class="shortcut-text">
+          <strong>Roadmap dell'arrivo</strong>
+          <span>Da Narita all'hotel in 8 step</span>
+        </span>
+      </a>
+      <a class="shortcut" href="/spesa">
+        <span class="shortcut-glyph" aria-hidden="true">買</span>
+        <span class="shortcut-text">
+          <strong>Spesa per le bimbe</strong>
+          <span>Farmacie e negozi vicino all'hotel</span>
+        </span>
+      </a>
+    </section>
+
+    <section class="install" id="install" hidden>
+      <h2>Mettila sul telefono</h2>
+      <p id="install-text">Installala come un'app: si apre dalla schermata Home e funziona anche senza internet.</p>
+      <button type="button" class="t-btn t-btn-primary" id="btn-install" hidden>Installa l'app</button>
+    </section>
+
+    <details class="sim">
+      <summary>Prova un giorno del viaggio</summary>
+      <p>Serve per vedere come funziona prima di partire. Quando chiudi l'app torna alla data vera.</p>
+      <div class="sim-row">
+        <input type="date" id="sim-date" min="2026-12-13" max="2026-12-27" value="2026-12-17" aria-label="Data da provare">
+        <button type="button" class="t-btn" id="sim-apply">Prova questa data</button>
+      </div>
+    </details>
+
+    <p class="app-version">Tokyo 2026, versione {{ app_version }}</p>
+  </main>
+
+  <dialog class="day-sheet" id="day-sheet" aria-labelledby="sheet-title">
+    <div class="day-sheet-inner" id="sheet-body"></div>
+  </dialog>
+
+  {% include '_nav.html' %}
+  <script>window.VIAGGIO = {{ viaggio | tojson }};</script>
+  <script src="{{ static_v('js/oggi.js') }}" defer></script>
+</body>
+</html>

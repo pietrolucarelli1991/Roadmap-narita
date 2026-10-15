@@ -2,13 +2,12 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Roadmap Narita → Ryogoku | Famiglia Lucarelli</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <title>Arrivo: Narita → Ryogoku — Tokyo 2026</title>
+  <link rel="stylesheet" href="{{ static_v('css/style.css') }}">
+  {% set theme = '#1a1a1a' %}
+  {% include '_head.html' %}
 </head>
-<body>
+<body class="has-nav">
 
   <!-- HEADER -->
   <header class="site-header">
@@ -21,8 +20,7 @@
       <div class="header-meta">
         <span class="badge">8 tappe</span>
         <span class="badge badge-cost">~21–25€</span>
-        <a href="/spesa" class="badge badge-shop">🛒 Spesa bimbe</a>
-      </div>
+              </div>
     </div>
   </header>
 
@@ -268,5 +266,6 @@
     // Init
     updateUI();
   </script>
+  {% include '_nav.html' %}
 </body>
 </html>
