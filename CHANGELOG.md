@@ -6,6 +6,26 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 2.1.0 — 16 ottobre 2026
+
+Aggiunto
+- Fuji-metro (nuova sezione 富 Fuji nella barra in basso): voto da 0 a 10 alla visibilità
+  del Fuji dal lago Kawaguchiko, mattina e pomeriggio, per i prossimi 16 giorni
+- Disegno del Fuji che si copre di nuvole in base alle previsioni del giorno scelto
+- Sezione "La vostra finestra del Fuji" (21–23 dicembre) con il giorno consigliato
+- Temperature di Tokyo e del lago con consiglio su come vestire le bimbe
+- Le ultime previsioni restano salvate per quando sei offline
+- Scorciatoia al Fuji-metro nella pagina Oggi e nei giorni 21 e 23 dell'itinerario
+
+Corretto (segnalato da Pietro)
+- Le prove fatte con "Prova un giorno del viaggio" non restano più salvate:
+  quando torni a oggi o chiudi l'app, caselle e timbri tornano com'erano
+- I timbri dei giorni non ancora arrivati, rimasti dalle prove, vengono tolti in automatico
+- Nuovo pulsante "Richiudi la casella" nella scheda di ogni giorno
+- Nuova voce "Ricomincia da capo" in fondo alla pagina Oggi
+
+Fonte dati: Open-Meteo.com, gratuito e senza chiavi (CC BY 4.0)
+
 ## 2.0.0 — 15 ottobre 2026
 
 Il primo numero cambia perché l'app cambia faccia: la pagina iniziale ora è "Oggi"

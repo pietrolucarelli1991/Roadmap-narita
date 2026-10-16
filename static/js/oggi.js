@@ -186,6 +186,7 @@
             '<button type="button" class="t-link" data-action="unstamp">Togli il timbro</button>'
           : '<button type="button" class="t-btn t-btn-stamp" data-action="stamp">Prendi il timbro' +
               (isToday ? " di oggi" : "") + "</button>") +
+        '<button type="button" class="t-link" data-action="reclose">Richiudi la casella</button>' +
         '<a class="t-link" href="/itinerario#d-' + d.date + '">Vedi nell\'itinerario</a>' +
       "</div>" +
       '<div class="stamp-fx" id="stamp-fx-live" aria-hidden="true" hidden><span lang="ja"></span></div>';
@@ -237,6 +238,17 @@
     renderTop();
   }
 
+  function reclose(d) {
+    state.stamps = state.stamps.filter(function (iso) { return iso !== d.date; });
+    state.opened = state.opened.filter(function (iso) { return iso !== d.date; });
+    T.saveState(state);
+    closeSheet();
+    renderDoors();
+    renderAlbum();
+    renderTop();
+    T.toast("Casella richiusa: è di nuovo da scoprire");
+  }
+
   function unstamp(d) {
     state.stamps = state.stamps.filter(function (iso) { return iso !== d.date; });
     T.saveState(state);
@@ -253,6 +265,7 @@
     if (a === "close") closeSheet();
     else if (a === "stamp") stamp(currentDay);
     else if (a === "unstamp") unstamp(currentDay);
+    else if (a === "reclose") reclose(currentDay);
     else if (a === "phrase") T.openShow(currentDay.phrase, el);
   });
   sheet.addEventListener("click", function (e) { if (e.target === sheet) closeSheet(); });
@@ -309,6 +322,7 @@
 
   /* ---------- Prova un giorno ---------- */
   function refreshAll() {
+    state = T.loadState();
     renderTop();
     renderDoors();
     renderAlbum();
@@ -326,6 +340,19 @@
   $("#sim-exit").addEventListener("click", function () {
     T.setSimDate(null);
     refreshAll();
+  });
+
+  $("#btn-reset").addEventListener("click", function () {
+    var preview = T.isPreview();
+    var msg = preview
+      ? "Vuoi cancellare le caselle aperte e i timbri di questa prova?"
+      : "Vuoi cancellare tutti i timbri e richiudere tutte le caselle? Le note dell'itinerario restano.";
+    if (!window.confirm(msg)) return;
+    state.opened = [];
+    state.stamps = [];
+    T.saveState(state);
+    refreshAll();
+    T.toast(preview ? "Prova azzerata" : "Fatto: il calendario è come nuovo");
   });
 
   $("#doors").addEventListener("click", onDoorClick);

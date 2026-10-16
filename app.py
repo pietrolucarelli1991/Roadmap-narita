@@ -1,11 +1,11 @@
 from flask import Flask, render_template, jsonify, url_for, make_response
 
 from dati_spesa import HOTEL, CATEGORIES, SHOPS, PRODUCTS, DIAPER_SIZES, WORDS, PHRASES
-from dati_viaggio import TRIP, DAYS
+from dati_viaggio import TRIP, DAYS, FUJI
 
 # Ad ogni rilascio aumenta questo numero (e usa lo stesso per il tag git):
 # così i telefoni vedono "Nuova versione pronta" e scaricano l'app aggiornata.
-APP_VERSION = "2.0.0"
+APP_VERSION = "2.1.0"
 
 # Font e mappe usati da tutte le pagine (salvati anche per l'uso offline)
 FONTS_URL = ("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700"
@@ -272,6 +272,11 @@ def itinerario():
     return render_template("itinerario.html", viaggio={"trip": TRIP, "days": DAYS}, tab="viaggio")
 
 
+@app.route("/fuji")
+def fuji():
+    return render_template("fuji.html", fuji=FUJI, tab="fuji")
+
+
 @app.route("/arrivo")
 def arrivo():
     return render_template("index.html", steps=STEPS, tab="arrivo")
@@ -320,10 +325,10 @@ def manifest():
 @app.route("/sw.js")
 def service_worker():
     # Il "service worker" è il pezzo che salva l'app sul telefono per usarla offline
-    pages = ["/", "/itinerario", "/arrivo", "/spesa"]
+    pages = ["/", "/itinerario", "/fuji", "/arrivo", "/spesa"]
     assets = [static_v(f) for f in [
         "css/app.css", "css/style.css", "css/spesa.css",
-        "js/app.js", "js/oggi.js", "js/itinerario.js", "js/spesa.js",
+        "js/app.js", "js/oggi.js", "js/itinerario.js", "js/fuji.js", "js/spesa.js",
         "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
     ]] + ["/manifest.webmanifest", FONTS_URL, LEAFLET_CSS, LEAFLET_JS]
     body = render_template("sw.js", pages=pages, assets=assets)

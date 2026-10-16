@@ -1,5 +1,5 @@
 <nav class="tabbar" aria-label="Sezioni dell'app">
-  {% for key, href, glyph, label in [('oggi', '/', '今', 'Oggi'), ('viaggio', '/itinerario', '旅', 'Viaggio'), ('arrivo', '/arrivo', '着', 'Arrivo'), ('spesa', '/spesa', '買', 'Spesa')] %}
+  {% for key, href, glyph, label in [('oggi', '/', '今', 'Oggi'), ('viaggio', '/itinerario', '旅', 'Viaggio'), ('fuji', '/fuji', '富', 'Fuji'), ('arrivo', '/arrivo', '着', 'Arrivo'), ('spesa', '/spesa', '買', 'Spesa')] %}
   <a class="tabbar-item{% if tab == key %} is-active{% endif %}" href="{{ href }}"{% if tab == key %} aria-current="page"{% endif %}>
     <span class="tabbar-glyph" aria-hidden="true">{{ glyph }}</span>
     <span class="tabbar-label">{{ label }}</span>

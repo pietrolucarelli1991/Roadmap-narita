@@ -59,6 +59,7 @@
   /* ---------- Aiuti condivisi ---------- */
   var STATE_KEY = "tokyo-viaggio-v1";
   var SIM_KEY = "tokyo-sim-date";
+  var SANDBOX_KEY = "tokyo-viaggio-prova";   // caselle e timbri della modalità prova
   var WD_LONG = ["domenica", "lunedì", "martedì", "mercoledì", "giovedì", "venerdì", "sabato"];
   var WD_SHORT = ["dom", "lun", "mar", "mer", "gio", "ven", "sab"];
   var MONTHS = ["gennaio", "febbraio", "marzo", "aprile", "maggio", "giugno", "luglio",
@@ -87,7 +88,16 @@
   }
   function setSimDate(iso) {
     try {
-      if (iso) sessionStorage.setItem(SIM_KEY, iso); else sessionStorage.removeItem(SIM_KEY);
+      if (iso) {
+        if (!sessionStorage.getItem(SIM_KEY)) {
+          var real = readReal();
+          sessionStorage.setItem(SANDBOX_KEY, JSON.stringify({ opened: real.opened, stamps: real.stamps }));
+        }
+        sessionStorage.setItem(SIM_KEY, iso);
+      } else {
+        sessionStorage.removeItem(SIM_KEY);
+        sessionStorage.removeItem(SANDBOX_KEY);
+      }
     } catch (e) { /* ignora */ }
   }
   function tokyoToday() { return simDate() || realTokyoToday(); }
@@ -104,20 +114,51 @@
     return WD_LONG[p.wd] + " " + p.d + " " + MONTHS[p.m - 1];
   }
 
-  function loadState() {
+  function cleanList(v) { return Array.isArray(v) ? v.filter(function (x) { return typeof x === "string"; }) : []; }
+
+  // Situazione vera, salvata sul telefono. I giorni che nella realtà non sono ancora
+  // arrivati non possono essere aperti: se ci sono, vengono da una prova e si tolgono.
+  function readReal() {
     var base = { opened: [], stamps: [], notes: {} };
     try {
       var s = JSON.parse(localStorage.getItem(STATE_KEY) || "null");
       if (s && typeof s === "object") {
-        base.opened = Array.isArray(s.opened) ? s.opened : [];
-        base.stamps = Array.isArray(s.stamps) ? s.stamps : [];
+        base.opened = cleanList(s.opened);
+        base.stamps = cleanList(s.stamps);
         base.notes = s.notes && typeof s.notes === "object" ? s.notes : {};
       }
     } catch (e) { /* memoria non disponibile: si riparte vuoti */ }
+    var today = realTokyoToday();
+    var before = base.opened.length + base.stamps.length;
+    base.opened = base.opened.filter(function (d) { return d <= today; });
+    base.stamps = base.stamps.filter(function (d) { return d <= today; });
+    if (base.opened.length + base.stamps.length !== before) writeReal(base);
     return base;
   }
-  function saveState(state) {
+  function writeReal(state) {
     try { localStorage.setItem(STATE_KEY, JSON.stringify(state)); } catch (e) { /* ignora */ }
+  }
+
+  function isPreview() { return !!simDate(); }
+
+  function loadState() {
+    var real = readReal();
+    if (!isPreview()) return real;
+    var box = { opened: [], stamps: [] };
+    try { box = JSON.parse(sessionStorage.getItem(SANDBOX_KEY) || "null") || box; } catch (e) { /* ignora */ }
+    return { opened: cleanList(box.opened), stamps: cleanList(box.stamps), notes: real.notes };
+  }
+  function saveState(state) {
+    var real = readReal();
+    real.notes = state.notes || real.notes;
+    if (isPreview()) {
+      try { sessionStorage.setItem(SANDBOX_KEY, JSON.stringify({ opened: state.opened, stamps: state.stamps })); }
+      catch (e) { /* ignora */ }
+    } else {
+      real.opened = state.opened;
+      real.stamps = state.stamps;
+    }
+    writeReal(real);
   }
 
   function mapsUrl(q) {
@@ -177,7 +218,7 @@
   window.TokyoApp = {
     esc: esc, parts: parts, daysBetween: daysBetween,
     tokyoToday: tokyoToday, realTokyoToday: realTokyoToday,
-    simDate: simDate, setSimDate: setSimDate,
+    simDate: simDate, setSimDate: setSimDate, isPreview: isPreview,
     clock: clock, tokyoHour: tokyoHour, longDate: longDate,
     WD_LONG: WD_LONG, WD_SHORT: WD_SHORT, MONTHS: MONTHS,
     loadState: loadState, saveState: saveState,

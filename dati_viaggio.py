@@ -14,6 +14,18 @@ Ogni giorno ha:
 - "phrase": la frase giapponese del giorno
 """
 
+# Fuji-metro: punti per le previsioni e finestra del viaggio
+FUJI = {
+    "forecast_days": 16,
+    "window": {"start": "2026-12-21", "end": "2026-12-23"},
+    "points": {
+        "summit": {"name": "Cima del Fuji", "lat": 35.3606, "lng": 138.7274},
+        "lake": {"name": "Lago Kawaguchiko", "lat": 35.5130, "lng": 138.7550},
+        "tokyo": {"name": "Ryogoku", "lat": 35.6954, "lng": 139.7926},
+    },
+    "ropeway_note": "La funivia del lago Kawaguchiko è prevista chiusa dal 7 al 18 dicembre 2026.",
+}
+
 TRIP = {
     "start": "2026-12-14",
     "end": "2026-12-26",
@@ -153,8 +165,8 @@ DAYS = [
             {"when": "Mattina", "what": "Bus presto da Shinjuku a Kawaguchiko. Una sola attività col Fuji, al mattino, quando si vede meglio."},
             {"when": "Poi", "what": "Oishi Park, che ha anche un parco giochi per le bimbe."},
         ],
-        "tip": "In inverno evitate la salita alla 5ª stazione. Controllate la visibilità la sera prima: nella prossima versione lo farà il Fuji-metro dell'app.",
-        "links": [],
+        "tip": "In inverno evitate la salita alla 5ª stazione. La sera prima aprite il Fuji-metro: vi dice quale dei tre giorni ha il cielo più limpido.",
+        "links": [{"label": "Apri il Fuji-metro", "href": "/fuji"}],
         "maps": [
             {"label": "Stazione Kawaguchiko", "q": "河口湖駅"},
             {"label": "Oishi Park", "q": "大石公園 富士河口湖町"},
@@ -189,7 +201,7 @@ DAYS = [
             {"when": "Se serve", "what": "Ultima occasione per il Fuji, se il 21 e il 22 erano nuvolosi."},
         ],
         "tip": "Racconta alla bimba grande la storia di Hachiko prima di andare: il cane che aspettò il suo padrone alla stazione per anni.",
-        "links": [],
+        "links": [{"label": "Apri il Fuji-metro", "href": "/fuji"}],
         "maps": [
             {"label": "Statua di Hachiko", "q": "忠犬ハチ公像"},
             {"label": "Mugiwara Store Shibuya", "q": "麦わらストア 渋谷本店"},

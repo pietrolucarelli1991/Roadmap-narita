@@ -47,6 +47,13 @@
     </section>
 
     <section class="shortcuts" aria-label="Scorciatoie">
+      <a class="shortcut" href="/fuji">
+        <span class="shortcut-glyph" aria-hidden="true">富</span>
+        <span class="shortcut-text">
+          <strong>Fuji-metro</strong>
+          <span>Quale giorno si vede meglio il Fuji</span>
+        </span>
+      </a>
       <a class="shortcut" href="/arrivo">
         <span class="shortcut-glyph" aria-hidden="true">着</span>
         <span class="shortcut-text">
@@ -71,10 +78,18 @@
 
     <details class="sim">
       <summary>Prova un giorno del viaggio</summary>
-      <p>Serve per vedere come funziona prima di partire. Quando chiudi l'app torna alla data vera.</p>
+      <p>Puoi aprire caselle e prendere timbri per provare. Quando premi "Torna a oggi" o chiudi l'app, tutto torna com'era: a dicembre troverai le caselle ancora da scoprire.</p>
       <div class="sim-row">
         <input type="date" id="sim-date" min="2026-12-13" max="2026-12-27" value="2026-12-17" aria-label="Data da provare">
         <button type="button" class="t-btn" id="sim-apply">Prova questa data</button>
+      </div>
+    </details>
+
+    <details class="sim">
+      <summary>Ricomincia da capo</summary>
+      <p>Cancella tutti i timbri e richiude tutte le caselle. Le note che avete scritto nell'itinerario restano.</p>
+      <div class="sim-row">
+        <button type="button" class="t-btn" id="btn-reset">Cancella timbri e richiudi le caselle</button>
       </div>
     </details>
 

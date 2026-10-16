@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  {% set theme = '#17191e' %}
+  {% include '_head.html' %}
+  <title>Fuji-metro — Tokyo 2026</title>
+</head>
+<body class="app-page page-fuji has-nav">
+
+  <header class="fuji-head">
+    <h1>Fuji-metro</h1>
+    <p>Quando si vede il Fuji dal lago Kawaguchiko nei prossimi giorni.</p>
+  </header>
+
+  <section class="scene-wrap" aria-label="Previsione per il giorno scelto">
+    <div class="scene" id="scene" data-part="morning" data-cover="0" data-state="loading">
+      <svg viewBox="0 0 360 200" role="img" aria-labelledby="scene-verdict">
+        <defs>
+          <linearGradient id="sky-morning" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#8fa9d1"/>
+            <stop offset="1" stop-color="#f2d6c2"/>
+          </linearGradient>
+          <linearGradient id="sky-afternoon" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#5f93d0"/>
+            <stop offset="1" stop-color="#cfe2f3"/>
+          </linearGradient>
+          <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#3d5f93"/>
+            <stop offset="1" stop-color="#22385f"/>
+          </linearGradient>
+        </defs>
+        <rect class="sky sky-morning" width="360" height="200" fill="url(#sky-morning)"/>
+        <rect class="sky sky-afternoon" width="360" height="200" fill="url(#sky-afternoon)"/>
+        <circle class="sun" cx="70" cy="64" r="22" fill="#c0392b"/>
+        <path class="fuji-body" d="M20 172 C100 152 132 96 158 52 L202 52 C228 96 260 152 340 172 Z" fill="#2b4c7e"/>
+        <path class="fuji-snow" d="M158 52 L202 52 L218 80 L206 73 L195 86 L180 75 L165 86 L154 73 L142 80 Z" fill="#f7f5f0"/>
+        <rect class="grey" width="360" height="200" fill="#7f8896"/>
+        <g class="cloud cloud-1">
+          <ellipse cx="60" cy="150" rx="70" ry="16"/><ellipse cx="160" cy="146" rx="80" ry="18"/>
+          <ellipse cx="270" cy="150" rx="90" ry="16"/>
+        </g>
+        <g class="cloud cloud-2">
+          <ellipse cx="110" cy="110" rx="70" ry="18"/><ellipse cx="200" cy="104" rx="74" ry="20"/>
+          <ellipse cx="290" cy="112" rx="60" ry="16"/>
+        </g>
+        <g class="cloud cloud-3">
+          <ellipse cx="150" cy="66" rx="62" ry="22"/><ellipse cx="214" cy="60" rx="58" ry="20"/>
+          <ellipse cx="180" cy="82" rx="90" ry="18"/>
+        </g>
+        <rect y="172" width="360" height="28" fill="url(#lake)"/>
+        <path d="M150 182 h60 M165 190 h30" stroke="#f7f5f0" stroke-opacity=".35" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <div class="scene-caption">
+      <p class="scene-when" id="scene-when">Scarico le previsioni…</p>
+      <p class="scene-verdict" id="scene-verdict">Un attimo</p>
+    </div>
+
+    <div class="part-toggle" role="group" aria-label="Momento della giornata">
+      <button type="button" data-part="morning" aria-pressed="true">Mattina <span>6–10</span></button>
+      <button type="button" data-part="afternoon" aria-pressed="false">Pomeriggio <span>12–16</span></button>
+    </div>
+  </section>
+
+  <main class="page-body fuji-body">
+    <section aria-labelledby="strip-title">
+      <h2 id="strip-title">Giorno per giorno</h2>
+      <div class="day-strip" id="day-strip" role="group" aria-label="Scegli il giorno"></div>
+      <p class="strip-note">Ogni giorno ha due trattini: mattina e pomeriggio. Verde si vede, arancio forse, grigio coperto. Dopo una settimana la previsione diventa meno sicura.</p>
+    </section>
+
+    <section class="fuji-card fuji-window" id="window" hidden></section>
+    <section class="fuji-card" id="best" hidden></section>
+    <section class="fuji-card" id="temps" hidden></section>
+
+    <details class="how">
+      <summary>Come funziona</summary>
+      <p>
+        Il Fuji-metro guarda le previsioni delle nuvole basse e medie, fino a 8 km di quota, sopra la cima del Fuji
+        e sul lago Kawaguchiko. Se sono poche, la montagna si vede. Le nuvole alte e sottili non la nascondono,
+        quindi non contano. Pioggia e foschia abbassano un po' il voto.
+      </p>
+      <p>
+        È una stima, non una garanzia. La sera prima di partire controlla anche
+        <a href="https://isfujivisible.com" target="_blank" rel="noopener">isfujivisible.com</a>,
+        che guarda pure le webcam.
+      </p>
+      <p class="fine">Dati meteo di <a href="https://open-meteo.com" target="_blank" rel="noopener">Open-Meteo.com</a> (CC BY 4.0).</p>
+    </details>
+
+    <p class="fuji-updated">
+      <span id="updated"></span>
+      <button type="button" class="t-link" id="btn-refresh">Aggiorna le previsioni</button>
+    </p>
+
+    <p class="app-version">Tokyo 2026, versione {{ app_version }}</p>
+  </main>
+
+  {% include '_nav.html' %}
+  <script>window.FUJI = {{ fuji | tojson }};</script>
+  <script src="{{ static_v('js/fuji.js') }}" defer></script>
+</body>
+</html>
