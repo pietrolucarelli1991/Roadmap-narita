@@ -1,39 +1,31 @@
 /* ==========================================================================
-   Oggi — il calendario del viaggio
-   Le caselle si aprono un giorno alla volta (ora di Tokyo).
-   A fine giornata si prende il timbro, che finisce nell'album.
+   Oggi
+   - prima di partire: conto alla rovescia, i 3 capitoli, le cose da prenotare
+   - durante il viaggio: il programma di oggi e il timbro di fine giornata
+   - sempre: il calendario dei 23 giorni con i timbri
    ========================================================================== */
 (function () {
   "use strict";
 
   var T = window.TokyoApp;
+  var P = window.Planner;
   var V = window.VIAGGIO;
-  var DAYS = V.days;
-  var TRIP = V.trip;
   var esc = T.esc;
   var state = T.loadState();
-  var lastOpener = null;
-
-  var MOOD = { leggera: "Giornata leggera", piena: "Giornata piena", jolly: "Giorno jolly" };
-  var ROT = [-8, 6, -4, 9, -10, 3, -6, 8, -3, 5, -9, 4, -5];
-  var LOCK_SVG = '<svg class="door-lock" viewBox="0 0 12 12" aria-hidden="true"><path fill="currentColor" d="M3.5 5V3.6a2.5 2.5 0 0 1 5 0V5H9a1 1 0 0 1 1 1v4.5a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1zm1.2 0h2.6V3.6a1.3 1.3 0 0 0-2.6 0z"/></svg>';
-  var PIN_SVG = '<svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8 1.5a4.5 4.5 0 0 0-4.5 4.5c0 3.2 4.5 8.5 4.5 8.5s4.5-5.3 4.5-8.5A4.5 4.5 0 0 0 8 1.5zm0 6.2a1.7 1.7 0 1 1 0-3.4 1.7 1.7 0 0 1 0 3.4z"/></svg>';
+  var START = V.trip.start, END = V.trip.end;
 
   function $(sel) { return document.querySelector(sel); }
   function cap(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
   function today() { return T.tokyoToday(); }
-  function dayByDate(iso) { return DAYS.filter(function (d) { return d.date === iso; })[0]; }
-  function dayNumber(iso) { return T.daysBetween(TRIP.start, iso) + 1; }
-  function isUnlocked(d) { return d.date <= today(); }
+  function dayNumber(iso) { return P.dayIndex(iso) + 1; }
   function isStamped(iso) { return state.stamps.indexOf(iso) !== -1; }
-  function isOpened(iso) { return state.opened.indexOf(iso) !== -1 || isStamped(iso); }
-  function stampCount() { return DAYS.filter(function (d) { return isStamped(d.date); }).length; }
-
-  function markOpened(iso) {
-    if (state.opened.indexOf(iso) === -1) { state.opened.push(iso); T.saveState(state); }
+  function stampCount() { return V.days.filter(function (d) { return isStamped(d.date); }).length; }
+  function shortRange(a, b) {
+    var x = T.parts(a), y = T.parts(b);
+    return x.d + " " + T.MONTHS[x.m - 1].slice(0, 3) + " – " + y.d + " " + T.MONTHS[y.m - 1].slice(0, 3);
   }
 
-  /* ---------- Parte alta: saluto, orologi, titolo ---------- */
+  /* ---------- Parte alta ---------- */
   function renderTop() {
     var h = T.tokyoHour();
     var g = h >= 5 && h < 11 ? ["おはよう", "Buongiorno"]
@@ -45,172 +37,147 @@
     $("#clock-italy").textContent = T.clock("Europe/Rome");
 
     var t = today();
-    var title, sub;
-    if (t < TRIP.start) {
-      var n = T.daysBetween(t, TRIP.start);
-      title = n === 1 ? "Domani si parte" : "Mancano " + n + " giorni";
-      sub = "Le caselle si aprono una al giorno, dal 14 al 26 dicembre. Intanto il programma completo è nella scheda Viaggio.";
-    } else if (t > TRIP.end) {
-      title = "Bentornati a casa";
-      sub = "Avete raccolto " + stampCount() + " timbri su " + DAYS.length + ". Le caselle restano aperte per ricordare il viaggio.";
+    var main = $("#sky-main");
+    if (t < START) {
+      var n = T.daysBetween(t, START);
+      $("#sky-title").textContent = n === 1 ? "Domani si parte" : "Mancano " + n + " giorni";
+      $("#sky-sub").textContent = "23 giorni in Giappone, in 3 capitoli. Intanto scegliete i piani nella scheda Viaggio.";
+      main.innerHTML = '<ol class="chapter-cards">' + V.chapters.map(function (c) {
+        return '<li class="chapter-card">' +
+          '<span class="chapter-card-glyph" lang="ja" aria-hidden="true">' + esc(c.glyph) + "</span>" +
+          '<span class="chapter-card-title">' + esc(c.title) + "</span>" +
+          '<span class="chapter-card-dates">' + shortRange(c.start, c.end) + "</span>" +
+          '<span class="chapter-card-hotel">' + esc(c.hotel) + "</span>" +
+          "</li>";
+      }).join("") + "</ol>";
+    } else if (t > END) {
+      $("#sky-title").textContent = "Bentornati a casa";
+      $("#sky-sub").textContent = "Avete raccolto " + stampCount() + " timbri su " + V.days.length + ". Il calendario resta qui sotto per ricordare il viaggio.";
+      main.innerHTML = "";
     } else {
-      var d = dayByDate(t);
-      title = "Giorno " + dayNumber(t) + " di " + DAYS.length;
-      sub = d.title + ". " + (isOpened(t) ? "Tocca la casella di oggi per rivedere il programma." : "Tocca la casella di oggi per aprirla.");
+      renderToday(t, main);
     }
-    $("#sky-title").textContent = title;
-    $("#sky-sub").textContent = sub;
 
     var sim = T.simDate();
     $("#sim-bar").hidden = !sim;
     if (sim) $("#sim-text").textContent = "Stai provando " + T.longDate(sim);
   }
 
-  /* ---------- Caselle ---------- */
-  function renderDoors() {
+  function renderToday(t, main) {
+    var d = P.day(t);
+    var plan = P.chosenPlan(t, state);
+    var chapter = P.chapter(d.chapter);
+    var warn = P.warnings(t, plan, state);
+    var idx = P.dayIndex(t);
+    var next = V.days[idx + 1];
+    $("#sky-title").textContent = "Giorno " + dayNumber(t) + " di " + V.days.length;
+    $("#sky-sub").textContent = chapter.title + ": " + chapter.subtitle.charAt(0).toLowerCase() + chapter.subtitle.slice(1) + ".";
+
+    var stops = plan.complete ? (plan.stops || []) : [];
+    main.innerHTML =
+      '<article class="today-card">' +
+        '<div class="today-head">' +
+          '<span class="seal' + (isStamped(t) ? " is-stamped" : "") + '" lang="ja" aria-hidden="true">' + esc(plan.kanji) + "</span>" +
+          "<div>" +
+            '<p class="today-label">Il programma di oggi</p>' +
+            '<h2 class="today-title">' + esc(plan.title) + "</h2>" +
+          "</div>" +
+        "</div>" +
+        '<p class="today-summary">' + esc(plan.summary) + "</p>" +
+        (stops.length
+          ? '<ol class="today-stops">' + stops.map(function (s) {
+              return "<li><strong>" + esc(s.when) + "</strong> " + esc(s.what.split(". ")[0].replace(/\.$/, "")) + "</li>";
+            }).join("") + "</ol>"
+          : "") +
+        (warn.length ? '<p class="today-warn">' + esc(warn[0].text) + (warn.length > 1 ? " E altri " + (warn.length - 1) + " avvisi." : "") + "</p>" : "") +
+        '<div class="today-actions">' +
+          '<button type="button" class="t-btn t-btn-primary" data-open="' + t + '">Apri il programma completo</button>' +
+          (isStamped(t)
+            ? '<span class="stamp-done">Timbro preso</span>'
+            : '<button type="button" class="t-btn t-btn-stamp-sm" data-stamp="' + t + '">Prendi il timbro di oggi</button>') +
+        "</div>" +
+      "</article>" +
+      (next ? '<p class="tomorrow">Domani: <a href="/itinerario#d-' + next.date + '">' + esc(P.chosenPlan(next.date, state).title) + "</a></p>" : "");
+  }
+
+  /* ---------- Da preparare ---------- */
+  function renderTodo() {
+    var section = $("#todo-section");
     var t = today();
-    $("#doors").innerHTML = DAYS.map(function (d, i) {
-      var p = T.parts(d.date);
-      var last = i === DAYS.length - 1;
-      var unlocked = d.date <= t;
-      var isToday = d.date === t;
-      var stamped = isStamped(d.date);
-      var opened = isOpened(d.date);
-      var cls = "door" + (unlocked ? "" : " is-locked") + (isToday ? " is-today" : "") +
-        (opened ? " is-open" : "") + (stamped ? " is-stamped" : "");
-      var label = cap(T.longDate(d.date)) + ": " + (unlocked ? d.title : "si apre quel giorno") +
-        (stamped ? ", timbro preso" : "");
-      var month = isToday ? "oggi" : last ? "dicembre, si torna a casa" : "dic";
-      return '<div class="door-cell' + (last ? " is-last" : "") + '" role="listitem">' +
-        '<button type="button" class="' + cls + '" data-date="' + d.date + '" aria-label="' + esc(label) + '">' +
-          '<span class="door-back" aria-hidden="true"><span class="door-kanji" lang="ja">' + esc(d.kanji) + "</span></span>" +
-          '<span class="door-front" aria-hidden="true">' +
-            '<span class="door-wd">' + T.WD_SHORT[p.wd] + "</span>" +
-            '<span class="door-num">' + p.d + "</span>" +
-            '<span class="door-month">' + month + "</span>" +
-            (unlocked ? "" : LOCK_SVG) +
-          "</span>" +
-        "</button></div>";
+    if (t >= START) { section.hidden = true; return; }
+    section.hidden = false;
+    $("#todo").innerHTML = V.todo.map(function (item) {
+      var done = !!state.done[item.id];
+      var when = item.date ? (item.date < t ? "Scadenza passata: controlla se si può ancora fare" : "Entro " + T.longDate(item.date)) : "Appena possibile";
+      return '<li class="todo-item' + (done ? " is-done" : "") + (item.date && item.date < t && !done ? " is-late" : "") + '">' +
+        '<button type="button" class="todo-check" data-todo="' + item.id + '" aria-pressed="' + done + '" aria-label="' +
+          esc((done ? "Fatto: " : "Da fare: ") + item.title) + '"><span aria-hidden="true">' + (done ? "✓" : "") + "</span></button>" +
+        "<div>" +
+          '<p class="todo-title">' + esc(item.title) + "</p>" +
+          '<p class="todo-when">' + esc(when) + "</p>" +
+          '<p class="todo-detail">' + esc(item.detail) + "</p>" +
+        "</div></li>";
     }).join("");
   }
 
-  function shake(btn) {
-    btn.classList.remove("is-shaking");
-    void btn.offsetWidth;
-    btn.classList.add("is-shaking");
-    btn.addEventListener("animationend", function () { btn.classList.remove("is-shaking"); }, { once: true });
+  /* ---------- Calendario ---------- */
+  function renderCal() {
+    var t = today();
+    var sc = stampCount();
+    $("#stamp-count").textContent = sc + (sc === 1 ? " timbro" : " timbri") + " su " + V.days.length;
+    var lastChapter = null;
+    $("#cal").innerHTML = V.days.map(function (d) {
+      var p = T.parts(d.date);
+      var plan = P.chosenPlan(d.date, state);
+      var warn = P.warnings(d.date, plan, state);
+      var chapterStart = d.chapter !== lastChapter;
+      lastChapter = d.chapter;
+      return '<li class="cal-day' + (d.date === t ? " is-today" : "") + (d.date < t ? " is-past" : "") +
+        (chapterStart ? " is-chapter-start" : "") + '">' +
+        '<a href="/itinerario#d-' + d.date + '" aria-label="' + esc(cap(T.longDate(d.date)) + ": " + plan.title + (warn.length ? ", con avvisi" : "")) + '">' +
+          '<span class="cal-date"><span class="cal-wd">' + T.WD_SHORT[p.wd] + (p.m === 1 ? " gen" : "") + '</span><span class="cal-num">' + p.d + "</span></span>" +
+          '<span class="seal seal-sm' + (isStamped(d.date) ? " is-stamped" : "") + '" lang="ja" aria-hidden="true">' + esc(plan.kanji) + "</span>" +
+          '<span class="cal-title">' + esc(plan.title) + "</span>" +
+          (warn.length ? '<span class="cal-warn" aria-hidden="true">!</span>' : "") +
+        "</a></li>";
+    }).join("");
   }
 
-  function knockToday() {
-    if (T.reduceMotion.matches) return;
-    var btn = document.querySelector(".door.is-today:not(.is-open)");
-    if (!btn) return;
-    setTimeout(function () {
-      btn.classList.add("is-knocking");
-      btn.addEventListener("animationend", function () { btn.classList.remove("is-knocking"); }, { once: true });
-    }, 700);
-  }
-
-  function onDoorClick(e) {
-    var btn = e.target.closest(".door");
-    if (!btn) return;
-    var d = dayByDate(btn.dataset.date);
-    if (!isUnlocked(d)) {
-      shake(btn);
-      T.toast("Questa casella si apre " + T.longDate(d.date) + ". Il programma è già nella scheda Viaggio.");
-      return;
-    }
-    if (btn.classList.contains("is-open") || T.reduceMotion.matches) {
-      markOpened(d.date);
-      btn.classList.add("is-open");
-      openSheet(d, btn);
-      return;
-    }
-    btn.classList.add("is-opening");
-    setTimeout(function () {
-      markOpened(d.date);
-      btn.classList.remove("is-opening");
-      btn.classList.add("is-open");
-      renderTop();
-      openSheet(d, btn);
-    }, 520);
-  }
-
-  /* ---------- Scheda del giorno ---------- */
+  /* ---------- Scheda di oggi (dialog) ---------- */
   var sheet = $("#day-sheet");
-  var sheetBody = $("#sheet-body");
-  var currentDay = null;
+  var body = $("#sheet-body");
+  var sheetDate = null, lastOpener = null;
 
-  function renderSheet(d, justStamped) {
-    var stamped = isStamped(d.date);
-    var isToday = d.date === today();
-    sheetBody.innerHTML =
+  function renderSheet(justStamped) {
+    var plan = P.chosenPlan(sheetDate, state);
+    body.innerHTML =
       '<div class="sheet-handle" aria-hidden="true"></div>' +
       '<button type="button" class="sheet-close" data-action="close">Chiudi</button>' +
-      '<div class="sheet-head">' +
-        '<span class="seal' + (stamped ? " is-stamped" : "") + (justStamped ? " just-stamped" : "") +
-          '" lang="ja" aria-hidden="true">' + esc(d.kanji) + "</span>" +
-        "<div>" +
-          '<p class="sheet-date">' + cap(T.longDate(d.date)) + ", giorno " + dayNumber(d.date) + " di " + DAYS.length + "</p>" +
-          '<h2 id="sheet-title">' + esc(d.title) + "</h2>" +
-          '<p class="sheet-kanji">Il timbro di oggi è <span lang="ja">' + esc(d.kanji) + "</span>: si legge " +
-            esc(d.reading) + " e vuol dire " + esc(d.meaning) + ".</p>" +
-          '<span class="mood-chip mood-' + d.mood + '">' + MOOD[d.mood] + "</span>" +
-        "</div>" +
-      "</div>" +
-      '<ol class="moments">' + d.parts.map(function (p) {
-        return '<li><span class="moment-when">' + esc(p.when) + '</span><span class="moment-what">' + esc(p.what) + "</span></li>";
-      }).join("") + "</ol>" +
-      '<p class="day-tip">' + esc(d.tip) + "</p>" +
-      (d.maps.length
-        ? '<div class="places"><p class="places-title">Apri in Google Maps</p><div class="places-row">' +
-          d.maps.map(function (m) {
-            return '<a class="place" href="' + T.mapsUrl(m.q) + '" target="_blank" rel="noopener">' + PIN_SVG + esc(m.label) + "</a>";
-          }).join("") + "</div></div>"
-        : "") +
-      '<button type="button" class="phrase-card" data-action="phrase">' +
-        '<span class="phrase-card-jp" lang="ja">' + esc(d.phrase.jp) + "</span>" +
-        '<span class="phrase-card-romaji">' + esc(d.phrase.romaji) + "</span>" +
-        '<span class="phrase-card-it">' + esc(d.phrase.it) + "</span>" +
-        '<span class="phrase-card-hint">Frase del giorno: tocca per mostrarla a tutto schermo</span>' +
-      "</button>" +
-      (d.links.length
-        ? '<div class="sheet-links">' + d.links.map(function (l) {
-            return '<a class="t-btn" href="' + esc(l.href) + '">' + esc(l.label) + "</a>";
-          }).join("") + "</div>"
-        : "") +
+      '<div class="sheet-top"><p class="sheet-date">' + cap(T.longDate(sheetDate)) + ", giorno " + dayNumber(sheetDate) + " di " + V.days.length + "</p>" +
+      '<h2 id="sheet-title" class="visually-hidden">' + esc(plan.title) + "</h2></div>" +
+      P.renderPlan(plan, sheetDate, state, { readonly: true }) +
       '<div class="sheet-foot">' +
-        (stamped
-          ? '<p class="stamp-done" role="status"><span class="seal seal-sm is-stamped" lang="ja" aria-hidden="true">' +
-              esc(d.kanji) + "</span>Timbro preso</p>" +
+        (isStamped(sheetDate)
+          ? '<p class="stamp-done" role="status"><span class="seal seal-sm is-stamped' + (justStamped ? " just-stamped" : "") + '" lang="ja" aria-hidden="true">' +
+              esc(plan.kanji) + "</span>Timbro preso</p>" +
             '<button type="button" class="t-link" data-action="unstamp">Togli il timbro</button>'
-          : '<button type="button" class="t-btn t-btn-stamp" data-action="stamp">Prendi il timbro' +
-              (isToday ? " di oggi" : "") + "</button>") +
-        '<button type="button" class="t-link" data-action="reclose">Richiudi la casella</button>' +
-        '<a class="t-link" href="/itinerario#d-' + d.date + '">Vedi nell\'itinerario</a>' +
+          : '<button type="button" class="t-btn t-btn-stamp" data-action="stamp">Giornata finita: prendi il timbro</button>') +
+        '<a class="t-link" href="/itinerario#d-' + sheetDate + '">Cambia piano per questo giorno</a>' +
       "</div>" +
       '<div class="stamp-fx" id="stamp-fx-live" aria-hidden="true" hidden><span lang="ja"></span></div>';
   }
 
-  function openSheet(d, opener) {
-    currentDay = d;
+  function openSheet(date, opener) {
+    sheetDate = date;
     lastOpener = opener || null;
-    renderSheet(d, false);
-    if (typeof sheet.showModal === "function") {
-      if (!sheet.open) sheet.showModal();
-    } else {
-      sheet.setAttribute("open", "");
-    }
+    renderSheet(false);
+    if (typeof sheet.showModal === "function") { if (!sheet.open) sheet.showModal(); }
+    else sheet.setAttribute("open", "");
     sheet.scrollTop = 0;
   }
-
   function closeSheet() {
     if (typeof sheet.close === "function") sheet.close();
-    else { sheet.removeAttribute("open"); afterClose(); }
-  }
-
-  function afterClose() {
-    currentDay = null;
+    else { sheet.removeAttribute("open"); }
     if (lastOpener && document.body.contains(lastOpener)) lastOpener.focus();
   }
 
@@ -218,77 +185,63 @@
     if (T.reduceMotion.matches) return;
     var fx = document.getElementById("stamp-fx-live");
     if (!fx) return;
-    fx.querySelector("span").textContent = kanji;
-    fx.hidden = false;
     var span = fx.querySelector("span");
-    span.addEventListener("animationend", function (e) {
-      if (e.animationName === "stamp-out") fx.hidden = true;
-    });
+    span.textContent = kanji;
+    fx.hidden = false;
+    span.addEventListener("animationend", function (e) { if (e.animationName === "stamp-out") fx.hidden = true; });
   }
 
-  function stamp(d) {
-    if (!isStamped(d.date)) state.stamps.push(d.date);
-    if (state.opened.indexOf(d.date) === -1) state.opened.push(d.date);
+  function stamp(date, inSheet) {
+    state = T.loadState();
+    if (!isStamped(date)) state.stamps.push(date);
     T.saveState(state);
-    renderSheet(d, true);
-    playStampFx(d.kanji);
     if (navigator.vibrate) navigator.vibrate(35);
-    renderDoors();
-    renderAlbum();
-    renderTop();
+    refreshAll();
+    if (inSheet) {
+      renderSheet(true);
+      playStampFx(P.chosenPlan(date, state).kanji);
+    } else {
+      T.toast("Timbro preso: " + P.chosenPlan(date, state).title);
+    }
   }
-
-  function reclose(d) {
-    state.stamps = state.stamps.filter(function (iso) { return iso !== d.date; });
-    state.opened = state.opened.filter(function (iso) { return iso !== d.date; });
+  function unstamp(date) {
+    state = T.loadState();
+    state.stamps = state.stamps.filter(function (d) { return d !== date; });
     T.saveState(state);
-    closeSheet();
-    renderDoors();
-    renderAlbum();
-    renderTop();
-    T.toast("Casella richiusa: è di nuovo da scoprire");
+    refreshAll();
+    renderSheet(false);
   }
 
-  function unstamp(d) {
-    state.stamps = state.stamps.filter(function (iso) { return iso !== d.date; });
-    T.saveState(state);
-    renderSheet(d, false);
-    renderDoors();
-    renderAlbum();
-    renderTop();
-  }
-
-  sheetBody.addEventListener("click", function (e) {
-    var el = e.target.closest("[data-action]");
-    if (!el || !currentDay) return;
-    var a = el.dataset.action;
-    if (a === "close") closeSheet();
-    else if (a === "stamp") stamp(currentDay);
-    else if (a === "unstamp") unstamp(currentDay);
-    else if (a === "reclose") reclose(currentDay);
-    else if (a === "phrase") T.openShow(currentDay.phrase, el);
+  body.addEventListener("click", function (e) {
+    var t = e.target.closest("[data-action]");
+    if (t) {
+      if (t.dataset.action === "close") closeSheet();
+      else if (t.dataset.action === "stamp") stamp(sheetDate, true);
+      else if (t.dataset.action === "unstamp") unstamp(sheetDate);
+      return;
+    }
+    var ph = e.target.closest("[data-phrase]");
+    if (ph) T.openShow(P.plan(ph.dataset.phrase).phrase, ph);
   });
   sheet.addEventListener("click", function (e) { if (e.target === sheet) closeSheet(); });
-  sheet.addEventListener("close", afterClose);
 
-  /* ---------- Album dei timbri ---------- */
-  function renderAlbum() {
-    $("#album-count").textContent = stampCount() + " su " + DAYS.length;
-    $("#album").innerHTML = DAYS.map(function (d, i) {
-      var p = T.parts(d.date);
-      if (isStamped(d.date)) {
-        return '<button type="button" class="album-slot" data-date="' + d.date + '" aria-label="' +
-          esc(cap(T.longDate(d.date)) + ": timbro " + d.kanji + ", " + d.title) + '">' +
-          '<span class="seal is-stamped" style="--rot:' + ROT[i % ROT.length] + 'deg" lang="ja">' + esc(d.kanji) + "</span></button>";
-      }
-      return '<span class="album-slot" role="img" aria-label="' + esc(cap(T.longDate(d.date)) + ": ancora senza timbro") +
-        '"><span class="album-empty">' + p.d + "</span></span>";
-    }).join("");
-  }
+  $("#sky-main").addEventListener("click", function (e) {
+    var o = e.target.closest("[data-open]");
+    if (o) { openSheet(o.dataset.open, o); return; }
+    var s = e.target.closest("[data-stamp]");
+    if (s) stamp(s.dataset.stamp, false);
+  });
 
-  $("#album").addEventListener("click", function (e) {
-    var slot = e.target.closest("button.album-slot");
-    if (slot) openSheet(dayByDate(slot.dataset.date), slot);
+  $("#todo").addEventListener("click", function (e) {
+    var b = e.target.closest("[data-todo]");
+    if (!b) return;
+    state = T.loadState();
+    var id = b.dataset.todo;
+    if (state.done[id]) delete state.done[id]; else state.done[id] = true;
+    T.saveState(state);
+    renderTodo();
+    var again = document.querySelector('[data-todo="' + id + '"]');
+    if (again) again.focus();
   });
 
   /* ---------- Installa sul telefono ---------- */
@@ -309,10 +262,7 @@
       var p = window.__installPrompt;
       if (!p) return;
       p.prompt();
-      p.userChoice.then(function () {
-        window.__installPrompt = null;
-        btn.hidden = true;
-      });
+      p.userChoice.then(function () { window.__installPrompt = null; btn.hidden = true; });
     });
     window.addEventListener("appinstalled", function () {
       section.hidden = true;
@@ -320,13 +270,12 @@
     });
   }
 
-  /* ---------- Prova un giorno ---------- */
+  /* ---------- Prova un giorno e Ricomincia ---------- */
   function refreshAll() {
     state = T.loadState();
     renderTop();
-    renderDoors();
-    renderAlbum();
-    knockToday();
+    renderTodo();
+    renderCal();
   }
 
   $("#sim-apply").addEventListener("click", function () {
@@ -341,29 +290,27 @@
     T.setSimDate(null);
     refreshAll();
   });
-
   $("#btn-reset").addEventListener("click", function () {
     var preview = T.isPreview();
-    var msg = preview
-      ? "Vuoi cancellare le caselle aperte e i timbri di questa prova?"
-      : "Vuoi cancellare tutti i timbri e richiudere tutte le caselle? Le note dell'itinerario restano.";
+    var msg = preview ? "Vuoi cancellare i timbri di questa prova?" : "Vuoi cancellare tutti i timbri? Scelte, cuori e note restano.";
     if (!window.confirm(msg)) return;
+    state = T.loadState();
     state.opened = [];
     state.stamps = [];
     T.saveState(state);
     refreshAll();
-    T.toast(preview ? "Prova azzerata" : "Fatto: il calendario è come nuovo");
+    T.toast(preview ? "Prova azzerata" : "Timbri cancellati");
   });
-
-  $("#doors").addEventListener("click", onDoorClick);
 
   /* ---------- Avvio ---------- */
   refreshAll();
   setupInstall();
-
   var lastDay = today();
   setInterval(function () {
-    renderTop();
-    if (today() !== lastDay) { lastDay = today(); renderDoors(); renderAlbum(); }
+    if (today() !== lastDay) { lastDay = today(); refreshAll(); }
+    else {
+      $("#clock-tokyo").textContent = T.clock("Asia/Tokyo");
+      $("#clock-italy").textContent = T.clock("Europe/Rome");
+    }
   }, 30000);
 })();

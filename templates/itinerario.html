@@ -11,22 +11,25 @@
   <header class="trip-head">
     <h1>Il viaggio</h1>
     <p>
-      12 notti a Ryogoku, dal 14 al 26 dicembre 2026. È una bozza da sistemare insieme:
-      le date fisse sono Harry Potter il 17 e la Jump Festa il 19, mentre il Fuji si sposta in base al meteo.
+      23 giorni in 3 capitoli. Ogni giorno ha uno o più piani: aprite il giorno, confrontate
+      le alternative, mettete un cuore a quelle che vi piacciono e scegliete.
     </p>
-    <ul class="legend" aria-label="Tipi di giornata">
-      <li><i class="mood-dot mood-leggera" aria-hidden="true"></i>Giornata leggera</li>
-      <li><i class="mood-dot mood-piena" aria-hidden="true"></i>Giornata piena</li>
-      <li><i class="mood-dot mood-jolly" aria-hidden="true"></i>Giorno jolly</li>
-    </ul>
+    <div class="trip-actions">
+      <a class="t-btn" id="btn-share" href="#" target="_blank" rel="noopener">Manda le scelte su WhatsApp</a>
+    </div>
   </header>
 
   <main class="trip-list" id="trip-list"></main>
 
   <p class="app-version">Tokyo 2026, versione {{ app_version }}</p>
 
+  <dialog class="day-sheet" id="day-sheet" aria-labelledby="sheet-title">
+    <div class="day-sheet-inner" id="sheet-body"></div>
+  </dialog>
+
   {% include '_nav.html' %}
   <script>window.VIAGGIO = {{ viaggio | tojson }};</script>
+  <script src="{{ static_v('js/planner.js') }}" defer></script>
   <script src="{{ static_v('js/itinerario.js') }}" defer></script>
 </body>
 </html>

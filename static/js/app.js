@@ -118,14 +118,19 @@
 
   // Situazione vera, salvata sul telefono. I giorni che nella realtà non sono ancora
   // arrivati non possono essere aperti: se ci sono, vengono da una prova e si tolgono.
+  function obj(v) { return v && typeof v === "object" && !Array.isArray(v) ? v : {}; }
+
   function readReal() {
-    var base = { opened: [], stamps: [], notes: {} };
+    var base = { opened: [], stamps: [], notes: {}, choices: {}, likes: {}, done: {} };
     try {
       var s = JSON.parse(localStorage.getItem(STATE_KEY) || "null");
       if (s && typeof s === "object") {
         base.opened = cleanList(s.opened);
         base.stamps = cleanList(s.stamps);
-        base.notes = s.notes && typeof s.notes === "object" ? s.notes : {};
+        base.notes = obj(s.notes);
+        base.choices = obj(s.choices);   // giorno -> piano scelto
+        base.likes = obj(s.likes);       // piano -> true (cuore)
+        base.done = obj(s.done);         // cose da prenotare già fatte
       }
     } catch (e) { /* memoria non disponibile: si riparte vuoti */ }
     var today = realTokyoToday();
@@ -146,11 +151,17 @@
     if (!isPreview()) return real;
     var box = { opened: [], stamps: [] };
     try { box = JSON.parse(sessionStorage.getItem(SANDBOX_KEY) || "null") || box; } catch (e) { /* ignora */ }
-    return { opened: cleanList(box.opened), stamps: cleanList(box.stamps), notes: real.notes };
+    return { opened: cleanList(box.opened), stamps: cleanList(box.stamps),
+             notes: real.notes, choices: real.choices, likes: real.likes, done: real.done };
   }
+  // Scelte, cuori, note e prenotazioni sono "pianificazione": restano salvate anche in modalità prova.
+  // Solo caselle e timbri della prova vengono buttati via.
   function saveState(state) {
     var real = readReal();
     real.notes = state.notes || real.notes;
+    real.choices = state.choices || real.choices;
+    real.likes = state.likes || real.likes;
+    real.done = state.done || real.done;
     if (isPreview()) {
       try { sessionStorage.setItem(SANDBOX_KEY, JSON.stringify({ opened: state.opened, stamps: state.stamps })); }
       catch (e) { /* ignora */ }

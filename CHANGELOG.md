@@ -6,6 +6,27 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 3.0.0 — 16 ottobre 2026
+
+Il primo numero cambia perché l'app cambia idea di fondo: da calendario a sorpresa
+a planner per scegliere insieme. Il viaggio ora va dal 14 dicembre al 5 gennaio.
+
+Aggiunto
+- Il viaggio in 3 capitoli: Tokyo (base Ryogoku), Kyoto con Nara e Osaka, Capodanno ad Asakusa
+- Planner dei 23 giorni nella sezione Viaggio: ogni giorno ha uno o più piani da confrontare
+- "Ci piace" (cuore) e "Scegliamo questo" per ogni piano
+- Avvisi automatici: posto chiuso nel giorno scelto, piano scelto due volte
+- Schede complete per i giorni 14–18: tappe, treni, passeggino, costi, pranzo, merenda e cena
+  verificati sotto i 1.500 ¥ a persona, piano per la pioggia
+- Invio delle scelte su WhatsApp: chi apre il link le copia nella sua app
+- Pagina Oggi nuova: conto alla rovescia, i 3 capitoli, le cose da prenotare con le scadenze,
+  calendario dei 23 giorni; durante il viaggio il programma del giorno e il timbro di fine giornata
+- Note per ogni giorno
+
+Modificato
+- Il calendario dell'Avvento è stato sostituito dal planner (i timbri restano)
+- Le scelte, i cuori e le note restano salvati anche in modalità prova; i timbri di prova no
+
 ## 2.1.0 — 16 ottobre 2026
 
 Aggiunto

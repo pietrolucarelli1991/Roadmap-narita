@@ -25,10 +25,10 @@
       </p>
     </div>
 
-    <h1 class="sky-title" id="sky-title">Il calendario del viaggio</h1>
+    <h1 class="sky-title" id="sky-title">Il viaggio</h1>
     <p class="sky-sub" id="sky-sub"></p>
 
-    <div class="doors" id="doors" role="list" aria-label="Caselle dei giorni del viaggio"></div>
+    <div id="sky-main"></div>
 
     <svg class="sky-fuji" viewBox="0 0 400 70" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0 70 L140 70 L178 18 C186 9 214 9 222 18 L260 70 L400 70 Z" fill="currentColor"/>
@@ -37,13 +37,18 @@
   </header>
 
   <main class="page-body">
-    <section class="album" aria-labelledby="album-title">
+    <section class="todo" id="todo-section" aria-labelledby="todo-title" hidden>
+      <h2 id="todo-title">Da preparare prima di partire</h2>
+      <ul class="todo-list" id="todo"></ul>
+    </section>
+
+    <section class="cal" aria-labelledby="cal-title">
       <div class="album-head">
-        <h2 id="album-title">Album dei timbri</h2>
-        <span class="album-count" id="album-count">0 su 13</span>
+        <h2 id="cal-title">Il calendario</h2>
+        <span class="album-count" id="stamp-count">0 timbri su 23</span>
       </div>
-      <div class="album-grid" id="album"></div>
-      <p class="album-hint">A fine giornata aprite la casella del giorno e premete "Prendi il timbro".</p>
+      <ol class="cal-grid" id="cal"></ol>
+      <p class="album-hint">Tocca un giorno per vedere i piani e scegliere. Il sigillo diventa rosso quando prendete il timbro di fine giornata.</p>
     </section>
 
     <section class="shortcuts" aria-label="Scorciatoie">
@@ -78,18 +83,18 @@
 
     <details class="sim">
       <summary>Prova un giorno del viaggio</summary>
-      <p>Puoi aprire caselle e prendere timbri per provare. Quando premi "Torna a oggi" o chiudi l'app, tutto torna com'era: a dicembre troverai le caselle ancora da scoprire.</p>
+      <p>Vedi come sarà questa pagina in un giorno del viaggio. I timbri presi in prova spariscono quando premi "Torna a oggi" o chiudi l'app; le scelte dei piani invece restano.</p>
       <div class="sim-row">
-        <input type="date" id="sim-date" min="2026-12-13" max="2026-12-27" value="2026-12-17" aria-label="Data da provare">
+        <input type="date" id="sim-date" min="2026-12-13" max="2027-01-06" value="2026-12-16" aria-label="Data da provare">
         <button type="button" class="t-btn" id="sim-apply">Prova questa data</button>
       </div>
     </details>
 
     <details class="sim">
       <summary>Ricomincia da capo</summary>
-      <p>Cancella tutti i timbri e richiude tutte le caselle. Le note che avete scritto nell'itinerario restano.</p>
+      <p>Cancella tutti i timbri. Le scelte dei piani, i cuori e le note restano.</p>
       <div class="sim-row">
-        <button type="button" class="t-btn" id="btn-reset">Cancella timbri e richiudi le caselle</button>
+        <button type="button" class="t-btn" id="btn-reset">Cancella i timbri</button>
       </div>
     </details>
 
@@ -102,6 +107,7 @@
 
   {% include '_nav.html' %}
   <script>window.VIAGGIO = {{ viaggio | tojson }};</script>
+  <script src="{{ static_v('js/planner.js') }}" defer></script>
   <script src="{{ static_v('js/oggi.js') }}" defer></script>
 </body>
 </html>

@@ -996,3 +996,336 @@ body.has-nav .toast { bottom: calc(var(--nav-h) + 16px); }
   font-size: 0.82rem;
   color: var(--t-ink-3);
 }
+
+/* ==========================================================================
+   v3 — PLANNER
+   ========================================================================== */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* ---------- Oggi: i 3 capitoli sul cielo ---------- */
+.chapter-cards {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.chapter-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 12px 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.14);
+}
+.chapter-card-glyph {
+  font-family: var(--t-jp);
+  font-weight: 900;
+  font-size: 1.9rem;
+  line-height: 1.1;
+  color: #fff;
+}
+.chapter-card-title { margin-top: 6px; font-weight: 600; font-size: 0.95rem; color: #fff; }
+.chapter-card-dates { font-size: 0.78rem; color: #c3cbe0; font-variant-numeric: tabular-nums; }
+.chapter-card-hotel { margin-top: 6px; font-size: 0.72rem; line-height: 1.3; color: #93a3c4; }
+
+/* ---------- Oggi: il programma del giorno ---------- */
+.today-card {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--t-washi);
+  color: var(--t-ink);
+  box-shadow: 0 0 0 3px var(--t-shu), 0 10px 24px rgba(0, 0, 0, 0.3);
+}
+.today-head { display: flex; gap: 12px; align-items: center; }
+.today-head .seal { width: 52px; height: 52px; font-size: 1.5rem; }
+.today-label { font-size: 0.8rem; color: var(--t-ink-3); }
+.today-title { font-family: var(--t-jp); font-weight: 700; font-size: 1.3rem; line-height: 1.25; }
+.today-summary { margin-top: 10px; font-size: 0.9rem; color: var(--t-ink-2); }
+.today-stops { margin-top: 10px; padding-left: 1.1rem; font-size: 0.86rem; display: grid; gap: 4px; }
+.today-stops strong { font-weight: 600; }
+.today-warn { margin-top: 10px; padding: 8px 10px; border-radius: 8px; background: #fbeee0; color: #7a4a0c; font-size: 0.84rem; }
+.today-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-top: 14px; }
+.t-btn-stamp-sm { border-color: var(--t-shu); color: var(--t-shu); }
+.tomorrow { margin-top: 12px; font-size: 0.86rem; color: #c3cbe0; }
+.tomorrow a { color: #fff; }
+
+/* ---------- Oggi: da preparare ---------- */
+.todo h2 { font-family: var(--t-jp); font-weight: 700; font-size: 1.15rem; }
+.todo-list { list-style: none; margin-top: 12px; padding: 0; display: grid; gap: 8px; }
+.todo-item {
+  display: grid;
+  grid-template-columns: 30px 1fr;
+  gap: 12px;
+  padding: 12px 14px;
+  border: 1px solid var(--t-line);
+  border-radius: 12px;
+  background: var(--t-washi);
+}
+.todo-item.is-late { border-color: #e6c27a; }
+.todo-item.is-done .todo-title { text-decoration: line-through; color: var(--t-ink-3); }
+.todo-check {
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--t-ink-2);
+  border-radius: 8px;
+  background: #fff;
+  color: #fff;
+  font: 700 1rem var(--t-ui);
+  cursor: pointer;
+}
+.todo-check[aria-pressed="true"] { background: var(--t-matcha); border-color: var(--t-matcha); }
+.todo-title { font-weight: 600; font-size: 0.92rem; line-height: 1.3; }
+.todo-when { margin-top: 2px; font-size: 0.8rem; font-weight: 600; color: var(--t-shu); }
+.todo-item.is-done .todo-when { color: var(--t-ink-3); }
+.todo-detail { margin-top: 2px; font-size: 0.82rem; color: var(--t-ink-2); }
+
+/* ---------- Oggi: calendario ---------- */
+.cal-grid {
+  list-style: none;
+  margin: 14px 0 10px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 8px;
+}
+.cal-day a {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "date seal" "title title";
+  gap: 6px 4px;
+  align-items: center;
+  height: 100%;
+  padding: 9px 9px 10px;
+  border: 1px solid var(--t-line);
+  border-radius: 12px;
+  background: var(--t-washi);
+  color: var(--t-ink);
+  text-decoration: none;
+}
+.cal-day a:hover { border-color: var(--t-line-strong); }
+.cal-day.is-today a { border-color: var(--t-shu); box-shadow: inset 0 0 0 1px var(--t-shu); }
+.cal-day.is-past a { background: transparent; }
+.cal-date { grid-area: date; display: flex; flex-direction: column; line-height: 1.1; }
+.cal-wd { font-size: 0.68rem; color: var(--t-ink-3); }
+.cal-num { font-family: var(--t-jp); font-weight: 900; font-size: 1.2rem; }
+.cal-day .seal { grid-area: seal; justify-self: end; }
+.cal-title {
+  grid-area: title;
+  font-size: 0.74rem;
+  line-height: 1.25;
+  color: var(--t-ink-2);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.cal-warn {
+  position: absolute;
+  top: -5px;
+  left: -5px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #d69e2e;
+  color: #fff;
+  font: 700 0.7rem/18px var(--t-ui);
+  text-align: center;
+}
+
+/* ---------- Viaggio: capitoli ---------- */
+.trip-actions { margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; }
+.trip-list::before { display: none; }
+.trip-list { padding-bottom: 8px; }
+.chapter + .chapter { margin-top: 28px; }
+.chapter-head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 10px; }
+.chapter-glyph {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: var(--t-night);
+  color: #fff;
+  font-family: var(--t-jp);
+  font-weight: 900;
+  font-size: 1.6rem;
+}
+.chapter-head h2 { font-family: var(--t-jp); font-weight: 700; font-size: 1.35rem; line-height: 1.2; }
+.chapter-sub { font-size: 0.86rem; color: var(--t-ink-2); }
+.chapter-hotel { margin-top: 2px; font-size: 0.82rem; font-weight: 600; }
+.chapter-hotel a { font-weight: 500; color: var(--t-ai); }
+.chapter-note { font-size: 0.78rem; color: var(--t-ink-3); }
+
+.chapter-days { list-style: none; margin: 0; padding: 0; position: relative; }
+.chapter-days::before {
+  content: "";
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 25px;
+  width: 2px;
+  background: var(--t-line);
+}
+.trip-day-head { grid-template-columns: 52px 1fr auto; }
+.trip-month { font-size: 0.62rem; color: var(--t-ink-3); line-height: 1; }
+.trip-day.is-today .trip-month { color: rgba(255, 255, 255, 0.85); }
+.trip-main { min-width: 0; }
+.trip-meta { flex-wrap: wrap; gap: 4px 8px; }
+.mini-tag {
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  line-height: 1.6;
+}
+.tag-treasure { background: #efe6d2; color: #6b4c12; }
+.tag-soon { background: #ebe8e1; color: var(--t-ink-3); }
+.tag-warn { background: #fbeee0; color: #8a5a10; }
+.mini-heart { color: var(--t-shu); font-size: 0.9rem; line-height: 1; }
+
+/* ---------- Scheda giorno: intestazione e linguette ---------- */
+.sheet-top { margin-top: 6px; padding-right: 80px; }
+.sheet-top h2 { margin-top: 2px; font-family: var(--t-jp); font-weight: 700; font-size: 1.1rem; line-height: 1.3; }
+.sheet-note { margin-top: 6px; padding: 8px 10px; border-radius: 8px; background: #eef1f7; color: var(--t-ai); font-size: 0.84rem; }
+
+.plan-tabs { display: flex; gap: 8px; margin: 14px -18px 0; padding: 2px 18px 4px; overflow-x: auto; scrollbar-width: none; }
+.plan-tabs::-webkit-scrollbar { display: none; }
+.plan-tab {
+  flex: 0 0 auto;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-areas: "letter title" "letter badges";
+  column-gap: 8px;
+  align-items: center;
+  max-width: 230px;
+  padding: 8px 12px 8px 8px;
+  border: 1px solid var(--t-line-strong);
+  border-radius: 12px;
+  background: var(--t-washi);
+  color: var(--t-ink);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.plan-tab.is-active { border-color: var(--t-ink); box-shadow: inset 0 0 0 1px var(--t-ink); }
+.plan-tab-letter {
+  grid-area: letter;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--t-ink);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+.plan-tab-title { grid-area: title; font-size: 0.84rem; font-weight: 600; line-height: 1.25; }
+.plan-tab-badges { grid-area: badges; display: flex; gap: 6px; align-items: center; min-height: 0; }
+.plan-tab-chosen { font-size: 0.7rem; font-weight: 700; color: var(--t-matcha); }
+.plan-tab-heart { color: var(--t-shu); font-size: 0.85rem; }
+
+/* ---------- La scheda di un piano ---------- */
+.plan { margin-top: 16px; }
+.plan-head { display: flex; gap: 14px; align-items: flex-start; }
+.plan-head .seal { width: 58px; height: 58px; font-size: 1.6rem; }
+.plan-label { font-size: 0.8rem; color: var(--t-ink-3); }
+.treasure-tag {
+  margin-left: 4px;
+  padding: 0 0.45rem;
+  border-radius: 999px;
+  background: #efe6d2;
+  color: #6b4c12;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.plan-title { margin: 2px 0 4px; font-family: var(--t-jp); font-weight: 700; font-size: 1.3rem; line-height: 1.25; }
+.plan-summary { font-size: 0.9rem; color: var(--t-ink-2); }
+.plan-kanji { margin-top: 6px; font-size: 0.78rem; color: var(--t-ink-3); }
+.plan-kanji span { font-family: var(--t-jp); font-weight: 700; color: var(--t-ink-2); }
+
+.plan-warn { list-style: none; margin: 14px 0 0; padding: 10px 12px; border-radius: 10px; background: #fbeee0; display: grid; gap: 4px; }
+.plan-warn li { font-size: 0.85rem; color: #7a4a0c; padding-left: 18px; position: relative; }
+.plan-warn li::before { content: "!"; position: absolute; left: 0; top: 0; font-weight: 800; color: #b7791f; }
+
+.plan-facts { margin: 14px 0 0; display: grid; gap: 8px; }
+.plan-facts div { padding: 10px 12px; border-radius: 10px; background: var(--t-washi); border: 1px solid var(--t-line); }
+.plan-facts dt { font-size: 0.74rem; font-weight: 600; color: var(--t-ink-3); }
+.plan-facts dd { margin: 2px 0 0; font-size: 0.88rem; }
+
+.plan .moments { margin-top: 16px; }
+.moments li.is-closed .moment-what { text-decoration: line-through; color: var(--t-ink-3); }
+.moment-info { display: block; margin-top: 2px; font-size: 0.8rem; color: var(--t-ink-3); }
+.moment-map { display: block; margin-top: 6px; }
+
+.meals-title { margin-top: 10px; font-family: var(--t-jp); font-weight: 700; font-size: 1.05rem; }
+.meals { display: grid; gap: 10px; margin-top: 10px; }
+.meal {
+  padding: 12px 14px;
+  border: 1px solid var(--t-line);
+  border-left: 3px solid var(--t-matcha);
+  border-radius: 0 12px 12px 0;
+  background: var(--t-washi);
+}
+.meal.is-closed { border-left-color: #d69e2e; opacity: 0.8; }
+.meal-label { font-size: 0.75rem; font-weight: 700; color: var(--t-matcha); }
+.meal.is-closed .meal-label { color: #a8670f; }
+.meal-name { margin-top: 2px; font-weight: 600; font-size: 0.95rem; line-height: 1.3; }
+.meal-jp { display: block; font-family: var(--t-jp); font-weight: 500; font-size: 0.8rem; color: var(--t-ink-3); }
+.meal-what { margin-top: 4px; font-size: 0.86rem; }
+.meal-facts { list-style: none; margin: 8px 0 10px; padding: 0; display: grid; gap: 3px; font-size: 0.82rem; color: var(--t-ink-2); }
+.meal-facts strong { font-weight: 600; color: var(--t-ink); margin-right: 4px; }
+.meal-closed { margin: -2px 0 10px; font-size: 0.82rem; font-weight: 600; color: #a8670f; }
+
+.plan-rain { margin-top: 14px; font-size: 0.88rem; color: var(--t-ink-2); }
+.plan-rain strong { color: var(--t-ai); font-weight: 600; }
+.plan .day-tip { margin-top: 12px; }
+.plan-soon {
+  margin-top: 14px;
+  padding: 12px 14px;
+  border: 1px dashed var(--t-line-strong);
+  border-radius: 12px;
+  font-size: 0.86rem;
+  color: var(--t-ink-2);
+}
+
+.plan-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 1px solid var(--t-line);
+}
+.like-btn {
+  padding: 0.55rem 0.95rem;
+  border: 1px solid var(--t-line-strong);
+  border-radius: 999px;
+  background: var(--t-washi);
+  color: var(--t-ink);
+  font: 600 0.88rem var(--t-ui);
+  cursor: pointer;
+}
+.like-btn[aria-pressed="true"] { border-color: var(--t-shu); color: var(--t-shu); background: #fbeceb; }
+.like-btn span { font-size: 1rem; }
+.chosen-tag { font-size: 0.86rem; font-weight: 600; color: var(--t-matcha); }
+
+.page-viaggio .trip-note { margin-top: 20px; }
+
+@media (max-width: 420px) {
+  .chapter-cards { grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+  .chapter-card { padding: 12px 9px 10px; }
+  .chapter-card-glyph { font-size: 1.6rem; }
+}

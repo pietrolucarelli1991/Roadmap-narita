@@ -1,11 +1,11 @@
 from flask import Flask, render_template, jsonify, url_for, make_response
 
 from dati_spesa import HOTEL, CATEGORIES, SHOPS, PRODUCTS, DIAPER_SIZES, WORDS, PHRASES
-from dati_viaggio import TRIP, DAYS, FUJI
+from dati_viaggio import TRIP, CHAPTERS, PLANS, DAYS, TODO, FUJI
 
 # Ad ogni rilascio aumenta questo numero (e usa lo stesso per il tag git):
 # così i telefoni vedono "Nuova versione pronta" e scaricano l'app aggiornata.
-APP_VERSION = "2.1.0"
+APP_VERSION = "3.0.0"
 
 # Font e mappe usati da tutte le pagine (salvati anche per l'uso offline)
 FONTS_URL = ("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700"
@@ -262,14 +262,18 @@ app.jinja_env.globals["static_v"] = static_v
 
 # ---------- Pagine dell'app ----------
 
+def viaggio_data():
+    return {"trip": TRIP, "chapters": CHAPTERS, "plans": PLANS, "days": DAYS, "todo": TODO}
+
+
 @app.route("/")
 def oggi():
-    return render_template("oggi.html", viaggio={"trip": TRIP, "days": DAYS}, tab="oggi")
+    return render_template("oggi.html", viaggio=viaggio_data(), tab="oggi")
 
 
 @app.route("/itinerario")
 def itinerario():
-    return render_template("itinerario.html", viaggio={"trip": TRIP, "days": DAYS}, tab="viaggio")
+    return render_template("itinerario.html", viaggio=viaggio_data(), tab="viaggio")
 
 
 @app.route("/fuji")
@@ -328,7 +332,7 @@ def service_worker():
     pages = ["/", "/itinerario", "/fuji", "/arrivo", "/spesa"]
     assets = [static_v(f) for f in [
         "css/app.css", "css/style.css", "css/spesa.css",
-        "js/app.js", "js/oggi.js", "js/itinerario.js", "js/fuji.js", "js/spesa.js",
+        "js/app.js", "js/planner.js", "js/oggi.js", "js/itinerario.js", "js/fuji.js", "js/spesa.js",
         "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
     ]] + ["/manifest.webmanifest", FONTS_URL, LEAFLET_CSS, LEAFLET_JS]
     body = render_template("sw.js", pages=pages, assets=assets)
@@ -360,7 +364,7 @@ def api_shops():
 
 @app.route("/api/itinerario")
 def api_itinerario():
-    return jsonify({"trip": TRIP, "days": DAYS})
+    return jsonify(viaggio_data())
 
 
 @app.route("/api/version")
