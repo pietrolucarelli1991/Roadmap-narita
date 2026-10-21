@@ -138,9 +138,10 @@ Frasi brevi, niente maiuscole urlate, niente gergo tecnico. Dove serve, una paro
 | ~~v4.0.0~~ | ✅ Fatto. **Pacchetto wow**: cielo in cima a Oggi che segue ora e meteo veri di Tokyo (alba, giorno, tramonto, notte con stelle; neve o pioggia se succede davvero, dati Open-Meteo); un colore per capitolo (Tokyo indaco invernale, Kyoto cachi e muschio, Capodanno rosso, bianco e oro); font Shippori Mincho per i titoli e Zen Kaku Gothic New per il testo; titoli dei capitoli in verticale (tategaki); voce nuova in tutti i testi vecchi; parola giapponese nei titoli di sezione; passaggi fluidi tra le pagine (View Transitions); timbro 決 quando si sceglie un piano |
 | ~~v4.1.0~~ | ✅ Fatto. Kyoto, Nara e Osaka completi (giorni 26–30) |
 | ~~v4.2.0~~ | ✅ Fatto. Capodanno completo e sezione 道 Percorsi con 4 roadmap (dati in `dati_percorsi.py`) |
-| v4.3.0 | Emergenze e salute (numeri, pediatri vicino ai 3 hotel, frasi mediche) e frasario per situazioni |
-| v4.4.0 | Sezione missioni per la bimba di 5 anni con adesivi; diario fotografico (foto per ogni giorno, salvate sul telefono) |
-| v4.5.0 | Meteo dentro il planner (proposta del piano B se piove) e "aggiungi al calendario del telefono" |
+| ~~v4.3.0~~ | ✅ Fatto. Restyling di Percorsi (linea del treno, `static/js/percorso.js`) e Spesa (grafica v4) |
+| v4.4.0 | Emergenze e salute (numeri, pediatri vicino ai 3 hotel, frasi mediche) e frasario per situazioni |
+| v4.5.0 | Missioni per la bimba di 5 anni con adesivi; diario fotografico (foto per ogni giorno, salvate sul telefono) |
+| v4.6.0 | Meteo dentro il planner (proposta del piano B se piove) e "aggiungi al calendario del telefono" |
 
 ## Cose ancora aperte
 

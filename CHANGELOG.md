@@ -6,6 +6,20 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 4.3.0 — 21 ottobre 2026
+
+Restyling: ora tutta l'app parla la stessa lingua visiva.
+
+Modificato
+- Percorsi ridisegnati come una linea del treno: ogni passo è una stazione con il suo sigillo,
+  sulla linea del colore del capitolo di arrivo. Si apre una stazione alla volta
+- L'app ricorda a che passo siete e cosa avete spuntato, anche se il telefono si chiude
+- Frasi giapponesi dei percorsi da mostrare a tutto schermo con un tocco
+- Biglietto per il taxi a tutto schermo, con caratteri grandi
+- Spesa con la grafica della v4: intestazione 買い物, mappa incorniciata, linguette a pillola,
+  negozi con il sigillo della categoria, carrello blu notte, frasi come nel resto dell'app
+- Testi di Percorsi e Spesa con la voce dell'app
+
 ## 4.2.0 — 21 ottobre 2026
 
 Tutti i 23 giorni sono completi.

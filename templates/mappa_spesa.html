@@ -8,12 +8,13 @@
   {% set theme = '#17191e' %}
   {% include '_head.html' %}
 </head>
-<body class="has-nav">
+<body class="app-page page-spesa has-nav">
 
   <header class="topbar">
     <div class="topbar-title">
+      <p class="jp-label" lang="ja">買い物 <i>kaimono</i></p>
       <h1>Spesa per le bimbe</h1>
-      <p>Pannolini, pappe e scorte d'emergenza, a portata di passeggino</p>
+      <p>Pannolini, pappe e scorte d'emergenza, a portata di passeggino. Sono i negozi intorno all'hotel di Ryogoku.</p>
     </div>
     <div class="topbar-clock" aria-live="polite">
       <span class="clock-label">A Tokyo sono le</span>
@@ -28,7 +29,7 @@
       <div id="map"></div>
       <div class="map-note">
         <span class="map-note-ring" aria-hidden="true"></span>
-        I cerchi indicano i minuti a piedi col passeggino
+        I cerchi sono i minuti a piedi, col passeggino
       </div>
       <button class="map-recenter" id="btn-recenter" type="button">Torna all'hotel</button>
     </section>
@@ -60,8 +61,8 @@
       <!-- VISTA: LISTA SPESA -->
       <div class="view" id="view-lista" role="tabpanel" aria-labelledby="tab-lista" hidden>
         <p class="lead">
-          Aggiungi quello che ti serve e vedi subito quanto spendi. Prezzi di riferimento 2026,
-          IVA inclusa, presi dai negozi online di Create SD e Matsumoto Kiyoshi: in negozio possono variare un po'.
+          Mettete nel carrello quello che serve: il totale si aggiorna da solo, in yen e in euro.
+          Prezzi 2026 con IVA, presi dai negozi online di Create SD e Matsumoto Kiyoshi: in negozio possono ballare un po'.
         </p>
         <div id="product-groups"></div>
         <div class="cart-bar">
@@ -85,7 +86,7 @@
       <!-- VISTA: TAGLIE E FRASI -->
       <div class="view" id="view-frasi" role="tabpanel" aria-labelledby="tab-frasi" hidden>
         <section class="block">
-          <h2>Che taglia prendere</h2>
+          <h2><span class="h-jp" lang="ja">サイズ <i>saizu</i></span>Che taglia prendere</h2>
           <label class="weight-input">
             Quanto pesa la bimba?
             <input type="number" id="weight" min="4" max="25" step="0.5" value="10" inputmode="decimal">
@@ -99,18 +100,18 @@
         </section>
 
         <section class="block">
-          <h2>Parole da riconoscere sugli scaffali</h2>
+          <h2><span class="h-jp" lang="ja">言葉 <i>kotoba</i></span>Parole da riconoscere sugli scaffali</h2>
           <dl class="words" id="words"></dl>
         </section>
 
         <section class="block">
-          <h2>Frasi da mostrare al commesso</h2>
+          <h2><span class="h-jp" lang="ja">会話 <i>kaiwa</i></span>Frasi da mostrare al commesso</h2>
           <p class="fine">Tocca una frase per ingrandirla a tutto schermo.</p>
           <div class="phrases" id="phrases"></div>
         </section>
 
         <section class="block block-note">
-          <h2>Tax-free: non serve per questa spesa</h2>
+          <h2><span class="h-jp" lang="ja">免税 <i>menzei</i></span>Tax-free: per questa spesa non serve</h2>
           <p>
             Dal 1° novembre 2026 in Giappone si paga il prezzo pieno e il rimborso si chiede in aeroporto alla partenza.
             Pannolini, cibo e tutto quello che usate durante il viaggio non danno diritto al rimborso,
@@ -119,7 +120,7 @@
         </section>
       </div>
 
-      <footer class="panel-footer">Roadmap Lucarelli · v{{ app_version }}</footer>
+      <footer class="panel-footer">Tokyo 2026, versione {{ app_version }}</footer>
     </section>
   </main>
 

@@ -2,31 +2,28 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>{{ route.from }} → {{ route.to }} — Tokyo 2026</title>
-  <link rel="stylesheet" href="{{ static_v('css/style.css') }}">
-  {% set theme = '#1a1a1a' %}
+  {% set theme = '#f7f5f0' %}
   {% include '_head.html' %}
+  <title>{{ route.from }} → {{ route.to }} — Tokyo 2026</title>
 </head>
-<body class="has-nav">
+<body class="app-page page-percorso has-nav" style="--ch: {{ chapter.color }}; --ch-soft: {{ chapter.color_soft }}">
 
-  <!-- HEADER -->
-  <header class="site-header">
-    <div class="header-inner">
-      <div class="header-flag">🇯🇵</div>
-      <div class="header-text">
-        <h1>{{ route.from }} <span class="arrow">→</span> {{ route.to }}</h1>
-        <p class="header-sub">{{ route.sub }}</p>
-      </div>
-      <div class="header-meta">
-        <span class="badge">{{ steps | length }} tappe</span>
-        <span class="badge badge-cost">{{ route.cost_badge }}</span>
-              </div>
-    </div>
+  <header class="route-head">
+    <p class="jp-label" lang="ja">道 <i>michi</i></p>
+    <h1 class="route-title">
+      <span>{{ route.from }}</span>
+      <span class="route-arrow" aria-hidden="true"></span>
+      <span>{{ route.to }}</span>
+    </h1>
+    <p class="route-sub">{{ route.sub }}</p>
+    <dl class="route-facts">
+      <div><dt>Tappe</dt><dd>{{ steps | length }}</dd></div>
+      <div><dt>Quanto costa</dt><dd>{{ route.cost_total }}</dd></div>
+      <div><dt>Arrivo</dt><dd>{{ route.dest }}</dd></div>
+    </dl>
   </header>
 
-  <!-- SCELTA DEL PERCORSO -->
   <nav class="route-switch" aria-label="Scegli il percorso">
-    <p class="route-switch-jp" lang="ja">道 <i>michi</i></p>
     <div class="route-switch-list">
       {% for r in routes %}
       <a class="route-chip{% if r.id == route.id %} is-active{% endif %}" href="{{ r.path }}"{% if r.id == route.id %} aria-current="page"{% endif %}>
@@ -37,252 +34,48 @@
     </div>
   </nav>
 
-  <!-- MAIN LAYOUT -->
-  <div class="app-layout">
+  <main class="route-body">
+    <p class="route-hint">Toccate una stazione per aprirla. L'app si ricorda a che punto siete, anche se chiudete il telefono.</p>
 
-    <!-- LEFT: MAPPA VERTICALE -->
-    <aside class="map-panel">
-      <div class="map-title">Percorso</div>
-      <div class="map-line">
-        {% for step in steps %}
-        <div class="map-node {% if loop.first %}active{% endif %}" data-step="{{ step.n }}" onclick="selectStep({{ step.n }})">
-          <div class="node-circle">
-            <span class="node-emoji">{{ step.emoji }}</span>
-            <span class="node-num">{{ step.n }}</span>
-          </div>
-          <div class="node-info">
-            <div class="node-title">{{ step.title.split('—')[0].split('→')[0].strip() }}</div>
-            <div class="node-time">{{ step.time }}</div>
-          </div>
-          {% if not loop.last %}
-          <div class="node-connector"></div>
-          {% endif %}
-        </div>
-        {% endfor %}
-        <div class="map-destination">
-          <div class="dest-dot">🏨</div>
-          <div class="dest-label">{{ route.dest }}<br><small>{{ route.dest_small }}</small></div>
-        </div>
-      </div>
-    </aside>
-
-    <!-- RIGHT: DETTAGLIO STEP -->
-    <main class="detail-panel">
-
-      <!-- STEP HEADER -->
-      <div class="step-header" id="step-header">
-        {% set step = steps[0] %}
-        <div class="step-num-big">{{ step.n }}</div>
-        <div class="step-header-info">
-          <h2 id="step-title">{{ step.title }}</h2>
-          <div class="step-meta-row" id="step-meta">
-            <span class="meta-chip">📍 {{ step.location }}</span>
-            <span class="meta-chip">⏱ {{ step.time }}</span>
-            <span class="meta-chip cost-chip">💴 {{ step.cost }} <em>{{ step.cost_detail }}</em></span>
-          </div>
-        </div>
-      </div>
-
-      <!-- TABS -->
-      <div class="tabs">
-        <button class="tab active" onclick="showTab('azioni', this)">Azioni</button>
-        <button class="tab" onclick="showTab('cartelli', this)">Cartelli</button>
-        <button class="tab" onclick="showTab('giapponese', this)">Giapponese</button>
-        <button class="tab" onclick="showTab('bimbe', this)">Bimbe</button>
-      </div>
-
-      <!-- TAB: AZIONI -->
-      <div class="tab-content active" id="tab-azioni">
-        <ul class="action-list" id="action-list"></ul>
-      </div>
-
-      <!-- TAB: CARTELLI -->
-      <div class="tab-content" id="tab-cartelli">
-        <div class="signs-grid" id="signs-grid"></div>
-      </div>
-
-      <!-- TAB: GIAPPONESE -->
-      <div class="tab-content" id="tab-giapponese">
-        <div class="japanese-list" id="japanese-list"></div>
-        <div class="japanese-tip">
-          <span class="tip-icon">💡</span>
-          <span>Mostra lo schermo al telefono — non devi pronunciare perfettamente.</span>
-        </div>
-      </div>
-
-      <!-- TAB: BIMBE -->
-      <div class="tab-content" id="tab-bimbe">
-        <div class="kids-list" id="kids-list"></div>
-        <div class="kids-banner">
-          <span>👨‍👩‍👧‍👶</span>
-          <span>Bimba 5a GRATIS su tutti i treni fino al 6° compleanno — regola JR ufficiale</span>
-        </div>
-      </div>
-
-      <!-- INVITO ALLA SPESA (solo step 8) -->
-      <a class="next-mission" id="next-mission" href="/spesa" hidden>
-        <span class="next-mission-kanji" aria-hidden="true">薬</span>
-        <span class="next-mission-text">
-          <strong>Prossima missione: la spesa per le bimbe</strong>
-          <span>Farmacia aperta quasi 24 ore a pochi minuti dall'hotel. Apri la mappa.</span>
+    <ol class="route-line" id="route-line">
+      {% for step in steps %}
+      <li class="route-stop" data-step="{{ step.n }}">
+        <button type="button" class="route-stop-head" aria-expanded="false" aria-controls="stop-{{ step.n }}" data-open="{{ step.n }}">
+          <span class="route-seal">{{ step.n }}</span>
+          <span class="route-stop-text">
+            <span class="route-stop-title">{{ step.title }}</span>
+            <span class="route-stop-time">{{ step.time }}</span>
+          </span>
+        </button>
+        <div class="route-stop-body" id="stop-{{ step.n }}" hidden></div>
+      </li>
+      {% endfor %}
+      <li class="route-stop route-end">
+        <span class="route-seal route-seal-end" lang="ja" aria-hidden="true">着</span>
+        <span class="route-stop-text">
+          <span class="route-stop-title">{{ route.dest }}</span>
+          <span class="route-stop-time">{{ route.dest_small }}</span>
         </span>
-      </a>
+      </li>
+    </ol>
 
-      <!-- NAVIGAZIONE -->
-      <div class="step-nav">
-        <button class="nav-btn" id="btn-prev" onclick="navigate(-1)" disabled>← Precedente</button>
-        <span class="nav-counter" id="nav-counter">1 / 8</span>
-        <button class="nav-btn nav-btn-next" id="btn-next" onclick="navigate(1)">Successivo →</button>
-      </div>
+    <p class="app-version">Tokyo 2026, versione {{ app_version }}</p>
+  </main>
 
-    </main>
-  </div>
-
-  <!-- TAXI CARD MODAL -->
-  <div class="modal-overlay" id="taxi-modal" onclick="closeTaxiModal()">
-    <div class="taxi-card" onclick="event.stopPropagation()">
-      <div class="taxi-card-header">
-        <span>🚕 Mostra al tassista</span>
-        <button onclick="closeTaxiModal()">✕</button>
-      </div>
-      <div class="taxi-address">
-        {{ route.taxi.jp | safe }}
-      </div>
-      <div class="taxi-detail">
-        {{ route.taxi.detail | safe }}
-      </div>
-      <div class="taxi-note">Porte automatiche • Non toccare la maniglia</div>
-    </div>
-  </div>
-
-  <!-- FLOATING TAXI BUTTON (visibile solo sullo step 7) -->
-  <button class="taxi-fab" id="taxi-fab" onclick="openTaxiModal()" style="display:none">
-    🚕 Mostra al tassista
+  <button type="button" class="taxi-fab" id="taxi-fab" hidden>
+    <span lang="ja" aria-hidden="true">車</span> Mostra al tassista
   </button>
 
-  <!-- RIEPILOGO COSTI FISSO -->
-  <div class="cost-bar">
-    <span>💴 Totale famiglia:</span>
-    <strong>{{ route.cost_total }}</strong>
-    <span class="cost-bar-detail">{{ route.cost_note }} • v{{ app_version }}</span>
+  <div class="taxi-show" id="taxi-modal" role="dialog" aria-modal="true" aria-labelledby="taxi-title" hidden>
+    <button type="button" class="t-btn taxi-close" id="taxi-close">Chiudi</button>
+    <p class="taxi-show-label" id="taxi-title">Da mostrare al tassista</p>
+    <p class="taxi-show-jp" lang="ja">{{ route.taxi.jp | safe }}</p>
+    <p class="taxi-show-detail" lang="ja">{{ route.taxi.detail | safe }}</p>
+    <p class="taxi-show-note">Le porte dei taxi si aprono da sole: niente maniglia.</p>
   </div>
 
-  <script>
-    // Porta in vista il percorso attivo nella striscia in alto
-    (function () {
-      var a = document.querySelector('.route-chip.is-active');
-      var list = document.querySelector('.route-switch-list');
-      if (a && list) list.scrollLeft = a.offsetLeft - (list.clientWidth - a.clientWidth) / 2;
-    })();
-    const STEPS = {{ steps | tojson }};
-    let currentStep = 1;
-    let currentTab = 'azioni';
-
-    function selectStep(n) {
-      currentStep = n;
-      updateUI();
-    }
-
-    function navigate(dir) {
-      const next = currentStep + dir;
-      if (next >= 1 && next <= STEPS.length) {
-        currentStep = next;
-        updateUI();
-      }
-    }
-
-    function showTab(tab, btn) {
-      currentTab = tab;
-      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-      btn.classList.add('active');
-      document.getElementById('tab-' + tab).classList.add('active');
-    }
-
-    function updateUI() {
-      const step = STEPS.find(s => s.n === currentStep);
-      if (!step) return;
-
-      // Map nodes
-      document.querySelectorAll('.map-node').forEach(node => {
-        node.classList.toggle('active', parseInt(node.dataset.step) === currentStep);
-        node.classList.toggle('done', parseInt(node.dataset.step) < currentStep);
-      });
-
-      // Header
-      document.getElementById('step-title').textContent = step.title;
-      document.getElementById('step-header').querySelector('.step-num-big').textContent = step.n;
-      document.getElementById('step-meta').innerHTML = `
-        <span class="meta-chip">📍 ${step.location}</span>
-        <span class="meta-chip">⏱ ${step.time}</span>
-        <span class="meta-chip cost-chip">💴 ${step.cost} <em>${step.cost_detail}</em></span>
-      `;
-
-      // Azioni
-      const actionList = document.getElementById('action-list');
-      actionList.innerHTML = step.actions.map((a, i) => `
-        <li class="action-item" onclick="this.classList.toggle('checked')">
-          <span class="action-check"></span>
-          <span class="action-text">${a}</span>
-        </li>
-      `).join('');
-
-      // Cartelli
-      const signsGrid = document.getElementById('signs-grid');
-      signsGrid.innerHTML = step.signs.map(s => `
-        <div class="sign-card">
-          <div class="sign-icon">${s.icon}</div>
-          <div class="sign-info">
-            <div class="sign-en">${s.en}</div>
-            <div class="sign-jp">${s.jp}</div>
-            ${s.note ? `<div class="sign-note">${s.note}</div>` : ''}
-          </div>
-        </div>
-      `).join('');
-
-      // Giapponese
-      const japList = document.getElementById('japanese-list');
-      japList.innerHTML = step.japanese.map(j => `
-        <div class="jap-card">
-          <div class="jap-label">${j.label}</div>
-          <div class="jap-text">${j.text.replace(/\n/g, '<br>')}</div>
-        </div>
-      `).join('');
-
-      // Bimbe
-      const kidsList = document.getElementById('kids-list');
-      kidsList.innerHTML = step.kids.map(k => `
-        <div class="kids-item">
-          <span class="kids-icon">🧒</span>
-          <span>${k}</span>
-        </div>
-      `).join('');
-
-      // Nav
-      document.getElementById('btn-prev').disabled = currentStep === 1;
-      document.getElementById('btn-next').disabled = currentStep === STEPS.length;
-      document.getElementById('nav-counter').textContent = `${currentStep} / ${STEPS.length}`;
-
-      // Taxi FAB
-      document.getElementById('taxi-fab').style.display = currentStep === {{ route.taxi_step | int }} ? 'flex' : 'none';
-      document.getElementById('next-mission').hidden = currentStep !== 8;
-
-      // Scroll map node into view
-      const activeNode = document.querySelector('.map-node.active');
-      if (activeNode) activeNode.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
-    }
-
-    function openTaxiModal() {
-      document.getElementById('taxi-modal').classList.add('open');
-    }
-
-    function closeTaxiModal() {
-      document.getElementById('taxi-modal').classList.remove('open');
-    }
-
-    // Init
-    updateUI();
-  </script>
   {% include '_nav.html' %}
+  <script>window.ROUTE = {{ route | tojson }};</script>
+  <script src="{{ static_v('js/percorso.js') }}" defer></script>
 </body>
 </html>
