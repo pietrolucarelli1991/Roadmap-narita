@@ -11,11 +11,11 @@ from dati_viaggio import TRIP, CHAPTERS, PLANS, DAYS, TODO, FUJI
 
 # Ad ogni rilascio aumenta questo numero (e usa lo stesso per il tag git):
 # così i telefoni vedono "Nuova versione pronta" e scaricano l'app aggiornata.
-APP_VERSION = "3.0.0"
+APP_VERSION = "3.1.0"
 
 # Font e mappe usati da tutte le pagine (salvati anche per l'uso offline)
-FONTS_URL = ("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700"
-             "&family=Noto+Serif+JP:wght@500;700;900&display=swap")
+FONTS_URL = ("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800"
+             "&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap")
 LEAFLET_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"
 LEAFLET_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
 
@@ -391,7 +391,7 @@ def service_worker():
     pages = ["/", "/itinerario", "/fuji", "/arrivo", "/spesa"]
     assets = [static_v(f) for f in [
         "css/app.css", "css/style.css", "css/spesa.css",
-        "js/app.js", "js/planner.js", "js/oggi.js", "js/itinerario.js", "js/fuji.js", "js/spesa.js",
+        "js/app.js", "js/planner.js", "js/oggi.js", "js/cielo.js", "js/itinerario.js", "js/fuji.js", "js/spesa.js",
         "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
     ]] + ["/manifest.webmanifest", FONTS_URL, LEAFLET_CSS, LEAFLET_JS]
     body = render_template("sw.js", pages=pages, assets=assets)

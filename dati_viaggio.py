@@ -39,6 +39,8 @@ TRIP = {
 CHAPTERS = [
     {
         "id": "tokyo1",
+        "name_jp": "東京", "color": "#2f5a9a", "color_soft": "#e7edf6",
+        "sky": {"city": "Tokyo", "lat": 35.6954, "lng": 139.7926},
         "title": "Tokyo",
         "subtitle": "Base Ryogoku, con il Natale",
         "start": "2026-12-14",
@@ -50,6 +52,8 @@ CHAPTERS = [
     },
     {
         "id": "kyoto",
+        "name_jp": "京都", "color": "#c25a24", "color_soft": "#f8e9df",
+        "sky": {"city": "Kyoto", "lat": 35.0036, "lng": 135.7556},
         "title": "Kyoto",
         "subtitle": "Con le gite a Nara e Osaka",
         "start": "2026-12-26",
@@ -62,6 +66,8 @@ CHAPTERS = [
     },
     {
         "id": "tokyo2",
+        "name_jp": "お正月", "color": "#a07a1c", "color_soft": "#f5eedb",
+        "sky": {"city": "Tokyo", "lat": 35.7148, "lng": 139.7967},
         "title": "Capodanno",
         "subtitle": "Base Asakusa, fino alla partenza",
         "start": "2026-12-31",

@@ -13,7 +13,16 @@
     <button type="button" id="sim-exit">Torna a oggi</button>
   </div>
 
-  <header class="sky">
+  <header class="sky" id="sky" data-phase="night" data-weather="clear">
+    <div class="sky-layers" aria-hidden="true">
+      <svg class="sky-stars" viewBox="0 0 400 210" preserveAspectRatio="xMidYMid slice"></svg>
+      <span class="sky-sun"></span>
+      <span class="sky-cloud sky-cloud-1"></span>
+      <span class="sky-cloud sky-cloud-2"></span>
+      <span class="sky-cloud sky-cloud-3"></span>
+      <span class="sky-dim"></span>
+      <div class="sky-precip"></div>
+    </div>
     <div class="sky-top">
       <p class="sky-greet">
         <span class="sky-greet-jp" id="greet-jp" lang="ja">こんにちは</span>
@@ -30,6 +39,8 @@
 
     <div id="sky-main"></div>
 
+    <p class="sky-weather" id="sky-weather" aria-live="polite"></p>
+
     <svg class="sky-fuji" viewBox="0 0 400 70" preserveAspectRatio="none" aria-hidden="true">
       <path d="M0 70 L140 70 L178 18 C186 9 214 9 222 18 L260 70 L400 70 Z" fill="currentColor"/>
       <path d="M178 18 C186 9 214 9 222 18 L232 31 L221 27 L212 34 L200 27 L188 34 L179 27 L168 31 Z" fill="#f7f5f0" opacity=".9"/>
@@ -38,17 +49,17 @@
 
   <main class="page-body">
     <section class="todo" id="todo-section" aria-labelledby="todo-title" hidden>
-      <h2 id="todo-title">Da preparare prima di partire</h2>
+      <h2 id="todo-title"><span class="h-jp" lang="ja">準備 <i>junbi</i></span>Da preparare prima di partire</h2>
       <ul class="todo-list" id="todo"></ul>
     </section>
 
     <section class="cal" aria-labelledby="cal-title">
       <div class="album-head">
-        <h2 id="cal-title">Il calendario</h2>
+        <h2 id="cal-title"><span class="h-jp" lang="ja">暦 <i>koyomi</i></span>Il calendario</h2>
         <span class="album-count" id="stamp-count">0 timbri su 23</span>
       </div>
       <ol class="cal-grid" id="cal"></ol>
-      <p class="album-hint">Tocca un giorno per vedere i piani e scegliere. Il sigillo diventa rosso quando prendete il timbro di fine giornata.</p>
+      <p class="album-hint">Tocca un giorno per scegliere il piano. Il sigillo diventa rosso quando prendete il timbro di fine giornata: collezionateli tutti.</p>
     </section>
 
     <section class="shortcuts" aria-label="Scorciatoie">
@@ -82,8 +93,16 @@
     </section>
 
     <details class="sim">
-      <summary>Prova un giorno del viaggio</summary>
-      <p>Vedi come sarà questa pagina in un giorno del viaggio. I timbri presi in prova spariscono quando premi "Torna a oggi" o chiudi l'app; le scelte dei piani invece restano.</p>
+      <summary>Prova un giorno del viaggio (e il cielo)</summary>
+      <p>Un salto nel futuro: guardate come sarà questa pagina in un giorno del viaggio. I timbri presi in prova spariscono quando premete "Torna a oggi"; le scelte dei piani invece restano.</p>
+      <p class="sky-demo-title">E il cielo? Provate come sarà con la neve o al tramonto:</p>
+      <div class="sim-row sky-demo">
+        <button type="button" class="chip-btn" data-sky-demo="neve" aria-pressed="false">Neve di notte</button>
+        <button type="button" class="chip-btn" data-sky-demo="pioggia" aria-pressed="false">Pioggia</button>
+        <button type="button" class="chip-btn" data-sky-demo="alba" aria-pressed="false">Alba</button>
+        <button type="button" class="chip-btn" data-sky-demo="tramonto" aria-pressed="false">Tramonto</button>
+        <button type="button" class="chip-btn" data-sky-demo="vero" aria-pressed="true">Cielo vero</button>
+      </div>
       <div class="sim-row">
         <input type="date" id="sim-date" min="2026-12-13" max="2027-01-06" value="2026-12-16" aria-label="Data da provare">
         <button type="button" class="t-btn" id="sim-apply">Prova questa data</button>
@@ -123,5 +142,6 @@
   <script>window.VIAGGIO = {{ viaggio | tojson }};</script>
   <script src="{{ static_v('js/planner.js') }}" defer></script>
   <script src="{{ static_v('js/oggi.js') }}" defer></script>
+  <script src="{{ static_v('js/cielo.js') }}" defer></script>
 </body>
 </html>

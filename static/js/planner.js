@@ -43,8 +43,8 @@
   }
   function closedText(name, item, date, how) {
     return how === "date"
-      ? name + ": chiuso " + T.longDate(date) + "."
-      : name + ": chiuso " + WD_NAME[weekdayKey(date)] + ".";
+      ? name + ": " + T.longDate(date) + " è chiuso."
+      : name + " " + WD_NAME[weekdayKey(date)] + " riposa.";
   }
 
   // Avvisi per un piano in una data
@@ -56,12 +56,12 @@
     });
     (p.meals || []).forEach(function (m) {
       var how = closedOn(m, date);
-      if (how) out.push({ level: "meal", text: closedText(m.name, m, date, how) + " Scegliete un'alternativa." });
+      if (how) out.push({ level: "meal", text: closedText(m.name, m, date, how) + " Serve un piano B per lo stomaco." });
     });
     if (state) {
       V.days.forEach(function (d) {
         if (d.date !== date && chosenId(d.date, state) === p.id) {
-          out.push({ level: "dup", text: "Questo piano è scelto anche " + T.longDate(d.date) + "." });
+          out.push({ level: "dup", text: "L'avete già scelto per " + T.longDate(d.date) + ": due volte la stessa gita?" });
         }
       });
     }
@@ -85,7 +85,7 @@
         (m.where ? "<li><strong>Dove</strong> " + esc(m.where) + "</li>" : "") +
         (m.kids ? "<li><strong>Con le bimbe</strong> " + esc(m.kids) + "</li>" : "") +
       "</ul>" +
-      (how ? '<p class="meal-closed">' + esc(closedText("Quel giorno", m, date, how).replace("Quel giorno: chiuso", "Quel giorno è chiuso")) + "</p>" : "") +
+      (how ? '<p class="meal-closed">' + esc(how === "date" ? "Quel giorno è chiuso." : "Quel giorno riposa: meglio un'alternativa.") + "</p>" : "") +
       (m.q ? placeChip("Apri in Google Maps", m.q) : "") +
       "</div>";
   }
@@ -146,7 +146,7 @@
       if (p.tip) html += '<p class="day-tip">' + esc(p.tip) + "</p>";
       if (p.kids) html += kidsBox(p.kids);
     } else {
-      html += '<p class="plan-soon">Il programma c\'è già. Orari, prezzi e ristoranti verificati arrivano nella versione ' + esc(p.version || "successiva") + ".</p>";
+      html += '<p class="plan-soon">Il programma c\'è. Orari, prezzi e ristoranti li verifico per bene nella versione ' + esc(p.version || "successiva") + ": niente sorprese, promesso.</p>";
     }
 
     if (p.phrase) {
@@ -168,7 +168,7 @@
           '<span aria-hidden="true">' + (liked ? "♥" : "♡") + "</span> " + (liked ? "Ci piace" : "Ci piace?") + "</button>" +
         (multi
           ? (chosen
-              ? '<span class="chosen-tag">✓ È il piano scelto per questo giorno</span>'
+              ? '<span class="chosen-tag">✓ Deciso: si fa questo</span>'
               : '<button type="button" class="t-btn t-btn-primary" data-choose="' + p.id + '">Scegliamo questo</button>')
           : "") +
         "</div>";

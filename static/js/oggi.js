@@ -41,9 +41,13 @@
     if (t < START) {
       var n = T.daysBetween(t, START);
       $("#sky-title").textContent = n === 1 ? "Domani si parte" : "Mancano " + n + " giorni";
-      $("#sky-sub").textContent = "23 giorni in Giappone, in 3 capitoli. Intanto scegliete i piani nella scheda Viaggio.";
+      $("#sky-sub").textContent =
+        n === 1 ? "Passaporti, caricabatterie, pannolini. E un bel respiro." :
+        n <= 7 ? "Fate la lista della valigia. Poi rifatela: qualcosa manca sempre." :
+        n <= 30 ? "È il momento di prenotare quello che manca: la lista è qui sotto." :
+        "23 giorni in Giappone, in 3 capitoli. Le valigie non si fanno da sole, ma i piani sì: sceglieteli nella scheda Viaggio.";
       main.innerHTML = '<ol class="chapter-cards">' + V.chapters.map(function (c) {
-        return '<li class="chapter-card">' +
+        return '<li class="chapter-card" style="--ch:' + c.color + '">' +
           '<span class="chapter-card-glyph" lang="ja" aria-hidden="true">' + esc(c.glyph) + "</span>" +
           '<span class="chapter-card-title">' + esc(c.title) + "</span>" +
           '<span class="chapter-card-dates">' + shortRange(c.start, c.end) + "</span>" +
@@ -52,7 +56,7 @@
       }).join("") + "</ol>";
     } else if (t > END) {
       $("#sky-title").textContent = "Bentornati a casa";
-      $("#sky-sub").textContent = "Avete raccolto " + stampCount() + " timbri su " + V.days.length + ". Il calendario resta qui sotto per ricordare il viaggio.";
+      $("#sky-sub").textContent = "Avete raccolto " + stampCount() + " timbri su " + V.days.length + ". Il jet lag passa, i ricordi no.";
       main.innerHTML = "";
     } else {
       renderToday(t, main);
@@ -108,7 +112,7 @@
     section.hidden = false;
     $("#todo").innerHTML = V.todo.map(function (item) {
       var done = !!state.done[item.id];
-      var when = item.date ? (item.date < t ? "Scadenza passata: controlla se si può ancora fare" : "Entro " + T.longDate(item.date)) : "Appena possibile";
+      var when = item.date ? (item.date < t ? "Scadenza passata: controllate se c'è ancora speranza" : "Entro " + T.longDate(item.date)) : "Appena possibile";
       return '<li class="todo-item' + (done ? " is-done" : "") + (item.date && item.date < t && !done ? " is-late" : "") + '">' +
         '<button type="button" class="todo-check" data-todo="' + item.id + '" aria-pressed="' + done + '" aria-label="' +
           esc((done ? "Fatto: " : "Da fare: ") + item.title) + '"><span aria-hidden="true">' + (done ? "✓" : "") + "</span></button>" +
@@ -132,8 +136,9 @@
       var warn = P.warnings(d.date, plan, state);
       var chapterStart = d.chapter !== lastChapter;
       lastChapter = d.chapter;
+      var ch = P.chapter(d.chapter);
       return '<li class="cal-day' + (d.date === t ? " is-today" : "") + (d.date < t ? " is-past" : "") +
-        (chapterStart ? " is-chapter-start" : "") + '">' +
+        (chapterStart ? " is-chapter-start" : "") + '" style="--ch:' + ch.color + '">' +
         '<a href="/itinerario#d-' + d.date + '" aria-label="' + esc(cap(T.longDate(d.date)) + ": " + plan.title + (warn.length ? ", con avvisi" : "")) + '">' +
           '<span class="cal-date"><span class="cal-wd">' + T.WD_SHORT[p.wd] + (p.m === 1 ? " gen" : "") + '</span><span class="cal-num">' + p.d + "</span></span>" +
           '<span class="seal seal-sm' + (isStamped(d.date) ? " is-stamped" : "") + '" lang="ja" aria-hidden="true">' + esc(plan.kanji) + "</span>" +
@@ -201,9 +206,17 @@
       renderSheet(true);
       playStampFx(P.chosenPlan(date, state).kanji);
     } else {
-      T.toast("Timbro preso: " + P.chosenPlan(date, state).title);
+      T.toast(stampMessage());
     }
   }
+  function stampMessage() {
+    var n = stampCount(), tot = V.days.length;
+    if (n >= tot) return "Ventitré timbri su ventitré. Viaggio completato: siete leggenda.";
+    if (n === 1) return "Primo timbro! Ne mancano " + (tot - 1) + ": l'album vi aspetta.";
+    if (n === Math.round(tot / 2)) return "Giornata timbrata: siete a metà viaggio. La parte bella continua.";
+    return "Giornata timbrata. " + n + " su " + tot + ": altri ricordi in cassaforte.";
+  }
+
   function unstamp(date) {
     state = T.loadState();
     state.stamps = state.stamps.filter(function (d) { return d !== date; });
@@ -276,6 +289,7 @@
     renderTop();
     renderTodo();
     renderCal();
+    document.dispatchEvent(new CustomEvent("tokyo:refresh"));
   }
 
   $("#sim-apply").addEventListener("click", function () {
@@ -292,14 +306,14 @@
   });
   $("#btn-reset").addEventListener("click", function () {
     var preview = T.isPreview();
-    var msg = preview ? "Vuoi cancellare i timbri di questa prova?" : "Vuoi cancellare tutti i timbri? Scelte, cuori e note restano.";
+    var msg = preview ? "Cancello i timbri di questa prova?" : "Cancello tutti i timbri? Scelte, cuori e note restano dove sono.";
     if (!window.confirm(msg)) return;
     state = T.loadState();
     state.opened = [];
     state.stamps = [];
     T.saveState(state);
     refreshAll();
-    T.toast(preview ? "Prova azzerata" : "Timbri cancellati");
+    T.toast(preview ? "Prova azzerata" : "Timbri cancellati. Si ricomincia, con calma.");
   });
 
   /* ---------- Copia di sicurezza ---------- */

@@ -19,8 +19,8 @@
   --open: #2f7d4f;
   --closed: #8a8f98;
   --unknown: #b7791f;
-  --font-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --font-jp: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --font-ui: "Zen Kaku Gothic New", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-jp: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
   --topbar-h: 64px;
   --r-s: 6px;
   --r-m: 12px;
@@ -175,7 +175,7 @@ a { color: inherit; }
   display: grid;
   place-items: center;
   font-family: var(--font-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: 15px;
   color: #fff;
   transition: transform 0.18s ease;
@@ -212,7 +212,7 @@ a { color: inherit; }
   display: grid;
   place-items: center;
   font-family: var(--font-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: 18px;
   border: 3px solid #fff;
   box-shadow: 0 0 0 3px var(--hinomaru), 0 3px 8px rgba(23, 25, 30, 0.35);
@@ -315,7 +315,7 @@ a { color: inherit; }
 }
 .chip:hover { border-color: var(--ink-2); }
 .chip[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
-.chip-glyph { font-family: var(--font-jp); font-weight: 900; color: var(--c, currentColor); }
+.chip-glyph { font-family: var(--font-jp); font-weight: 800; color: var(--c, currentColor); }
 .chip[aria-pressed="true"] .chip-glyph { color: #fff; }
 .chip-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--open); }
 .filters-note { font-size: 0.78rem; color: var(--ink-3); margin: -0.4rem 0 0.8rem; }
@@ -348,7 +348,7 @@ a { color: inherit; }
   display: grid;
   place-items: center;
   font-family: var(--font-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: 1.3rem;
 }
 .tile-lg { width: 64px; height: 64px; border-radius: 14px; font-size: 2rem; }
@@ -431,7 +431,7 @@ a { color: inherit; }
 .distance-big {
   font-family: var(--font-jp);
   font-size: 1.9rem;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1;
   white-space: nowrap;
 }
@@ -553,7 +553,7 @@ a { color: inherit; }
 .cart-total-yen {
   font-family: var(--font-jp);
   font-size: 1.5rem;
-  font-weight: 900;
+  font-weight: 800;
   font-variant-numeric: tabular-nums;
 }
 .cart-total-eur { font-size: 0.9rem; color: var(--ink-2); }
@@ -705,7 +705,7 @@ a { color: inherit; }
 .show-body { max-width: 900px; text-align: center; }
 .show-jp {
   font-family: var(--font-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: clamp(2rem, 8vw, 4.8rem);
   line-height: 1.35;
   word-break: keep-all;

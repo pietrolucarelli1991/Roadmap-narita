@@ -17,8 +17,8 @@
   --t-night-2: #24375c;
   --t-matcha: #2f7d4f;
   --t-ai: #2b4c7e;
-  --t-ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
-  --t-jp: "Noto Serif JP", "Hiragino Mincho ProN", "Yu Mincho", serif;
+  --t-ui: "Zen Kaku Gothic New", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --t-jp: "Shippori Mincho", "Hiragino Mincho ProN", "Yu Mincho", serif;
   --nav-h: calc(64px + env(safe-area-inset-bottom, 0px));
 }
 
@@ -81,7 +81,7 @@ body.app-page {
 .tabbar-item.is-active { color: #fff; }
 .tabbar-item.is-active::before { background: var(--t-shu); }
 .tabbar-item:focus-visible { outline: 2px solid #fff; outline-offset: -5px; border-radius: 10px; }
-.tabbar-glyph { font-family: var(--t-jp); font-weight: 900; font-size: 21px; line-height: 1; }
+.tabbar-glyph { font-family: var(--t-jp); font-weight: 800; font-size: 21px; line-height: 1; }
 .tabbar-label { font-size: 11px; font-weight: 500; line-height: 1; }
 
 /* ---------- Avvisi dell'app ---------- */
@@ -183,7 +183,7 @@ body.app-page {
   border-radius: 50%;
   color: #9a968e;
   font-family: var(--t-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: 1.35rem;
   line-height: 1;
   transform: rotate(var(--rot));
@@ -295,7 +295,7 @@ body.app-page {
   backface-visibility: hidden;
 }
 .door-wd { font-size: 0.75rem; color: var(--t-ink-3); line-height: 1.2; }
-.door-num { font-family: var(--t-jp); font-weight: 900; font-size: 2rem; line-height: 1.05; }
+.door-num { font-family: var(--t-jp); font-weight: 800; font-size: 2rem; line-height: 1.05; }
 .door-month { font-size: 0.72rem; color: var(--t-ink-3); line-height: 1.2; }
 .door-lock { position: absolute; top: 9px; right: 9px; width: 12px; height: 12px; opacity: 0.6; }
 
@@ -325,7 +325,7 @@ body.app-page {
   height: 2.2em;
   border-radius: 50%;
   font-family: var(--t-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: 1.55rem;
   line-height: 1;
   color: #aaa59b;
@@ -414,7 +414,7 @@ button.album-slot { cursor: pointer; }
   background: var(--t-ink);
   color: #fff;
   font-family: var(--t-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: 1.3rem;
 }
 .shortcut-text { display: flex; flex-direction: column; }
@@ -613,7 +613,7 @@ button.album-slot { cursor: pointer; }
   background: rgba(247, 245, 240, 0.9);
   color: var(--t-shu);
   font-family: var(--t-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: 5rem;
   line-height: 1;
   animation: stamp-in 0.6s cubic-bezier(0.2, 1.4, 0.4, 1) both, stamp-out 0.35s ease 0.95s forwards;
@@ -687,7 +687,7 @@ button.album-slot { cursor: pointer; }
   background: var(--t-washi);
 }
 .trip-wd { font-size: 0.7rem; color: var(--t-ink-3); line-height: 1.2; }
-.trip-num { font-family: var(--t-jp); font-weight: 900; font-size: 1.35rem; line-height: 1.05; }
+.trip-num { font-family: var(--t-jp); font-weight: 800; font-size: 1.35rem; line-height: 1.05; }
 .trip-day.is-today .trip-date { background: var(--t-shu); border-color: var(--t-shu); color: #fff; }
 .trip-day.is-today .trip-wd { color: rgba(255, 255, 255, 0.85); }
 
@@ -751,7 +751,7 @@ button.album-slot { cursor: pointer; }
 .t-show-body { max-width: 900px; text-align: center; }
 .t-show-jp {
   font-family: var(--t-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: clamp(2rem, 9vw, 4.8rem);
   line-height: 1.35;
   overflow-wrap: anywhere;
@@ -930,7 +930,7 @@ body.has-nav .toast { bottom: calc(var(--nav-h) + 16px); }
 }
 .strip-day[aria-pressed="true"] { border-color: var(--t-ink); box-shadow: inset 0 0 0 1px var(--t-ink); opacity: 1; }
 .strip-wd { font-size: 0.7rem; color: var(--t-ink-3); }
-.strip-num { font-family: var(--t-jp); font-weight: 900; font-size: 1.25rem; line-height: 1.1; }
+.strip-num { font-family: var(--t-jp); font-weight: 800; font-size: 1.25rem; line-height: 1.1; }
 .strip-bars { display: flex; gap: 3px; margin-top: 3px; }
 .bar { width: 14px; height: 5px; border-radius: 3px; background: var(--t-line); }
 .bar-good { background: var(--t-matcha); }
@@ -1027,7 +1027,7 @@ body.has-nav .toast { bottom: calc(var(--nav-h) + 16px); }
 }
 .chapter-card-glyph {
   font-family: var(--t-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: 1.9rem;
   line-height: 1.1;
   color: #fff;
@@ -1117,7 +1117,7 @@ body.has-nav .toast { bottom: calc(var(--nav-h) + 16px); }
 .cal-day.is-past a { background: transparent; }
 .cal-date { grid-area: date; display: flex; flex-direction: column; line-height: 1.1; }
 .cal-wd { font-size: 0.68rem; color: var(--t-ink-3); }
-.cal-num { font-family: var(--t-jp); font-weight: 900; font-size: 1.2rem; }
+.cal-num { font-family: var(--t-jp); font-weight: 800; font-size: 1.2rem; }
 .cal-day .seal { grid-area: seal; justify-self: end; }
 .cal-title {
   grid-area: title;
@@ -1158,7 +1158,7 @@ body.has-nav .toast { bottom: calc(var(--nav-h) + 16px); }
   background: var(--t-night);
   color: #fff;
   font-family: var(--t-jp);
-  font-weight: 900;
+  font-weight: 800;
   font-size: 1.6rem;
 }
 .chapter-head h2 { font-family: var(--t-jp); font-weight: 700; font-size: 1.35rem; line-height: 1.2; }
@@ -1369,7 +1369,187 @@ body.page-entra {
   border: 1px dashed #e0b56a;
 }
 .plan-kids-label { font-size: 0.78rem; font-weight: 700; color: #8a5a10; }
-.plan-kids-label span { font-family: var(--t-jp); font-weight: 900; margin-right: 4px; }
+.plan-kids-label span { font-family: var(--t-jp); font-weight: 800; margin-right: 4px; }
 .plan-kids-text { margin-top: 4px; font-size: 0.92rem; line-height: 1.5; color: #4a3410; }
 
 .file-btn { cursor: pointer; }
+
+/* ==========================================================================
+   v4 — PACCHETTO WOW
+   ========================================================================== */
+
+/* ---------- Il cielo vivo ---------- */
+.sky { isolation: isolate; }
+.sky-layers { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.sky > *:not(.sky-layers) { position: relative; z-index: 1; }
+
+.sky[data-phase="night"] { background: linear-gradient(180deg, #0c1430 0%, #17244a 55%, #22355b 100%); }
+.sky[data-phase="dawn"]  { background: linear-gradient(180deg, #24305c 0%, #6d5a8c 50%, #e3a184 100%); }
+.sky[data-phase="day"]   { background: linear-gradient(180deg, #1d4a85 0%, #3670b0 50%, #7aaedb 100%); }
+.sky[data-phase="dusk"]  { background: linear-gradient(180deg, #232853 0%, #8f466c 50%, #df8a52 100%); }
+
+.sky:not([data-phase="night"]) .sky-top,
+.sky:not([data-phase="night"]) .sky-title,
+.sky:not([data-phase="night"]) .sky-sub,
+.sky:not([data-phase="night"]) .tomorrow { text-shadow: 0 1px 4px rgba(10, 20, 40, 0.55); }
+
+.sky-stars { position: absolute; inset: 0; width: 100%; height: 72%; fill: #fff; opacity: 0; transition: opacity 1.2s ease; }
+.sky[data-phase="night"] .sky-stars { opacity: 0.9; }
+.sky[data-phase="dawn"] .sky-stars { opacity: 0.25; }
+.sky[data-phase="night"]:is([data-weather="cloudy"], [data-weather="rain"], [data-weather="snow"], [data-weather="fog"]) .sky-stars { opacity: 0.15; }
+.sky-stars .twinkle { animation: twinkle 3.6s ease-in-out infinite; }
+
+.sky-sun {
+  position: absolute;
+  left: var(--sun-x, 80%);
+  top: var(--sun-y, 18%);
+  width: 56px;
+  height: 56px;
+  margin: -28px 0 0 -28px;
+  border-radius: 50%;
+  transition: left 1.5s ease, top 1.5s ease, background 0.8s ease, box-shadow 0.8s ease, opacity 0.8s ease;
+}
+.sky[data-phase="day"] .sky-sun { background: #fff4cf; box-shadow: 0 0 44px 14px rgba(255, 236, 170, 0.5); }
+.sky[data-phase="dawn"] .sky-sun,
+.sky[data-phase="dusk"] .sky-sun { background: #e8613a; box-shadow: 0 0 40px 12px rgba(232, 97, 58, 0.45); }
+.sky[data-phase="night"] .sky-sun {
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  background: transparent;
+  box-shadow: inset -11px 7px 0 0 #f1ecdc;
+  transform: rotate(-20deg);
+}
+.sky:is([data-weather="cloudy"], [data-weather="rain"], [data-weather="snow"], [data-weather="fog"]) .sky-sun { opacity: 0.25; }
+
+.sky-cloud {
+  position: absolute;
+  height: 30px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.88);
+  opacity: 0;
+  transition: opacity 1.2s ease;
+}
+.sky-cloud::before, .sky-cloud::after { content: ""; position: absolute; background: inherit; border-radius: 50%; }
+.sky-cloud::before { width: 46%; height: 170%; left: 16%; bottom: 25%; }
+.sky-cloud::after { width: 34%; height: 135%; right: 16%; bottom: 30%; }
+/* Le nuvole passano sopra il saluto e dietro le carte dei capitoli, mai dietro il testo lungo */
+.sky-cloud-1 { width: 120px; top: 2%; left: 0; animation: drift 95s linear infinite; animation-delay: -20s; }
+.sky-cloud-2 { width: 130px; top: 46%; left: 0; animation: drift 125s linear infinite; animation-delay: -70s; }
+.sky-cloud-3 { width: 190px; top: 64%; left: 0; animation: drift 160s linear infinite; animation-delay: -110s; }
+.sky[data-phase="night"] .sky-cloud { background: rgba(165, 178, 206, 0.35); }
+.sky[data-weather="partly"] .sky-cloud { opacity: 0.55; }
+.sky:is([data-weather="cloudy"], [data-weather="rain"], [data-weather="snow"], [data-weather="fog"]) .sky-cloud { opacity: 0.92; }
+.sky:not([data-phase="night"]):is([data-weather="cloudy"], [data-weather="rain"], [data-weather="snow"], [data-weather="fog"]) .sky-cloud { opacity: 0.6; }
+
+.sky-dim { position: absolute; inset: 0; background: #586273; opacity: 0; transition: opacity 1.2s ease; }
+.sky[data-weather="cloudy"] .sky-dim { opacity: 0.25; }
+.sky[data-weather="rain"] .sky-dim { opacity: 0.4; }
+.sky[data-weather="snow"] .sky-dim { opacity: 0.18; }
+.sky[data-weather="fog"] .sky-dim { opacity: 0.45; background: #aeb6c3; }
+
+.sky-precip { position: absolute; inset: 0; }
+.flake {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  animation-name: snowfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.drop {
+  position: absolute;
+  width: 1.5px;
+  height: 16px;
+  background: linear-gradient(transparent, rgba(215, 228, 255, 0.85));
+  animation-name: rainfall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.sky-weather {
+  display: inline-block;
+  margin-top: 18px;
+  max-width: 100%;
+  padding: 7px 13px;
+  border-radius: 14px;
+  background: rgba(8, 15, 32, 0.32);
+  color: #fff;
+  font-size: 0.84rem;
+  line-height: 1.4;
+}
+.sky-weather:empty { display: none; }
+
+.sky[data-phase="night"] .sky-fuji { color: #2c4270; }
+.sky[data-phase="dawn"] .sky-fuji { color: #4b4d7c; }
+.sky[data-phase="day"] .sky-fuji { color: #22508a; }
+.sky[data-phase="dusk"] .sky-fuji { color: #4e3a66; }
+.sky-fuji { transition: color 1s ease; }
+
+@keyframes twinkle { 50% { opacity: 0.2; } }
+@keyframes drift { from { transform: translateX(-35vw); } to { transform: translateX(115vw); } }
+@keyframes snowfall { to { transform: translate3d(var(--sway, 0px), var(--fall, 420px), 0); } }
+@keyframes rainfall {
+  from { transform: translate3d(0, 0, 0) rotate(12deg); }
+  to { transform: translate3d(-40px, var(--fall, 420px), 0) rotate(12deg); }
+}
+
+/* ---------- Prova del cielo ---------- */
+.sky-demo-title { margin-top: 12px; font-size: 0.84rem; color: var(--t-ink-2); }
+.sky-demo { margin-top: 8px; }
+.chip-btn {
+  padding: 0.4rem 0.8rem;
+  border: 1px solid var(--t-line-strong);
+  border-radius: 999px;
+  background: var(--t-washi);
+  color: var(--t-ink);
+  font: 500 0.84rem var(--t-ui);
+  cursor: pointer;
+}
+.chip-btn[aria-pressed="true"] { background: var(--t-night); border-color: var(--t-night); color: #fff; }
+
+/* ---------- Parole giapponesi nei titoli ---------- */
+.app-page .jp-label { font-family: var(--t-jp); font-weight: 700; font-size: 1rem; color: var(--t-shu); margin: 0; }
+.jp-label i, .h-jp i { font-style: normal; font-family: var(--t-ui); font-weight: 500; font-size: 0.76rem; color: var(--t-ink-3); margin-left: 4px; }
+.h-jp { display: block; margin-bottom: 2px; font-family: var(--t-jp); font-weight: 700; font-size: 0.82rem; color: var(--t-shu); }
+
+/* ---------- Colori dei capitoli ---------- */
+.chapter-card { box-shadow: inset 0 3px 0 0 var(--ch, transparent), inset 0 0 0 1px rgba(255, 255, 255, 0.14); }
+.cal-day a { border-left: 3px solid var(--ch, var(--t-line)); }
+
+.chapter-head { gap: 16px; }
+/* Scrittura verticale: un kanji sotto l'altro (funziona con qualsiasi font) */
+.chapter-tate {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.12em;
+  min-height: 5.4rem;
+  padding-right: 10px;
+  border-right: 2px solid var(--ch);
+  color: var(--ch);
+  font-family: var(--t-jp);
+  font-weight: 800;
+  font-size: 1.75rem;
+  line-height: 1;
+}
+.chapter-tate span { display: block; }
+.chapter-hotel a { color: var(--ch); }
+.chapter .chapter-days::before { background: var(--ch-soft, var(--t-line)); }
+.trip-day .trip-date { border-top: 3px solid var(--ch, var(--t-line)); }
+.trip-day.is-today .trip-date { border-top-color: var(--t-shu); }
+.day-sheet-inner .sheet-top { padding-left: 12px; border-left: 4px solid var(--ch, var(--t-shu)); }
+
+/* ---------- Passaggi fluidi tra le pagine ---------- */
+@view-transition { navigation: auto; }
+.tabbar { view-transition-name: tabbar; }
+::view-transition-old(root) { animation: 150ms ease-out both vt-out; }
+::view-transition-new(root) { animation: 230ms ease-out both vt-in; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(6px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+  .sky-cloud { animation: none !important; }
+}

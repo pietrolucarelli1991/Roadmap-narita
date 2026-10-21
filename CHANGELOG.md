@@ -6,6 +6,25 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 4.0.0 — 21 ottobre 2026
+
+Il pacchetto wow: l'app cambia faccia.
+
+Aggiunto
+- Il cielo vivo in cima a Oggi: segue l'ora vera (alba, giorno, tramonto, notte con stelle e luna)
+  e il meteo vero (nuvole, pioggia, neve, nebbia) della città del capitolo: Tokyo o Kyoto
+- La frase sotto il cielo con temperatura e un consiglio ("Cappellino e guanti per le bimbe")
+- Prova del cielo: neve, pioggia, alba e tramonto anche prima di partire
+- Un colore per capitolo: Tokyo indaco, Kyoto cachi, Capodanno oro
+- Titoli dei capitoli in verticale: 東京, 京都, お正月
+- Parole giapponesi nei titoli delle sezioni, con la pronuncia
+- Il timbro 決 ("deciso") quando si sceglie un piano
+- Passaggi fluidi tra le sezioni (sui browser che li supportano)
+
+Modificato
+- Nuovi caratteri: Shippori Mincho per i titoli, Zen Kaku Gothic New per il testo
+- La voce dell'app in tutti i testi: calda e ironica, giocosa per le bimbe
+
 ## 3.1.0 — 16 ottobre 2026
 
 Aggiunto

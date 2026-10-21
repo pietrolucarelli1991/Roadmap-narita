@@ -134,15 +134,15 @@
         saveCache();
         if (!view.date || !dayByDate(view.date)) view.date = defaultDate();
         renderAll();
-        if (manual) T.toast("Previsioni aggiornate");
+        if (manual) T.toast("Previsioni fresche di giornata");
       })
       .catch(function () {
         if (view.days.length) {
-          T.toast("Non riesco ad aggiornare: mostro le ultime previsioni salvate");
+          T.toast("Niente rete: vi mostro le ultime previsioni salvate");
         } else {
           $("#scene").dataset.state = "error";
           $("#scene-when").textContent = "Previsioni non disponibili";
-          $("#scene-verdict").textContent = "Non riesco a scaricarle: controlla la connessione e premi Aggiorna le previsioni.";
+          $("#scene-verdict").textContent = "Il cielo non risponde: controllate la connessione e premete Aggiorna le previsioni.";
         }
         renderUpdated();
       })
@@ -184,8 +184,8 @@
   function verdict(s) {
     if (!s) return { cls: "none", text: "Previsione non disponibile" };
     if (s.score >= 8) return { cls: "good", text: "Si vede bene" };
-    if (s.score >= 5) return { cls: "maybe", text: "Forse si vede" };
-    return { cls: "bad", text: "Probabilmente coperto" };
+    if (s.score >= 5) return { cls: "maybe", text: "Forse fa capolino" };
+    return { cls: "bad", text: "Si nasconde tra le nuvole" };
   }
   function coverLevel(s) {
     if (!s) return 2;
@@ -207,7 +207,7 @@
     scene.dataset.cover = coverLevel(s);
     scene.style.setProperty("--grey", s ? ((10 - s.score) / 10 * 0.45).toFixed(2) : "0.45");
 
-    var far = d.index >= 7 ? " La previsione è lontana: ricontrolla nei giorni prima." : "";
+    var far = d.index >= 7 ? " È lontano: ricontrollate nei giorni prima, il meteo cambia idea spesso." : "";
     $("#scene-when").textContent = cap(T.longDate(d.date)) + ", " + PARTS[view.part].label;
     $("#scene-verdict").innerHTML = '<span class="verdict verdict-' + v.cls + '">' + v.text +
       (s ? ", " + s.score + " su 10" : "") + "</span>" +
