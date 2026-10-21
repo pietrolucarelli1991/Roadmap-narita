@@ -14,6 +14,7 @@
       var userAskedUpdate = false;
 
       navigator.serviceWorker.register("/sw.js").then(function (reg) {
+        navigator.serviceWorker.ready.then(function (r) { if (r.active) r.active.postMessage("WARM"); });
         function offerUpdate(worker) {
           var bar = document.getElementById("update-bar");
           if (!bar) return;
@@ -226,7 +227,31 @@
     showEl.querySelector(".t-show-close").focus();
   }
 
+  /* ---------- Copia di sicurezza ---------- */
+  var BACKUP_KEYS = [STATE_KEY, "spesa-bimbe-v1"];
+  function exportData() {
+    var data = { app: "tokyo2026", v: 1, saved: new Date().toISOString(), keys: {} };
+    BACKUP_KEYS.forEach(function (k) {
+      try { var v = localStorage.getItem(k); if (v) data.keys[k] = JSON.parse(v); } catch (e) { /* ignora */ }
+    });
+    return data;
+  }
+  function importData(obj) {
+    if (!obj || obj.app !== "tokyo2026" || !obj.keys || typeof obj.keys !== "object") throw new Error("copia non valida");
+    BACKUP_KEYS.forEach(function (k) {
+      if (obj.keys[k]) localStorage.setItem(k, JSON.stringify(obj.keys[k]));
+    });
+  }
+  function backupLink() {
+    return location.origin + "/#copia=" + encodeURIComponent(JSON.stringify(exportData()));
+  }
+  function readBackupHash(hash) {
+    if (!hash || hash.indexOf("#copia=") !== 0) return null;
+    try { return JSON.parse(decodeURIComponent(hash.slice(7))); } catch (e) { return null; }
+  }
+
   window.TokyoApp = {
+    exportData: exportData, importData: importData, backupLink: backupLink, readBackupHash: readBackupHash,
     esc: esc, parts: parts, daysBetween: daysBetween,
     tokyoToday: tokyoToday, realTokyoToday: realTokyoToday,
     simDate: simDate, setSimDate: setSimDate, isPreview: isPreview,

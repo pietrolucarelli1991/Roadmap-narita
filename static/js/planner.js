@@ -90,6 +90,11 @@
       "</div>";
   }
 
+  function kidsBox(text) {
+    return '<div class="plan-kids"><p class="plan-kids-label"><span lang="ja" aria-hidden="true">冒険</span> Missione per le piccole esploratrici</p>' +
+      '<p class="plan-kids-text">' + esc(text) + "</p></div>";
+  }
+
   function renderPlan(p, date, state, opts) {
     opts = opts || {};
     var chosen = chosenId(date, state) === p.id;
@@ -139,6 +144,7 @@
       }
       if (p.rain) html += '<p class="plan-rain"><strong>Se piove.</strong> ' + esc(p.rain) + "</p>";
       if (p.tip) html += '<p class="day-tip">' + esc(p.tip) + "</p>";
+      if (p.kids) html += kidsBox(p.kids);
     } else {
       html += '<p class="plan-soon">Il programma c\'è già. Orari, prezzi e ristoranti verificati arrivano nella versione ' + esc(p.version || "successiva") + ".</p>";
     }

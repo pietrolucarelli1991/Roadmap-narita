@@ -302,7 +302,52 @@
     T.toast(preview ? "Prova azzerata" : "Timbri cancellati");
   });
 
+  /* ---------- Copia di sicurezza ---------- */
+  function restore(obj) {
+    var when = obj && obj.saved ? new Date(obj.saved).toLocaleString("it-IT", { day: "numeric", month: "long", hour: "2-digit", minute: "2-digit" }) : "";
+    var ok = window.confirm("Vuoi ripristinare la copia" + (when ? " del " + when : "") + "? Sostituisce scelte, note, timbri e lista della spesa di questo telefono.");
+    if (!ok) return;
+    try {
+      T.importData(obj);
+      T.toast("Copia ripristinata");
+      setTimeout(function () { location.replace("/"); }, 700);
+    } catch (e) {
+      T.toast("Questa copia non sembra valida");
+    }
+  }
+
+  $("#backup-box").addEventListener("toggle", function () {
+    if (!this.open) return;
+    var text = "Copia di sicurezza dell'app Tokyo 2026 (" + new Date().toLocaleDateString("it-IT") + "). Per ripristinarla apri questo link sul telefono:\n" + T.backupLink();
+    $("#btn-backup-wa").href = "https://wa.me/?text=" + encodeURIComponent(text);
+  });
+  $("#btn-backup-file").addEventListener("click", function () {
+    var blob = new Blob([JSON.stringify(T.exportData(), null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "tokyo2026-copia-" + T.realTokyoToday() + ".json";
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+    T.toast("Copia scaricata");
+  });
+  $("#restore-file").addEventListener("change", function () {
+    var f = this.files && this.files[0];
+    if (!f) return;
+    var reader = new FileReader();
+    reader.onload = function () {
+      try { restore(JSON.parse(reader.result)); } catch (e) { T.toast("Questo file non è una copia dell'app"); }
+    };
+    reader.readAsText(f);
+    this.value = "";
+  });
+
   /* ---------- Avvio ---------- */
+  var fromLink = T.readBackupHash(location.hash);
+  if (fromLink) {
+    if (history.replaceState) history.replaceState(null, "", "/");
+    setTimeout(function () { restore(fromLink); }, 300);
+  }
   refreshAll();
   setupInstall();
   var lastDay = today();

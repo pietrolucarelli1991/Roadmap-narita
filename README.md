@@ -28,6 +28,12 @@ roadmap_app/
     └── js/spesa.js     # Logica mappa spesa
 ```
 
+## Password
+
+L'app online chiede una parola d'ordine. Non è scritta nel codice (il progetto è su GitHub):
+si imposta su Render in Environment, con la variabile `APP_PASSWORD`.
+Sul PC, se la variabile non c'è, l'app resta aperta per comodità.
+
 ## Avviare sul PC
 
 ```

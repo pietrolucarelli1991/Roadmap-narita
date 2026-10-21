@@ -6,6 +6,21 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 3.1.0 — 16 ottobre 2026
+
+Aggiunto
+- Password di famiglia controllata dal server: senza la parola d'ordine non si vedono né
+  le pagine né i dati. La password si imposta su Render (variabile APP_PASSWORD), mai nel codice
+- Copia di sicurezza: si manda su WhatsApp come link oppure si scarica come file, e si ripristina
+- Giorni 19–25 completi: Jump Festa, Odaiba, Stazione di Tokyo, Fuji, Shibuya e Harajuku,
+  Nikko, Vigilia delle luci, Natale tra Tsukiji e Tsukishima, con pasti verificati
+- Una missione per le piccole esploratrici in ogni giorno completo
+- Due nuove cose da prenotare: treno Tobu per Nikko e bus per il Fuji
+
+Modificato
+- I testi nuovi hanno la voce dell'app: calda e ironica, giocosa quando parla alle bimbe
+- Il service worker non salva mai la pagina della password al posto dell'app
+
 ## 3.0.0 — 16 ottobre 2026
 
 Il primo numero cambia perché l'app cambia idea di fondo: da calendario a sorpresa

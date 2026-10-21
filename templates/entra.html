@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  {% set theme = '#1b2a47' %}
+  {% include '_head.html' %}
+  <title>Entra — Tokyo 2026</title>
+</head>
+<body class="app-page page-entra">
+  <main class="entra">
+    <svg class="entra-fuji" viewBox="0 0 360 200" aria-hidden="true">
+      <circle cx="250" cy="70" r="34" fill="#c0392b"/>
+      <path d="M20 200 C100 180 132 116 158 72 L202 72 C228 116 260 180 340 200 Z" fill="#2b4c7e"/>
+      <path d="M158 72 L202 72 L218 100 L206 93 L195 106 L180 95 L165 106 L154 93 L142 100 Z" fill="#f7f5f0"/>
+    </svg>
+    <p class="entra-jp" lang="ja">いらっしゃいませ</p>
+    <h1>Benvenuti a bordo</h1>
+    <p class="entra-lead">Questa è l'app di famiglia per il Giappone. Qui si entra solo con la parola d'ordine: basta scriverla una volta per telefono.</p>
+
+    <form method="post" action="/entra?next={{ next | urlencode }}" class="entra-form">
+      <label for="password">Parola d'ordine</label>
+      <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
+      <input type="hidden" name="hash" id="hash" value="">
+      {% if error %}
+      <p class="entra-error" role="alert">Non è quella giusta. Riprova con calma: il Giappone non scappa.</p>
+      {% endif %}
+      <button type="submit" class="t-btn t-btn-primary">Entra</button>
+    </form>
+  </main>
+  <script>
+    // Se si arriva da un link condiviso (es. le scelte del viaggio), lo conserviamo dopo l'accesso
+    document.getElementById("hash").value = location.hash || "";
+  </script>
+</body>
+</html>

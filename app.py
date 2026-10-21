@@ -1,4 +1,10 @@
-from flask import Flask, render_template, jsonify, url_for, make_response
+import hashlib
+import hmac
+import os
+import time
+from datetime import timedelta
+
+from flask import Flask, render_template, jsonify, url_for, make_response, request, session, redirect
 
 from dati_spesa import HOTEL, CATEGORIES, SHOPS, PRODUCTS, DIAPER_SIZES, WORDS, PHRASES
 from dati_viaggio import TRIP, CHAPTERS, PLANS, DAYS, TODO, FUJI
@@ -14,6 +20,59 @@ LEAFLET_CSS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.
 LEAFLET_JS = "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"
 
 app = Flask(__name__)
+
+# ---------- Password di famiglia ----------
+# La password NON sta nel codice (il progetto è su GitHub): si imposta su Render
+# come variabile d'ambiente APP_PASSWORD. Sul PC, senza variabile, l'app resta aperta.
+APP_PASSWORD = os.environ.get("APP_PASSWORD", "").strip()
+PASSWORD_FINGERPRINT = hashlib.sha256(("tokyo2026:" + APP_PASSWORD).encode()).hexdigest()[:16]
+app.secret_key = os.environ.get("SECRET_KEY") or hashlib.sha256(("chiave:" + APP_PASSWORD).encode()).hexdigest()
+app.config.update(
+    PERMANENT_SESSION_LIFETIME=timedelta(days=400),   # si entra una volta e si resta dentro
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=bool(os.environ.get("RENDER")),  # su Render il sito è https
+)
+OPEN_PATHS = {"/entra", "/manifest.webmanifest", "/sw.js", "/favicon.ico"}
+
+
+@app.before_request
+def require_password():
+    if not APP_PASSWORD:
+        return None
+    path = request.path
+    if path in OPEN_PATHS or path.startswith("/static/"):
+        return None
+    if session.get("ok") == PASSWORD_FINGERPRINT:
+        return None
+    if path.startswith("/api/"):
+        return jsonify({"error": "serve la password"}), 401
+    target = request.full_path if request.query_string else path
+    return redirect(url_for("entra", next=target))
+
+
+@app.route("/entra", methods=["GET", "POST"])
+def entra():
+    if not APP_PASSWORD:
+        return redirect("/")
+    nxt = request.values.get("next") or "/"
+    if not nxt.startswith("/") or nxt.startswith("//"):
+        nxt = "/"
+    error = False
+    if request.method == "POST":
+        typed = request.form.get("password", "").strip()
+        if hmac.compare_digest(typed.encode(), APP_PASSWORD.encode()):
+            session.permanent = True
+            session["ok"] = PASSWORD_FINGERPRINT
+            frag = request.form.get("hash", "")
+            if not frag.startswith("#"):
+                frag = ""
+            return redirect(nxt + frag)
+        time.sleep(1)   # rallenta chi prova a indovinare
+        error = True
+    resp = make_response(render_template("entra.html", error=error, next=nxt), 401 if error else 200)
+    resp.headers["Cache-Control"] = "no-store"
+    return resp
 
 STEPS = [
     {

@@ -14,16 +14,22 @@ const ASSETS = {{ assets | tojson }};
 const DEV = ["localhost", "127.0.0.1"].includes(self.location.hostname);
 const CDN_HOSTS = ["cdnjs.cloudflare.com", "fonts.googleapis.com", "fonts.gstatic.com"];
 
+// Salva solo risposte vere: mai la pagina della password al posto dell'app
+function cacheable(res) { return res && res.ok && !res.redirected; }
+
+async function saveUrls(urls, onlyMissing) {
+  const cache = await caches.open(CORE);
+  await Promise.all(urls.map(async (url) => {
+    try {
+      if (onlyMissing && (await cache.match(url))) return;
+      const res = await fetch(new Request(url, { cache: "reload", credentials: "same-origin" }));
+      if (cacheable(res)) await cache.put(url, res);
+    } catch (err) { /* offline o non disponibile: pazienza */ }
+  }));
+}
+
 self.addEventListener("install", (event) => {
-  event.waitUntil(
-    caches.open(CORE).then((cache) =>
-      Promise.all(
-        PAGES.concat(ASSETS).map((url) =>
-          cache.add(new Request(url, { cache: "reload" })).catch(() => null)
-        )
-      )
-    )
-  );
+  event.waitUntil(saveUrls(PAGES.concat(ASSETS), false));
 });
 
 self.addEventListener("activate", (event) => {
@@ -38,6 +44,8 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("message", (event) => {
   if (event.data === "SKIP_WAITING") self.skipWaiting();
+  // Dopo l'accesso con la password, salva le pagine che ancora mancano
+  if (event.data === "WARM") event.waitUntil(saveUrls(PAGES, true));
 });
 
 self.addEventListener("fetch", (event) => {
@@ -45,7 +53,7 @@ self.addEventListener("fetch", (event) => {
   if (req.method !== "GET") return;
   const url = new URL(req.url);
 
-  if (url.origin === self.location.origin && url.pathname === "/sw.js") return;
+  if (url.origin === self.location.origin && (url.pathname === "/sw.js" || url.pathname === "/entra")) return;
 
   if (req.mode === "navigate") {
     event.respondWith(DEV ? pageNetworkFirst(req) : pageStaleWhileRevalidate(event));
@@ -67,7 +75,7 @@ async function pageStaleWhileRevalidate(event) {
   const cache = await caches.open(CORE);
   const cached = await cache.match(key);
   const network = fetch(req)
-    .then((res) => { if (res && res.ok) cache.put(key, res.clone()); return res; })
+    .then((res) => { if (cacheable(res) && PAGES.includes(key)) cache.put(key, res.clone()); return res; })
     .catch(() => null);
   if (cached) {
     event.waitUntil(network);
@@ -81,7 +89,7 @@ async function pageNetworkFirst(req) {
   const cache = await caches.open(CORE);
   try {
     const res = await fetch(req);
-    if (res && res.ok) cache.put(key, res.clone());
+    if (cacheable(res) && PAGES.includes(key)) cache.put(key, res.clone());
     return res;
   } catch (err) {
     return (await cache.match(key)) || (await cache.match("/")) || offlineResponse();
