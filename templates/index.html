@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Arrivo: Narita → Ryogoku — Tokyo 2026</title>
+  <title>{{ route.from }} → {{ route.to }} — Tokyo 2026</title>
   <link rel="stylesheet" href="{{ static_v('css/style.css') }}">
   {% set theme = '#1a1a1a' %}
   {% include '_head.html' %}
@@ -14,15 +14,28 @@
     <div class="header-inner">
       <div class="header-flag">🇯🇵</div>
       <div class="header-text">
-        <h1>Narita <span class="arrow">→</span> Ryogoku</h1>
-        <p class="header-sub">Famiglia Lucarelli • 14 Dic 2026 • 2 adulti + 2 bimbe</p>
+        <h1>{{ route.from }} <span class="arrow">→</span> {{ route.to }}</h1>
+        <p class="header-sub">{{ route.sub }}</p>
       </div>
       <div class="header-meta">
-        <span class="badge">8 tappe</span>
-        <span class="badge badge-cost">~21–25€</span>
+        <span class="badge">{{ steps | length }} tappe</span>
+        <span class="badge badge-cost">{{ route.cost_badge }}</span>
               </div>
     </div>
   </header>
+
+  <!-- SCELTA DEL PERCORSO -->
+  <nav class="route-switch" aria-label="Scegli il percorso">
+    <p class="route-switch-jp" lang="ja">道 <i>michi</i></p>
+    <div class="route-switch-list">
+      {% for r in routes %}
+      <a class="route-chip{% if r.id == route.id %} is-active{% endif %}" href="{{ r.path }}"{% if r.id == route.id %} aria-current="page"{% endif %}>
+        <span class="route-chip-date">{{ r.date[8:10] | int }}/{{ r.date[5:7] | int }}</span>
+        <span class="route-chip-name">{{ r.from }} → {{ r.to }}</span>
+      </a>
+      {% endfor %}
+    </div>
+  </nav>
 
   <!-- MAIN LAYOUT -->
   <div class="app-layout">
@@ -48,7 +61,7 @@
         {% endfor %}
         <div class="map-destination">
           <div class="dest-dot">🏨</div>
-          <div class="dest-label">Ryogoku View Hotel<br><small>2-19-1 Ryogoku</small></div>
+          <div class="dest-label">{{ route.dest }}<br><small>{{ route.dest_small }}</small></div>
         </div>
       </div>
     </aside>
@@ -133,12 +146,10 @@
         <button onclick="closeTaxiModal()">✕</button>
       </div>
       <div class="taxi-address">
-        両国ビューホテルまで<br>お願いします
+        {{ route.taxi.jp | safe }}
       </div>
       <div class="taxi-detail">
-        墨田区両国2-19-1<br>
-        JR両国駅西口から1分<br>
-        Tel: 03-3631-3241
+        {{ route.taxi.detail | safe }}
       </div>
       <div class="taxi-note">Porte automatiche • Non toccare la maniglia</div>
     </div>
@@ -152,11 +163,17 @@
   <!-- RIEPILOGO COSTI FISSO -->
   <div class="cost-bar">
     <span>💴 Totale famiglia:</span>
-    <strong>3.540–4.040 ¥</strong>
-    <span class="cost-bar-detail">~21–25€ • bimbe gratis • v{{ app_version }}</span>
+    <strong>{{ route.cost_total }}</strong>
+    <span class="cost-bar-detail">{{ route.cost_note }} • v{{ app_version }}</span>
   </div>
 
   <script>
+    // Porta in vista il percorso attivo nella striscia in alto
+    (function () {
+      var a = document.querySelector('.route-chip.is-active');
+      var list = document.querySelector('.route-switch-list');
+      if (a && list) list.scrollLeft = a.offsetLeft - (list.clientWidth - a.clientWidth) / 2;
+    })();
     const STEPS = {{ steps | tojson }};
     let currentStep = 1;
     let currentTab = 'azioni';
@@ -247,7 +264,7 @@
       document.getElementById('nav-counter').textContent = `${currentStep} / ${STEPS.length}`;
 
       // Taxi FAB
-      document.getElementById('taxi-fab').style.display = currentStep === 7 ? 'flex' : 'none';
+      document.getElementById('taxi-fab').style.display = currentStep === {{ route.taxi_step | int }} ? 'flex' : 'none';
       document.getElementById('next-mission').hidden = currentStep !== 8;
 
       // Scroll map node into view

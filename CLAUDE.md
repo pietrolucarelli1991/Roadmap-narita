@@ -40,7 +40,7 @@ Repository GitHub (privato): pietrolucarelli1991/Roadmap-narita, branch `main`.
 - `/itinerario` **旅 Viaggio**: planner dei 23 giorni. Ogni giorno ha uno o più piani (A, B, C):
   si confrontano, si mette il cuore, si sceglie. Note per giorno. Invio delle scelte su WhatsApp.
 - `/fuji` **富 Fuji**: Fuji-metro, voto 0–10 di visibilità del Fuji da Kawaguchiko (dati Open-Meteo, gratis, senza chiavi).
-- `/arrivo` **着 Arrivo**: roadmap in 8 step da Narita all'hotel di Ryogoku (la prima versione dell'app).
+- `/arrivo` e `/percorso/<id>` **道 Percorsi**: quattro roadmap passo passo (Narita → Ryogoku, Ryogoku → Kyoto, Kyoto → Asakusa, Asakusa → Narita). Dati in `dati_percorsi.py`.
 - `/spesa` **買 Spesa**: mappa Leaflet + OpenStreetMap di farmacie e negozi per le bimbe vicino all'hotel di Ryogoku,
   lista della spesa con prezzi, taglie dei pannolini, frasi.
 - `/entra`: pagina della password.
@@ -137,7 +137,7 @@ Frasi brevi, niente maiuscole urlate, niente gergo tecnico. Dove serve, una paro
 |---|---|
 | ~~v4.0.0~~ | ✅ Fatto. **Pacchetto wow**: cielo in cima a Oggi che segue ora e meteo veri di Tokyo (alba, giorno, tramonto, notte con stelle; neve o pioggia se succede davvero, dati Open-Meteo); un colore per capitolo (Tokyo indaco invernale, Kyoto cachi e muschio, Capodanno rosso, bianco e oro); font Shippori Mincho per i titoli e Zen Kaku Gothic New per il testo; titoli dei capitoli in verticale (tategaki); voce nuova in tutti i testi vecchi; parola giapponese nei titoli di sezione; passaggi fluidi tra le pagine (View Transitions); timbro 決 quando si sceglie un piano |
 | ~~v4.1.0~~ | ✅ Fatto. Kyoto, Nara e Osaka completi (giorni 26–30) |
-| v4.2.0 | Capodanno completo (31/12–5/1) e 3 roadmap di trasferimento: Ryogoku → Kyoto, Kyoto → Asakusa, Asakusa → Narita |
+| ~~v4.2.0~~ | ✅ Fatto. Capodanno completo e sezione 道 Percorsi con 4 roadmap (dati in `dati_percorsi.py`) |
 | v4.3.0 | Emergenze e salute (numeri, pediatri vicino ai 3 hotel, frasi mediche) e frasario per situazioni |
 | v4.4.0 | Sezione missioni per la bimba di 5 anni con adesivi; diario fotografico (foto per ogni giorno, salvate sul telefono) |
 | v4.5.0 | Meteo dentro il planner (proposta del piano B se piove) e "aggiungi al calendario del telefono" |

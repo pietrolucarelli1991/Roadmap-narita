@@ -6,6 +6,23 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 4.2.0 — 21 ottobre 2026
+
+Tutti i 23 giorni sono completi.
+
+Aggiunto
+- Capodanno ad Asakusa completo: l'ultimo dell'anno con la soba della lunga vita,
+  il primo giorno con la prima visita al tempio e l'acquario di Sumida, le borse fortunate,
+  Nakano Broadway e la partenza
+- Dove mangiare quando quasi tutto è chiuso (orari di Capodanno dell'anno scorso, segnalati come tali)
+- La sezione 着 Arrivo diventa 道 Percorsi, con quattro roadmap passo passo:
+  Narita → Ryogoku, Ryogoku → Kyoto, Kyoto → Asakusa, Asakusa → Narita
+- Biglietto per il taxi con l'indirizzo giusto in ogni percorso
+- Le schede dei giorni di trasferimento portano al percorso passo passo
+
+Modificato
+- I passi dei percorsi sono ora in dati_percorsi.py
+
 ## 4.1.0 — 21 ottobre 2026
 
 Aggiunto

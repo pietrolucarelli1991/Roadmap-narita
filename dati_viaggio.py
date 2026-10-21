@@ -321,41 +321,6 @@ PLANS = {
     },
 
     # ===================== DA COMPLETARE (prossime versioni) =====================
-    "omisoka": {
-        "title": "Ōmisoka, l'ultimo dell'anno", "kanji": "年", "reading": "toshi", "meaning": "anno",
-        "kind": "capodanno", "complete": False, "version": "3.3.0",
-        "summary": "Rientro a Tokyo al mattino, check-in ad Asakusa, la soba di fine anno e l'atmosfera serale al Senso-ji. I treni corrono tutta la notte.",
-        "stops": [], "meals": [],
-        "phrase": {"jp": "よいお年を", "romaji": "Yoi otoshi o", "it": "Buona fine d'anno"},
-    },
-    "gantan": {
-        "title": "Il primo giorno dell'anno", "kanji": "初", "reading": "hatsu", "meaning": "primo",
-        "kind": "capodanno", "complete": False, "version": "3.3.0",
-        "summary": "La prima visita dell'anno al tempio, poi lo Skytree. Molti ristoranti sono chiusi: ci pensiamo prima.",
-        "stops": [], "meals": [],
-        "phrase": {"jp": "あけましておめでとうございます", "romaji": "Akemashite omedetō gozaimasu", "it": "Buon anno!"},
-    },
-    "fukubukuro": {
-        "title": "Le borse fortunate", "kanji": "福", "reading": "fuku", "meaning": "fortuna",
-        "kind": "capodanno", "treasure": True, "complete": False, "version": "3.3.0",
-        "summary": "I grandi magazzini riaprono con i saldi e i fukubukuro, sacchetti a sorpresa con dentro più di quanto pagate.",
-        "stops": [], "meals": [],
-        "phrase": {"jp": "福袋はどこですか？", "romaji": "Fukubukuro wa doko desu ka?", "it": "Dove sono le borse fortunate?"},
-    },
-    "nakano": {
-        "title": "Nakano Broadway", "kanji": "宝", "reading": "takara", "meaning": "tesoro",
-        "kind": "tokyo", "treasure": True, "complete": False, "version": "3.3.0",
-        "summary": "La caccia al tesoro vera: 33 negozi Mandarake, con lo Special 8 dedicato alle figure shonen. Il 4 gennaio riapre tutto.",
-        "stops": [], "meals": [],
-        "phrase": {"jp": "箱はありますか？", "romaji": "Hako wa arimasu ka?", "it": "C'è la scatola originale?"},
-    },
-    "partenza": {
-        "title": "Arrivederci Giappone", "kanji": "帰", "reading": "kaeru", "meaning": "ritorno",
-        "kind": "fisso", "complete": False, "version": "3.3.0",
-        "summary": "Treno Keisei da Asakusa direttamente a Narita. Volo alle 14: uscite dall'hotel verso le 9:30.",
-        "stops": [], "meals": [],
-        "phrase": {"jp": "ありがとう、また来ます", "romaji": "Arigatō, mata kimasu", "it": "Grazie, torneremo"},
-    },
 }
 
 # ---------------------------------------------------------------------------
@@ -641,6 +606,7 @@ PLANS.update({
         ],
         "rain": "Non cambia niente: treno, taxi e appartamento sono al coperto.",
         "tip": "Bagagli: se la somma delle tre misure di un trolley supera i 160 cm, va prenotato il posto per bagagli voluminosi insieme al biglietto. In alternativa spedite le valigie da hotel a hotel e viaggiate leggeri.",
+        "links": [{"label": "Il percorso passo passo", "href": "/percorso/ryogoku-kyoto"}],
         "kids": "Contare le gallerie dal finestrino dello shinkansen. Spoiler: sono tantissime, ci vuole concentrazione.",
         "phrase": {"jp": "この席は空いていますか？", "romaji": "Kono seki wa aite imasu ka?", "it": "È libero questo posto?"},
     },
@@ -799,6 +765,144 @@ PLANS.update({
     },
 })
 
+# ---------------------------------------------------------------------------
+# Capodanno ad Asakusa, 31 dicembre – 5 gennaio (v4.2.0)
+# Orari di Capodanno: dove non ci sono quelli del 2026/27, uso quelli dell'anno scorso e lo dico.
+# ---------------------------------------------------------------------------
+PLANS.update({
+    "omisoka": {
+        "title": "Ōmisoka, l'ultimo dell'anno", "kanji": "年", "reading": "toshi", "meaning": "anno",
+        "kind": "capodanno", "complete": True,
+        "summary": "Rientro a Tokyo col treno proiettile, nuova base ad Asakusa, la soba della lunga vita e il primo assaggio di Capodanno giapponese.",
+        "transport": "Shinkansen da Kyoto a Tokyo, poi JR fino ad Akihabara e Tsukuba Express fino ad Asakusa: l'hotel è a 2 minuti dall'uscita A1",
+        "stroller": "medio: è una giornata di valigie",
+        "cost": "biglietti dello shinkansen; la soba sta nel budget",
+        "stops": [
+            {"when": "Mattina", "what": "Shinkansen da Kyoto a Tokyo e due treni brevi fino ad Asakusa. Il percorso passo passo è nella sezione Percorsi."},
+            {"when": "Pomeriggio", "what": "Bagagli in hotel e prima passeggiata sulla via Nakamise, vestita a festa con le decorazioni di Capodanno.",
+             "place": {"name": "Nakamise e Senso-ji", "q": "浅草寺 仲見世"}},
+            {"when": "Sera presto", "what": "La toshikoshi soba, i noodle della lunga vita, da mangiare prima di mezzanotte."},
+            {"when": "Mezzanotte, per chi resiste", "what": "La campana del Senso-ji suona dalla collinetta di Benten-yama per salutare l'anno nuovo. Il tempio è un mare di persone: uno dei due può andare, l'altro resta con le bimbe."},
+        ],
+        "meals": [
+            {"label": "Cena", "name": "Toshikoshi soba", "jp": "年越しそば", "what": "Soba di grano saraceno, lunghi per la lunga vita e facili da spezzare per chiudere con le sfortune dell'anno",
+             "price": "una ciotola di solito sta sotto i 1.500 ¥", "kids": "Se i locali sono pieni, la soba pronta del konbini vale lo stesso: conta il gesto", "q": "浅草 そば"},
+            {"label": "Scorte", "name": "Konbini sotto l'hotel", "jp": "コンビニ", "what": "Onigiri, frutta, yogurt e pappe per la mattina del 1° gennaio, quando quasi tutto è chiuso",
+             "price": "pochi soldi", "kids": "I konbini restano aperti anche a Capodanno", "q": "浅草 コンビニ"},
+        ],
+        "rain": "Il Senso-ji con l'ombrello è suggestivo; la soba si mangia al caldo.",
+        "tip": "Il 31 sera conviene andare al tempio presto, verso le 18–19: c'è già atmosfera ma si cammina. I treni corrono tutta la notte, quindi chi vuole la mezzanotte può viverla senza pensieri.",
+        "links": [{"label": "Il percorso passo passo", "href": "/percorso/kyoto-asakusa"}],
+        "kids": "Mangiare la soba facendo slurp: in Giappone è educato. Più forte è lo slurp, più lunga la vita, dicono i papà.",
+        "phrase": {"jp": "よいお年を", "romaji": "Yoi otoshi o", "it": "Buona fine d'anno"},
+    },
+    "gantan": {
+        "title": "Il primo giorno dell'anno", "kanji": "初", "reading": "hatsu", "meaning": "primo",
+        "kind": "capodanno", "complete": True,
+        "summary": "La prima visita dell'anno al tempio di buon mattino, poi l'acquario di Sumida ai piedi dello Skytree. Quasi tutto è chiuso, ma noi sappiamo dove andare.",
+        "transport": "A piedi al Senso-ji; per lo Skytree una passeggiata di circa 20 minuti oltre il fiume, oppure una fermata di metro fino a Oshiage",
+        "stroller": "medio: folla al tempio, comodo allo Skytree",
+        "cost": "il tempio è gratis (l'offerta tradizionale è una moneta da 5 ¥); l'acquario si paga",
+        "stops": [
+            {"when": "Mattina presto", "what": "Hatsumōde, la prima visita dell'anno al Senso-ji. Più tardi le strade intorno vengono chiuse per la folla: presto è meglio.",
+             "place": {"name": "Senso-ji", "q": "浅草寺"}},
+            {"when": "Tarda mattina", "what": "Acquario di Sumida, dentro Tokyo Solamachi: pinguini, foche e il tunnel delle meduse. È aperto tutto l'anno.",
+             "place": {"name": "Acquario di Sumida", "q": "すみだ水族館", "info": "Aperto tutto l'anno, 9–21"}},
+            {"when": "Pomeriggio", "what": "Riposo in hotel. Il primo dell'anno anche i giapponesi stanno a casa."},
+        ],
+        "meals": [
+            {"label": "Pranzo", "name": "Saint Marc a Matsuya Asakusa", "jp": "サンマルク 松屋浅草 8F", "what": "Panetteria e ristorante all'8° piano del grande magazzino accanto alla stazione",
+             "price": "prezzi da caffetteria", "kids": "Consigliato per le famiglie dal blog della mamma di Tokyo. L'anno scorso il 1° gennaio era aperto dalle 11 alle 15", "q": "松屋浅草"},
+            {"label": "Alternativa", "name": "Ristoranti di Tokyo Solamachi", "jp": "東京ソラマチ レストラン", "what": "I ristoranti ai piedi dello Skytree, comodi dopo l'acquario",
+             "price": "per tutte le tasche", "kids": "L'anno scorso il 1° gennaio erano aperti dalle 11 alle 21", "q": "東京ソラマチ"},
+            {"label": "Cena", "name": "Le catene che non chiudono mai", "jp": "ファミレス", "what": "Sushi al nastro come Sushiro e family restaurant come Gusto o Denny's di solito restano aperti anche il 1° gennaio",
+             "price": "nel budget", "kids": "Menu con le foto, seggioloni e niente sorprese", "q": "浅草 ファミレス"},
+        ],
+        "rain": "L'acquario e Solamachi sono al coperto: perfetti.",
+        "tip": "Il 1° gennaio è il giorno più chiuso dell'anno. Le scorte del konbini fatte il 31 sera vi salvano la colazione.",
+        "kids": "Pescare l'omikuji, il biglietto della fortuna. Se esce grande fortuna si festeggia; se esce sfortuna, si lega al filo apposito e lei resta lì.",
+        "phrase": {"jp": "あけましておめでとうございます", "romaji": "Akemashite omedetō gozaimasu", "it": "Buon anno!"},
+    },
+    "fukubukuro": {
+        "title": "Le borse fortunate", "kanji": "福", "reading": "fuku", "meaning": "fortuna",
+        "kind": "capodanno", "treasure": True, "complete": True,
+        "summary": "Riaprono i negozi con i fukubukuro, sacchetti a sorpresa con dentro più di quanto pagate. Papà a caccia ad Akihabara, mamma e bimbe da Matsuya, sotto casa.",
+        "transport": "Matsuya è alla stazione di Asakusa; per Akihabara una fermata di Tsukuba Express",
+        "stroller": "medio: code e folla al mattino",
+        "cost": "borse da poche centinaia di yen a decine di migliaia; nei negozi di anime l'anno scorso 3.000 e 5.000 ¥",
+        "stops": [
+            {"when": "Mattina, mamma e bimbe", "what": "Matsuya Asakusa riapre con le borse fortunate. L'anno scorso il 2 gennaio era aperto dalle 10 alle 18.",
+             "place": {"name": "Matsuya Asakusa", "q": "松屋浅草"}},
+            {"when": "Mattina, papà", "what": "Akihabara: l'anno scorso Animate vendeva borse fortunate il 2 e il 3 gennaio, con code lunghissime. La caccia al tesoro di Capodanno.",
+             "place": {"name": "Animate Akihabara", "q": "アニメイト秋葉原", "info": "L'anno scorso borse da 3.000 e 5.000 ¥"}},
+            {"when": "In alternativa", "what": "Il 2 gennaio l'Imperatore si affaccia più volte in pubblico al Palazzo Imperiale. Folla e controlli: meglio senza passeggino.",
+             "place": {"name": "Palazzo Imperiale", "q": "皇居"}},
+            {"when": "Sera", "what": "Tutti in camera ad aprire le borse insieme, come regali di compleanno."},
+        ],
+        "meals": [
+            {"label": "Pranzo", "name": "Ristoranti di Matsuya Asakusa", "jp": "松屋浅草 レストラン", "what": "I piani dei ristoranti del grande magazzino, comodi dopo lo shopping",
+             "price": "per tutte le tasche", "kids": "Si resta al caldo e vicino all'hotel", "q": "松屋浅草"},
+            {"label": "Cena", "name": "Ristoranti di Tokyo Solamachi", "jp": "東京ソラマチ レストラン", "what": "Tanta scelta ai piedi dello Skytree",
+             "price": "per tutte le tasche", "kids": "L'anno scorso il 2 e il 3 gennaio erano aperti dalle 11 alle 22", "q": "東京ソラマチ"},
+        ],
+        "rain": "Tutto al coperto, a parte le code fuori dai negozi.",
+        "tip": "Le borse non si aprono in negozio: il bello è scartarle in hotel tutti insieme. Fissate un budget prima, o sarà lui a fissare voi.",
+        "kids": "Scegliere una piccola borsa fortunata da poche centinaia di yen e aprirla in camera come un regalo a sorpresa.",
+        "phrase": {"jp": "福袋はどこですか？", "romaji": "Fukubukuro wa doko desu ka?", "it": "Dove sono le borse fortunate?"},
+    },
+    "nakano": {
+        "title": "Nakano Broadway", "kanji": "宝", "reading": "takara", "meaning": "tesoro",
+        "kind": "tokyo", "treasure": True, "complete": True,
+        "summary": "La caccia al tesoro vera: Nakano Broadway e i suoi negozi Mandarake, con le figure shonen dello Special 8. Dopo le feste riapre tutto.",
+        "transport": "Da Asakusa linea Ginza fino a Kanda, poi JR Chuo rapida fino a Nakano: circa 40 minuti, verificate su Google Maps. Nakano Broadway è a 5 minuti dalla stazione",
+        "stroller": "difficile: negozi minuscoli e corridoi stretti. Uno caccia, l'altro tiene le bimbe, poi ci si dà il cambio",
+        "cost": "dipende da quanto è profonda la tasca dei pantaloni",
+        "stops": [
+            {"when": "Tarda mattina", "what": "Nakano Broadway: 33 negozi Mandarake, con lo Special 8 dedicato alle figure shonen. Molti negozi aprono a fine mattina; contanti preferiti.",
+             "place": {"name": "Nakano Broadway", "q": "中野ブロードウェイ", "info": "Controllate gli orari di inizio anno sul sito di Mandarake"}},
+            {"when": "Pranzo", "what": "La galleria coperta Sun Mall, tra la stazione e Nakano Broadway, piena di locali economici.",
+             "place": {"name": "Sun Mall", "q": "中野サンモール商店街"}},
+            {"when": "Pomeriggio", "what": "Secondo giro di caccia o rientro con calma ad Asakusa: domani si parte."},
+        ],
+        "meals": [
+            {"label": "Pranzo", "name": "Locali della Sun Mall", "jp": "中野サンモール", "what": "Ramen, curry e catene economiche lungo la galleria coperta",
+             "price": "si sta nel budget", "kids": "Al coperto e a due passi dal tesoro", "q": "中野サンモール商店街"},
+            {"label": "Merenda", "name": "Il gelato altissimo di Nakano Broadway", "jp": "デイリーチコ", "what": "Un cono di gelato soft a più strati, il più famoso dell'edificio",
+             "price": "prezzi da verificare sul posto", "kids": "Una torre di gelato: impossibile non fotografarla", "q": "デイリーチコ 中野"},
+            dict(DANDADAN, label="Cena", what="Ultima cena: gyoza ad Asakusabashi, due fermate di linea Toei Asakusa dall'hotel"),
+        ],
+        "rain": "Tutto al coperto: perfetto.",
+        "tip": "Prima di pagare controllate la scatola: 箱あり (hako ari) vuol dire con la scatola originale. E portate contanti.",
+        "kids": "Trovare la figure più piccola di tutto Nakano Broadway. Missione difficilissima: sono migliaia.",
+        "phrase": {"jp": "箱はありますか？", "romaji": "Hako wa arimasu ka?", "it": "C'è la scatola originale?"},
+    },
+    "partenza": {
+        "title": "Arrivederci Giappone", "kanji": "帰", "reading": "kaeru", "meaning": "ritorno",
+        "kind": "fisso", "complete": True,
+        "summary": "Ultima mattina: colazione, valigie e treno diretto per Narita. Volo alle 14, ricordi a volontà.",
+        "transport": "Access Express diretto dalla linea Toei Asakusa all'aeroporto di Narita, circa 55–80 minuti",
+        "stroller": "medio: valigie e passeggini, ma senza cambi",
+        "cost": "circa 1.300 ¥ a adulto; bimbe sotto i 6 anni gratis",
+        "stops": [
+            {"when": "7:30", "what": "Colazione e check-out con calma."},
+            {"when": "9:30", "what": "Partenza dall'hotel verso la stazione Toei di Asakusa (non quella della Tsukuba Express)."},
+            {"when": "11:00", "what": "In aeroporto: rimborso tax-free, check-in e controlli."},
+            {"when": "14:00", "what": "Decollo. さようなら, Giappone."},
+        ],
+        "meals": [
+            {"label": "Colazione", "name": "Konbini o hotel", "jp": "コンビニ", "what": "Onigiri, pane e frutta per partire leggeri",
+             "price": "pochi soldi", "kids": "L'ultimo onigiri giapponese, per un po'", "q": "浅草 コンビニ"},
+            {"label": "Pranzo", "name": "Ristoranti dell'aeroporto", "jp": "成田空港 レストラン", "what": "Ramen, sushi e food court nei terminal di Narita",
+             "price": "per tutte le tasche", "kids": "Mangiate prima dei controlli, con calma", "q": "成田空港 レストラン"},
+        ],
+        "rain": "Non cambia niente: tutto al coperto.",
+        "tip": "Spendete le ultime monetine al konbini dell'aeroporto: le bimbe sceglieranno il souvenir più strano, ed è giusto così.",
+        "links": [{"label": "Il percorso passo passo", "href": "/percorso/asakusa-narita"}],
+        "kids": "Dire sayōnara al Giappone dal finestrino dell'aereo e promettere di tornare.",
+        "phrase": {"jp": "ありがとう、また来ます", "romaji": "Arigatō, mata kimasu", "it": "Grazie, torneremo"},
+    },
+})
+
 # I 23 giorni: il primo piano della lista è quello consigliato
 DAYS = [
     {"date": "2026-12-14", "chapter": "tokyo1", "plans": ["arrivo"]},
@@ -821,7 +925,7 @@ DAYS = [
     {"date": "2026-12-31", "chapter": "tokyo2", "plans": ["omisoka"]},
     {"date": "2027-01-01", "chapter": "tokyo2", "plans": ["gantan"]},
     {"date": "2027-01-02", "chapter": "tokyo2", "plans": ["fukubukuro"]},
-    {"date": "2027-01-03", "chapter": "tokyo2", "plans": ["odaiba", "yokohama", "ueno-akiba"], "note": "Il 3 gennaio molti tornano in città e i treni sono affollati. I centri commerciali sono aperti."},
+    {"date": "2027-01-03", "chapter": "tokyo2", "plans": ["odaiba", "yokohama", "ueno-akiba"], "note": "Il 3 gennaio molti tornano in città e i treni sono affollati. I centri commerciali sono aperti; per musei e attrazioni controllate sempre il calendario di Capodanno."},
     {"date": "2027-01-04", "chapter": "tokyo2", "plans": ["nakano"]},
     {"date": "2027-01-05", "chapter": "tokyo2", "plans": ["partenza"]},
 ]
