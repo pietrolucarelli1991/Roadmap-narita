@@ -136,7 +136,7 @@ Frasi brevi, niente maiuscole urlate, niente gergo tecnico. Dove serve, una paro
 | Versione | Contenuto |
 |---|---|
 | ~~v4.0.0~~ | ✅ Fatto. **Pacchetto wow**: cielo in cima a Oggi che segue ora e meteo veri di Tokyo (alba, giorno, tramonto, notte con stelle; neve o pioggia se succede davvero, dati Open-Meteo); un colore per capitolo (Tokyo indaco invernale, Kyoto cachi e muschio, Capodanno rosso, bianco e oro); font Shippori Mincho per i titoli e Zen Kaku Gothic New per il testo; titoli dei capitoli in verticale (tategaki); voce nuova in tutti i testi vecchi; parola giapponese nei titoli di sezione; passaggi fluidi tra le pagine (View Transitions); timbro 決 quando si sceglie un piano |
-| v4.1.0 | Kyoto, Nara e Osaka completi (giorni 26–30) |
+| ~~v4.1.0~~ | ✅ Fatto. Kyoto, Nara e Osaka completi (giorni 26–30) |
 | v4.2.0 | Capodanno completo (31/12–5/1) e 3 roadmap di trasferimento: Ryogoku → Kyoto, Kyoto → Asakusa, Asakusa → Narita |
 | v4.3.0 | Emergenze e salute (numeri, pediatri vicino ai 3 hotel, frasi mediche) e frasario per situazioni |
 | v4.4.0 | Sezione missioni per la bimba di 5 anni con adesivi; diario fotografico (foto per ogni giorno, salvate sul telefono) |

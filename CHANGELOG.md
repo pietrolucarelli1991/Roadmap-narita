@@ -6,6 +6,18 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 4.1.0 — 21 ottobre 2026
+
+Aggiunto
+- Capitolo Kyoto completo, giorni 26–30: shinkansen verso Kyoto, Kyoto classica
+  (Fushimi Inari e Kiyomizu-dera), Arashiyama con il trenino di Sagano, gita a Nara,
+  Museo dei treni, gita a Osaka (acquario Kaiyukan e Dotonbori), Universal Studios Japan
+- Pasti verificati: Gyoza no Ohsho (nato a Kyoto), kitsune udon, mochi di Nakatanidou,
+  takoyaki di Dotonbori, cena in appartamento dal Daimaru
+- Chiusure di fine anno: trenino di Sagano (fino al 29/12), Museo dei treni (30/12–1/1)
+- Due nuove cose da prenotare: trenino di Sagano e acquario di Osaka (dal 30 novembre)
+- Missioni per le bimbe e frasi del giorno per tutti i giorni di Kyoto
+
 ## 4.0.0 — 21 ottobre 2026
 
 Il pacchetto wow: l'app cambia faccia.
