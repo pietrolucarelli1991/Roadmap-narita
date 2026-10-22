@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  {% set theme = '#f7f5f0' %}
+  {% include '_head.html' %}
+  <title>SOS emergenze — Tokyo 2026</title>
+</head>
+<body class="app-page page-sos has-nav">
+
+  <header class="sos-head">
+    <p class="jp-label" lang="ja">救急 <i>kyūkyū</i></p>
+    <h1>SOS emergenze</h1>
+    <p>Speriamo di non aprirla mai. Ma se serve, qui c'è tutto, anche senza internet. I numeri si chiamano con un tocco.</p>
+  </header>
+
+  <main class="page-body sos-body">
+    <section class="sos-big" aria-label="Numeri principali">
+      <a class="sos-call sos-call-red" href="tel:119">
+        <span class="sos-call-num">119</span>
+        <span class="sos-call-text"><strong>Ambulanza e vigili del fuoco</strong><span>Gratuito, 24 ore su 24</span></span>
+      </a>
+      <a class="sos-call" href="tel:110">
+        <span class="sos-call-num">110</span>
+        <span class="sos-call-text"><strong>Polizia</strong><span>Gratuito, 24 ore su 24</span></span>
+      </a>
+      <a class="sos-call sos-call-blue" href="tel:+815038162787">
+        <span class="sos-call-num sos-call-num-sm">050-3816-2787</span>
+        <span class="sos-call-text"><strong>Japan Visitor Hotline</strong><span>Aiuto per turisti in inglese, 24 ore su 24</span></span>
+      </a>
+    </section>
+
+    <section class="sos-card" aria-labelledby="how-title">
+      <h2 id="how-title"><span class="h-jp" lang="ja">電話 <i>denwa</i></span>Come chiamare il 119</h2>
+      <ol class="sos-steps">
+        <li>Dite subito <strong lang="ja">救急です</strong> (kyūkyū desu): è un'emergenza medica.</li>
+        <li>Dite dove siete: leggete o fate leggere l'indirizzo dell'hotel qui sotto. Se siete fuori, chiedete aiuto al primo passante o in un negozio.</li>
+        <li>Gli operatori parlano giapponese, ma possono collegare un interprete: restate in linea.</li>
+        <li>Quando sentite la sirena, uno di voi va incontro all'ambulanza.</li>
+      </ol>
+      <a class="t-btn" href="/frasi#emergenza">Le frasi d'emergenza da mostrare</a>
+    </section>
+
+    <section aria-labelledby="addr-title">
+      <h2 id="addr-title"><span class="h-jp" lang="ja">住所 <i>jūsho</i></span>I vostri indirizzi</h2>
+      <div class="sos-addr-list">
+        {% for c in chapters %}
+        <button type="button" class="sos-addr" style="--ch: {{ c.color }}" data-addr-jp="{{ c.address_jp }}" data-addr-name="{{ c.hotel_jp }}" data-addr-it="{{ c.hotel }}">
+          <span class="sos-addr-when">{{ c.title }}, dal {{ c.start[8:10] | int }}/{{ c.start[5:7] | int }}</span>
+          <span class="sos-addr-name">{{ c.hotel }}</span>
+          <span class="sos-addr-jp" lang="ja">{{ c.address_jp }}</span>
+          <span class="sos-addr-hint">Tocca per mostrarlo a tutto schermo</span>
+        </button>
+        {% endfor %}
+      </div>
+    </section>
+
+    <section aria-labelledby="hosp-title">
+      <h2 id="hosp-title"><span class="h-jp" lang="ja">病院 <i>byōin</i></span>Ospedali vicino ai vostri hotel</h2>
+      {% for c in chapters %}
+      <div class="sos-chapter" style="--ch: {{ c.color }}">
+        <h3><span lang="ja" class="sos-chapter-jp">{{ c.name_jp }}</span> {{ c.title }} <span class="sos-chapter-hotel">vicino a {{ c.hotel }}</span></h3>
+        {% for h in sos.hospitals if h.chapter == c.id %}
+        <article class="sos-hosp">
+          <p class="sos-hosp-name">{{ h.name }} <span lang="ja">{{ h.jp }}</span></p>
+          <p class="sos-hosp-what">{{ h.what }}</p>
+          <p class="sos-hosp-actions">
+            {% if h.tel %}<a class="t-btn" href="tel:{{ h.tel_link }}">Chiama {{ h.tel }}</a>{% endif %}
+            <a class="t-btn" href="https://www.google.com/maps/search/?api=1&query={{ h.q | urlencode }}" target="_blank" rel="noopener">Mappa</a>
+          </p>
+        </article>
+        {% endfor %}
+      </div>
+      {% endfor %}
+      <p class="fine">Se è grave, non cercate l'ospedale da soli: chiamate il 119.</p>
+    </section>
+
+    <section aria-labelledby="num-title">
+      <h2 id="num-title"><span class="h-jp" lang="ja">番号 <i>bangō</i></span>Altri numeri utili</h2>
+      <ul class="sos-list">
+        {% for n in sos.numbers if n.num not in ['119', '110', '050-3816-2787'] %}
+        <li>
+          <a class="sos-num" href="tel:{{ n.tel | replace('#', '%23') }}">{{ n.num }}</a>
+          <div><p class="sos-num-title">{{ n.title }}</p><p class="sos-num-detail">{{ n.detail }}</p></div>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+
+    <section aria-labelledby="cons-title">
+      <h2 id="cons-title"><span class="h-jp" lang="ja">大使館 <i>taishikan</i></span>Ambasciata e Consolato</h2>
+      {% for c in sos.consular %}
+      <article class="sos-hosp">
+        <p class="sos-hosp-name">{{ c.name }}</p>
+        <p class="sos-hosp-what">{{ c.address }}. {{ c.note }}</p>
+        <p class="sos-hosp-actions">
+          <a class="t-btn" href="tel:{{ c.tel_link }}">Chiama {{ c.tel }}</a>
+          {% if c.emergency %}<a class="t-btn t-btn-sos" href="tel:{{ c.emergency_link }}">Emergenza {{ c.emergency }}</a>{% endif %}
+        </p>
+      </article>
+      {% endfor %}
+    </section>
+
+    <section class="sos-card" aria-labelledby="ins-title">
+      <h2 id="ins-title"><span class="h-jp" lang="ja">保険 <i>hoken</i></span>La vostra assicurazione</h2>
+      <p class="fine">In Giappone la tessera sanitaria europea non vale: serve l'assicurazione di viaggio. Scrivete qui i dati, così li avete sempre sotto mano. Restano solo su questo telefono.</p>
+      <div class="ins-grid" id="insurance">
+        <label>Compagnia <input type="text" data-ins="company" autocomplete="off"></label>
+        <label>Numero di polizza <input type="text" data-ins="policy" autocomplete="off"></label>
+        <label>Numero dell'assistenza 24 ore <input type="tel" data-ins="phone" autocomplete="off"></label>
+      </div>
+      <a class="t-btn" id="ins-call" href="#" hidden>Chiama l'assistenza</a>
+    </section>
+
+    <p class="fine sos-sources">Numeri e orari verificati a ottobre 2026. Prima di partire ricontrollate i contatti dell'Ambasciata sul suo sito.</p>
+    <p class="app-version">Tokyo 2026, versione {{ app_version }}</p>
+  </main>
+
+  {% include '_nav.html' %}
+  <script src="{{ static_v('js/frasi.js') }}" defer></script>
+</body>
+</html>

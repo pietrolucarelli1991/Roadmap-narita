@@ -228,7 +228,7 @@
   }
 
   /* ---------- Copia di sicurezza ---------- */
-  var BACKUP_KEYS = [STATE_KEY, "spesa-bimbe-v1"];
+  var BACKUP_KEYS = [STATE_KEY, "spesa-bimbe-v1", "tokyo-frasi-v1", "tokyo-sos-v1"];
   function exportData() {
     var data = { app: "tokyo2026", v: 1, saved: new Date().toISOString(), keys: {} };
     BACKUP_KEYS.forEach(function (k) {

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  {% set theme = '#f7f5f0' %}
+  {% include '_head.html' %}
+  <title>Frasario — Tokyo 2026</title>
+</head>
+<body class="app-page page-frasi has-nav">
+
+  <header class="frasi-head">
+    <p class="jp-label" lang="ja">会話 <i>kaiwa</i></p>
+    <h1>Frasario</h1>
+    <p>Le frasi che servono davvero, anche senza internet. "Mostra" la mette a tutto schermo, "Ascolta" la dice in giapponese al posto vostro.</p>
+
+    <a class="sos-banner" href="/sos">
+      <span class="sos-banner-glyph" lang="ja" aria-hidden="true">救</span>
+      <span class="sos-banner-text">
+        <strong>SOS emergenze</strong>
+        <span>Numeri utili, ospedali vicino agli hotel, Ambasciata</span>
+      </span>
+    </a>
+
+    <label class="frasi-search">
+      <span class="visually-hidden">Cerca una frase</span>
+      <input type="search" id="frasi-search" placeholder="Cerca: bagno, seggiolone, febbre..." autocomplete="off">
+    </label>
+  </header>
+
+  <nav class="frasi-cats" id="frasi-cats" aria-label="Situazioni"></nav>
+
+  <main class="page-body frasi-body">
+    <section class="allergy" id="allergie" aria-labelledby="allergy-title">
+      <h2 id="allergy-title"><span class="h-jp" lang="ja">アレルギー <i>arerugī</i></span>La carta delle allergie</h2>
+      <p class="allergy-lead">Scegliete chi e cosa: la frase giusta in giapponese si scrive da sola, pronta da mostrare al ristorante.</p>
+      <div class="allergy-who" role="group" aria-label="Chi è allergico">
+        <button type="button" class="chip-btn" data-who="musume" aria-pressed="true">Mia figlia</button>
+        <button type="button" class="chip-btn" data-who="watashi" aria-pressed="false">Io</button>
+      </div>
+      <div class="allergy-items" id="allergy-items" role="group" aria-label="Allergeni"></div>
+      <div class="allergy-card" id="allergy-card" hidden></div>
+    </section>
+
+    <div id="frasi-list"></div>
+
+    <section class="gt-tips" aria-labelledby="gt-title">
+      <h2 id="gt-title"><span class="h-jp" lang="ja">翻訳 <i>hon'yaku</i></span>La scorta: Google Traduttore</h2>
+      <ol>
+        <li>Scaricate il giapponese e l'italiano per l'uso offline, con il Wi-Fi di casa.</li>
+        <li>Con la <strong>Fotocamera</strong> inquadrate menu, cartelli ed etichette: la traduzione compare sopra.</li>
+        <li>La modalità <strong>Conversazione</strong> traduce a turno: voi in italiano, loro in giapponese.</li>
+        <li>Frasi brevi e semplici, una cosa alla volta: la traduzione viene molto meglio.</li>
+      </ol>
+    </section>
+
+    <p class="app-version">Tokyo 2026, versione {{ app_version }}</p>
+  </main>
+
+  {% include '_nav.html' %}
+  <script>window.FRASI = {{ frasi | tojson }};</script>
+  <script src="{{ static_v('js/frasi.js') }}" defer></script>
+</body>
+</html>

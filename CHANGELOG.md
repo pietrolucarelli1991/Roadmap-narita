@@ -6,6 +6,24 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 4.4.0 — 22 ottobre 2026
+
+Aggiunto
+- Frasario (sezione 話 Frasi): 86 frasi in 9 situazioni, dalle parole magiche alle emergenze,
+  con ricerca, preferite, "Mostra" a tutto schermo e "Ascolta" con la voce giapponese del telefono.
+  Funziona anche offline
+- La carta delle allergie: si scelgono chi e cosa, la frase in giapponese si scrive da sola
+- Pagina SOS: 119, 110 e Japan Visitor Hotline con un tocco, come chiamare il 119,
+  gli indirizzi dei tre hotel da mostrare a tutto schermo, gli ospedali con pediatria vicino
+  a ogni hotel, altri numeri utili, Ambasciata e Consolato, i dati dell'assicurazione
+- Scorciatoia SOS nella pagina Oggi
+- Consigli per usare Google Traduttore come scorta
+
+Modificato
+- Nella barra in basso 話 Frasi prende il posto di 富 Fuji: il Fuji-metro resta nella pagina Oggi
+  e nelle schede dei giorni del Fuji
+- La copia di sicurezza include anche preferite, allergie e assicurazione
+
 ## 4.3.0 — 21 ottobre 2026
 
 Restyling: ora tutta l'app parla la stessa lingua visiva.

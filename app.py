@@ -8,11 +8,12 @@ from flask import Flask, render_template, jsonify, url_for, make_response, reque
 
 from dati_spesa import HOTEL, CATEGORIES, SHOPS, PRODUCTS, DIAPER_SIZES, WORDS, PHRASES
 from dati_percorsi import ROUTES, STEPS
+from dati_frasi import PHRASES, ALLERGENS, SOS
 from dati_viaggio import TRIP, CHAPTERS, PLANS, DAYS, TODO, FUJI
 
 # Ad ogni rilascio aumenta questo numero (e usa lo stesso per il tag git):
 # così i telefoni vedono "Nuova versione pronta" e scaricano l'app aggiornata.
-APP_VERSION = "4.2.0"
+APP_VERSION = "4.3.0"
 
 # Font e mappe usati da tutte le pagine (salvati anche per l'uso offline)
 FONTS_URL = ("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800"
@@ -109,6 +110,17 @@ def itinerario():
     return render_template("itinerario.html", viaggio=viaggio_data(), tab="viaggio")
 
 
+@app.route("/frasi")
+def frasi():
+    return render_template("frasi.html", phrases=PHRASES, allergens=ALLERGENS,
+                           frasi={"phrases": PHRASES, "allergens": ALLERGENS}, tab="frasi")
+
+
+@app.route("/sos")
+def sos():
+    return render_template("sos.html", sos=SOS, chapters=CHAPTERS, tab="frasi")
+
+
 @app.route("/fuji")
 def fuji():
     return render_template("fuji.html", fuji=FUJI, tab="fuji")
@@ -184,10 +196,10 @@ def manifest():
 @app.route("/sw.js")
 def service_worker():
     # Il "service worker" è il pezzo che salva l'app sul telefono per usarla offline
-    pages = ["/", "/itinerario", "/fuji", "/spesa"] + [r["path"] for r in ROUTES]
+    pages = ["/", "/itinerario", "/frasi", "/sos", "/fuji", "/spesa"] + [r["path"] for r in ROUTES]
     assets = [static_v(f) for f in [
         "css/app.css", "css/style.css", "css/spesa.css",
-        "js/app.js", "js/planner.js", "js/oggi.js", "js/cielo.js", "js/percorso.js", "js/itinerario.js", "js/fuji.js", "js/spesa.js",
+        "js/app.js", "js/planner.js", "js/oggi.js", "js/cielo.js", "js/percorso.js", "js/frasi.js", "js/itinerario.js", "js/fuji.js", "js/spesa.js",
         "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
     ]] + ["/manifest.webmanifest", FONTS_URL, LEAFLET_CSS, LEAFLET_JS]
     body = render_template("sw.js", pages=pages, assets=assets)
