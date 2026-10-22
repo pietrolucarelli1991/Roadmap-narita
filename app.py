@@ -13,7 +13,7 @@ from dati_viaggio import TRIP, CHAPTERS, PLANS, DAYS, TODO, FUJI
 
 # Ad ogni rilascio aumenta questo numero (e usa lo stesso per il tag git):
 # così i telefoni vedono "Nuova versione pronta" e scaricano l'app aggiornata.
-APP_VERSION = "4.3.0"
+APP_VERSION = "4.4.0"
 
 # Font e mappe usati da tutte le pagine (salvati anche per l'uso offline)
 FONTS_URL = ("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800"

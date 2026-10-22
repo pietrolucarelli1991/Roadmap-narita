@@ -876,3 +876,31 @@ a { color: inherit; }
   }
   .cart-bar { bottom: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px)); }
 }
+
+/* ---------- v4.5: prodotti con marchio, dove si trovano e foto ---------- */
+.lead-note { padding: 10px 12px; border-radius: 12px; background: #fff4e0; color: #6b4c12; font-size: 0.84rem; }
+.where-filter { display: flex; gap: 6px; margin-bottom: 14px; }
+.where-btn {
+  flex: 1;
+  padding: 0.5rem 0.4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: var(--card);
+  color: var(--ink-2);
+  font-weight: 600;
+  font-size: 0.84rem;
+}
+.where-btn[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+.product { flex-wrap: wrap; }
+.product-main { min-width: 0; }
+.product-brand { font-size: 0.72rem; font-weight: 700; color: var(--hinomaru); }
+.product-where { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.where-tag { padding: 0 0.45rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; line-height: 1.6; background: #ebe8e1; color: var(--ink-2); }
+.where-konbini { background: #e1f0e6; color: #22603c; }
+.where-drug { background: #e4ebf5; color: #24426e; }
+.product-extra { grid-column: 1 / -1; width: 100%; display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--line); }
+.product-photos { font-size: 0.82rem; font-weight: 600; color: var(--ai); }
+.product-look summary { font-size: 0.82rem; font-weight: 600; color: var(--ink-2); cursor: pointer; }
+.product-look p { margin-top: 6px; font-size: 0.84rem; color: var(--ink-2); line-height: 1.5; }
+.product-look[open] { width: 100%; }
+.tab { white-space: nowrap; font-size: 0.82rem; padding-left: 0.35rem; padding-right: 0.35rem; }

@@ -6,6 +6,23 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 4.5.0 — 22 ottobre 2026
+
+Aggiunto
+- Lista della spesa da 10 a 21 prodotti, con i marchi più diffusi in Giappone
+- Per ogni prodotto: il marchio, dove si trova davvero (farmacia, konbini, supermercato,
+  negozi per bimbi), "Guarda le foto della confezione" con il nome giapponese esatto
+  e "Come riconoscerlo" sullo scaffale
+- Nuovo gruppo "Dal konbini": onigiri, tamago sando, pollo fritto del banco caldo,
+  frutta tagliata, budino, latte, Pocari Sweat
+- Nuovo gruppo "Se arriva la febbre": cerotti rinfrescanti, OS-1, gallette per bebè
+- Filtro rapido: Tutto, In farmacia, Al konbini
+
+Note
+- Le foto non sono copiate nell'app (appartengono ai marchi e le confezioni cambiano spesso):
+  il pulsante apre le immagini aggiornate della confezione
+- Prezzi della farmacia verificati; quelli dei konbini sono indicativi (segno ≈)
+
 ## 4.4.0 — 22 ottobre 2026
 
 Aggiunto

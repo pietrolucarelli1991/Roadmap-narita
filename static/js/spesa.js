@@ -389,25 +389,47 @@
     try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) { /* ignora */ }
   }
 
+  var WHERE = { drug: "Farmacia", konbini: "Konbini", super: "Supermercato", baby: "Negozi bimbi" };
+  var listFilter = "all";
+
+  function photosUrl(q) {
+    return "https://www.google.com/search?tbm=isch&q=" + encodeURIComponent(q);
+  }
+
   function renderProducts() {
+    var shown = D.products.filter(function (p) {
+      return listFilter === "all" || (p.where || []).indexOf(listFilter) !== -1;
+    });
     var groups = [];
-    D.products.forEach(function (p) { if (groups.indexOf(p.group) === -1) groups.push(p.group); });
-    $("#product-groups").innerHTML = groups.map(function (g) {
+    shown.forEach(function (p) { if (groups.indexOf(p.group) === -1) groups.push(p.group); });
+    var filters = '<div class="where-filter" role="group" aria-label="Dove siete">' +
+      [["all", "Tutto"], ["drug", "In farmacia"], ["konbini", "Al konbini"]].map(function (f) {
+        return '<button type="button" class="where-btn" data-where="' + f[0] + '" aria-pressed="' + (listFilter === f[0]) + '">' + f[1] + "</button>";
+      }).join("") + "</div>";
+    $("#product-groups").innerHTML = filters + groups.map(function (g) {
       return '<div class="group"><h3>' + esc(g) + "</h3>" +
-        D.products.filter(function (p) { return p.group === g; }).map(function (p) {
+        shown.filter(function (p) { return p.group === g; }).map(function (p) {
           var q = state.qty[p.id] || 0;
           return '<div class="product' + (q ? " in-cart" : "") + '" data-product="' + p.id + '">' +
-            "<div>" +
+            '<div class="product-main">' +
+              (p.brand ? '<div class="product-brand">' + esc(p.brand) + "</div>" : "") +
               '<div class="product-name">' + esc(p.name) + "</div>" +
-              '<div class="product-jp">' + esc(p.jp) + "</div>" +
+              '<div class="product-jp" lang="ja">' + esc(p.jp) + "</div>" +
+              '<div class="product-where">' + (p.where || []).map(function (w) {
+                return '<span class="where-tag where-' + w + '">' + WHERE[w] + "</span>";
+              }).join("") + "</div>" +
             "</div>" +
             '<div class="product-right">' +
-              '<div class="product-price">' + fmtYen(p.price) + ' <span class="product-src">' + esc(p.src) + "</span></div>" +
+              '<div class="product-price">' + (p.approx ? "≈ " : "") + fmtYen(p.price) + ' <span class="product-src">' + esc(p.src) + "</span></div>" +
               '<div class="stepper">' +
                 '<button type="button" data-step="-1" aria-label="Togli ' + esc(p.name) + '"' + (q ? "" : " disabled") + ">−</button>" +
                 "<output>" + q + "</output>" +
                 '<button type="button" data-step="1" aria-label="Aggiungi ' + esc(p.name) + '">+</button>' +
               "</div>" +
+            "</div>" +
+            '<div class="product-extra">' +
+              (p.q ? '<a class="product-photos" href="' + photosUrl(p.q) + '" target="_blank" rel="noopener">Guarda le foto della confezione</a>' : "") +
+              (p.look ? '<details class="product-look"><summary>Come riconoscerlo</summary><p>' + esc(p.look) + "</p></details>" : "") +
             "</div>" +
           "</div>";
         }).join("") + "</div>";
@@ -562,6 +584,8 @@
     });
 
     $("#product-groups").addEventListener("click", function (e) {
+      var wb = e.target.closest("[data-where]");
+      if (wb) { listFilter = wb.dataset.where; renderProducts(); return; }
       var btn = e.target.closest("[data-step]");
       if (!btn) return;
       changeQty(btn.closest("[data-product]").dataset.product, parseInt(btn.dataset.step, 10));

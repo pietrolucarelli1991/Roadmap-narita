@@ -141,8 +141,11 @@ Frasi brevi, niente maiuscole urlate, niente gergo tecnico. Dove serve, una paro
 | ~~v4.2.0~~ | ✅ Fatto. Capodanno completo e sezione 道 Percorsi con 4 roadmap (dati in `dati_percorsi.py`) |
 | ~~v4.3.0~~ | ✅ Fatto. Restyling di Percorsi (linea del treno, `static/js/percorso.js`) e Spesa (grafica v4) |
 | ~~v4.4.0~~ | ✅ Fatto. Frasario (`/frasi`, dati in `dati_frasi.py`) e SOS (`/sos`). Scelto: niente traduttore integrato, Google Traduttore come scorta |
-| v4.5.0 | Missioni per la bimba di 5 anni con adesivi; diario fotografico (foto per ogni giorno, salvate sul telefono) |
-| v4.6.0 | Meteo dentro il planner (proposta del piano B se piove) e "aggiungi al calendario del telefono" |
+| ~~v4.5.0~~ | ✅ Fatto. Spesa con 21 prodotti di marca, dove si trovano, foto della confezione (link alla ricerca immagini, niente foto copiate) |
+| v4.6.0 | Traduttore integrato col microfono (da decidere: serve un servizio di traduzione con chiave, es. DeepL) |
+| v4.7.0 | Meteo dentro il planner (proposta del piano B se piove) e "aggiungi al calendario del telefono" |
+
+Il diario fotografico è stato scartato da Pietro.
 
 ## Cose ancora aperte
 
