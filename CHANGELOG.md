@@ -6,6 +6,19 @@ Ogni rilascio ha un numero nel formato MAGGIORE.MINORE.CORREZIONE:
 - MINORE cambia quando aggiungi una funzione nuova (es. 1.1.0)
 - CORREZIONE cambia quando sistemi un errore o un testo (es. 1.1.1)
 
+## 4.6.0 — 22 ottobre 2026
+
+Aggiunto
+- Meteo nel planner: quando i giorni entrano nei 16 giorni di previsione, caselle e righe
+  mostrano il tempo e le temperature della città del capitolo (Tokyo o Kyoto)
+- Nella scheda del giorno: previsione completa e, se piove, il piano per la pioggia.
+  Se il piano scelto non è al coperto e c'è un'alternativa che lo è, l'app la propone
+- Nella pagina Oggi, durante il viaggio: il meteo di oggi con il consiglio giusto
+- "Aggiungi il viaggio al calendario": i 23 giorni con il piano scelto, uscita dall'hotel
+  e volo del 5 gennaio con promemoria, scadenze delle prenotazioni ancora da fare
+- "Aggiungi questa giornata al calendario" in ogni scheda
+- Prima del 29 novembre la pagina Viaggio dice da quando arriveranno le previsioni
+
 ## 4.5.0 — 22 ottobre 2026
 
 Aggiunto

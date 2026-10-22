@@ -17,7 +17,9 @@
     </p>
     <div class="trip-actions">
       <a class="t-btn" id="btn-share" href="#" target="_blank" rel="noopener">Manda le scelte su WhatsApp</a>
+      <button type="button" class="t-btn" id="btn-ics">Aggiungi il viaggio al calendario</button>
     </div>
+    <p class="trip-wx-note" id="wx-note" hidden></p>
   </header>
 
   <main class="trip-list" id="trip-list"></main>
@@ -31,6 +33,7 @@
   {% include '_nav.html' %}
   <script>window.VIAGGIO = {{ viaggio | tojson }};</script>
   <script src="{{ static_v('js/planner.js') }}" defer></script>
+  <script src="{{ static_v('js/meteo.js') }}" defer></script>
   <script src="{{ static_v('js/itinerario.js') }}" defer></script>
 </body>
 </html>

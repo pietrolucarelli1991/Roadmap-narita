@@ -49,6 +49,7 @@
             (!chosen.complete ? '<span class="mini-tag tag-soon">dettagli in arrivo</span>' : "") +
             (warn.length ? '<span class="mini-tag tag-warn">' + warn.length + (warn.length === 1 ? " avviso" : " avvisi") + "</span>" : "") +
             (anyLiked(d.date) ? '<span class="mini-heart" aria-label="Avete messo un cuore">♥</span>' : "") +
+            (window.TripWeather ? window.TripWeather.mini(d.date) : "") +
           "</span>" +
         "</span>" +
         '<span class="seal' + (isStamped(d.date) ? " is-stamped" : "") + '" lang="ja" aria-hidden="true">' + esc(chosen.kanji) + "</span>" +
@@ -93,6 +94,7 @@
         '<h2 id="sheet-title">' + esc(chapter.title) + ": " + esc(chapter.subtitle.charAt(0).toLowerCase() + chapter.subtitle.slice(1)) + "</h2>" +
         (d.note ? '<p class="sheet-note">' + esc(d.note) + "</p>" : "") +
       "</div>" +
+      weatherBox(current.date, plan, plans) +
       (plans.length > 1
         ? '<div class="plan-tabs" role="tablist" aria-label="Piani per questo giorno">' + plans.map(function (p) {
             var on = p.id === plan.id;
@@ -114,6 +116,7 @@
           esc(state.notes[current.date] || "") + "</textarea>" +
         '<span class="note-saved" aria-live="polite"></span>' +
       "</div>" +
+      '<p class="sheet-ics"><button type="button" class="t-link" data-ics-day="' + current.date + '">Aggiungi questa giornata al calendario</button></p>' +
       '<div class="stamp-fx" id="stamp-fx-live" aria-hidden="true" hidden><span lang="ja"></span></div>';
   }
 
@@ -125,6 +128,25 @@
     span.textContent = "決";
     fx.hidden = false;
     span.addEventListener("animationend", function (e) { if (e.animationName === "stamp-out") fx.hidden = true; });
+  }
+
+  function weatherBox(date, plan, plans) {
+    var f = window.TripWeather && window.TripWeather.forDate(date);
+    if (!f) return "";
+    // un'alternativa si propone solo se è adatta alla pioggia e il piano attuale no
+    var other = plans.filter(function (p) { return p.id !== plan.id && p.rain_ok; })[0];
+    var text;
+    if (!f.wet) text = "";
+    else if (plan.rain_ok) text = "Buone notizie: questo piano funziona anche con la pioggia. Basta un ombrello per i tragitti.";
+    else text = (plan.rain ? "Il piano per la pioggia: " + esc(plan.rain) : "Ombrelli e mantellina per il passeggino.");
+    return '<div class="sheet-wx' + (f.wet ? " is-wet" : "") + '">' +
+      '<p class="sheet-wx-head">' + f.icon + "<span><strong>" + P.cap(f.label) + "</strong>, da " + f.tmin + "° a " + f.tmax + "°" +
+        (f.pp !== null ? ", pioggia al " + f.pp + "%" : "") + "</span></p>" +
+      (text ? '<p class="sheet-wx-text">' + text + "</p>" : "") +
+      (f.wet && !plan.rain_ok && other
+        ? '<button type="button" class="t-btn" data-tab="' + other.id + '">Al coperto: piano ' + P.letterOf(date, other.id) + ", " + esc(other.title) + "</button>"
+        : "") +
+      "</div>";
   }
 
   function openDay(date, opener, planId) {
@@ -231,7 +253,109 @@
     return true;
   }
 
+  /* ---------- Aggiungi al calendario ---------- */
+  function icsText(s) {
+    return String(s || "").replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  }
+  function fold(line) {
+    var out = [];
+    while (line.length > 70) { out.push(line.slice(0, 70)); line = " " + line.slice(70); }
+    out.push(line);
+    return out.join("\r\n");
+  }
+  function ymd(iso) { return iso.replace(/-/g, ""); }
+  function nextDay(iso) { return new Date(T.parts(iso).time + 86400000).toISOString().slice(0, 10); }
+  function stamp() { return new Date().toISOString().replace(/[-:]/g, "").replace(/\.\d+/, ""); }
+
+  function dayEvent(d) {
+    var p = P.chosenPlan(d.date, state);
+    var ch = P.chapter(d.chapter);
+    return [
+      "BEGIN:VEVENT",
+      "UID:giorno-" + ymd(d.date) + "@tokyo2026",
+      "DTSTAMP:" + stamp(),
+      "DTSTART;VALUE=DATE:" + ymd(d.date),
+      "DTEND;VALUE=DATE:" + ymd(nextDay(d.date)),
+      "SUMMARY:" + icsText("Giappone: " + p.title),
+      "DESCRIPTION:" + icsText(p.summary + "\nBase: " + ch.hotel + "\nDettagli nell'app: " + location.origin + "/itinerario#d-" + d.date),
+      "TRANSP:TRANSPARENT",
+      "END:VEVENT"
+    ];
+  }
+  function timedEvent(uid, startUtc, endUtc, title, desc) {
+    return ["BEGIN:VEVENT", "UID:" + uid + "@tokyo2026", "DTSTAMP:" + stamp(),
+      "DTSTART:" + startUtc, "DTEND:" + endUtc, "SUMMARY:" + icsText(title), "DESCRIPTION:" + icsText(desc),
+      "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + icsText(title), "TRIGGER:-PT1H", "END:VALARM", "END:VEVENT"];
+  }
+  function deadlineEvent(item) {
+    return ["BEGIN:VEVENT", "UID:scadenza-" + item.id + "@tokyo2026", "DTSTAMP:" + stamp(),
+      "DTSTART;VALUE=DATE:" + ymd(item.date), "DTEND;VALUE=DATE:" + ymd(nextDay(item.date)),
+      "SUMMARY:" + icsText("Da prenotare: " + item.title), "DESCRIPTION:" + icsText(item.detail),
+      "BEGIN:VALARM", "ACTION:DISPLAY", "DESCRIPTION:" + icsText(item.title), "TRIGGER:-PT15H", "END:VALARM", "END:VEVENT"];
+  }
+
+  function buildIcs(onlyDate) {
+    var lines = ["BEGIN:VCALENDAR", "VERSION:2.0", "PRODID:-//Tokyo 2026//Famiglia Lucarelli//IT",
+      "CALSCALE:GREGORIAN", "METHOD:PUBLISH", "X-WR-CALNAME:Giappone 2026"];
+    V.days.forEach(function (d) {
+      if (!onlyDate || d.date === onlyDate) lines = lines.concat(dayEvent(d));
+    });
+    if (!onlyDate || onlyDate === "2027-01-05") {
+      // ora giapponese = UTC + 9
+      lines = lines.concat(timedEvent("uscita-hotel", "20270105T003000Z", "20270105T013000Z",
+        "Uscita dall'hotel verso Narita", "Treno Access Express dalla linea Toei Asakusa. Il percorso passo passo è nella sezione Percorsi."));
+      lines = lines.concat(timedEvent("volo-ritorno", "20270105T050000Z", "20270105T060000Z",
+        "Volo di ritorno da Narita", "Volo alle 14:00 ora giapponese. In aeroporto entro le 11."));
+    }
+    if (!onlyDate) {
+      var today = T.realTokyoToday();
+      V.todo.forEach(function (item) { if (item.date && item.date >= today) lines = lines.concat(deadlineEvent(item)); });
+    }
+    lines.push("END:VCALENDAR");
+    return lines.map(fold).join("\r\n") + "\r\n";
+  }
+  function downloadIcs(text, name) {
+    var blob = new Blob([text], { type: "text/calendar;charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 1500);
+  }
+  $("#btn-ics").addEventListener("click", function () {
+    state = T.loadState();
+    downloadIcs(buildIcs(null), "giappone-2026.ics");
+    T.toast("Aprite il file scaricato: il telefono vi chiederà di aggiungerlo al calendario");
+  });
+  body.addEventListener("click", function (e) {
+    var b = e.target.closest("[data-ics-day]");
+    if (!b) return;
+    state = T.loadState();
+    downloadIcs(buildIcs(b.dataset.icsDay), "giappone-" + b.dataset.icsDay + ".ics");
+    T.toast("Giornata pronta per il calendario");
+  });
+
+  /* ---------- Meteo ---------- */
+  function renderWxNote() {
+    var el = $("#wx-note");
+    if (!el || !window.TripWeather) return;
+    var first = window.TripWeather.firstForecastDate();
+    var t = T.realTokyoToday();
+    if (t < first) {
+      el.hidden = false;
+      el.textContent = "Il meteo comparirà sulle caselle dal " + T.longDate(first).replace(/^\S+ /, "") + ", quando i primi giorni entrano nelle previsioni.";
+    } else {
+      el.hidden = true;
+    }
+  }
+  document.addEventListener("tokyo:meteo", function () {
+    render();
+    if (current.date) renderSheet();
+  });
+
   /* ---------- Avvio ---------- */
+  renderWxNote();
   render();
   if (!importShared()) {
     var m = /^#d-(\d{4}-\d{2}-\d{2})$/.exec(location.hash);

@@ -903,6 +903,13 @@ PLANS.update({
     },
 })
 
+# Piani che funzionano bene anche con la pioggia (al coperto o quasi):
+# il meteo nel planner li usa per non proporre alternative peggiori
+for _pid in ["arrivo", "ryogoku-calma", "yokohama", "harry-potter", "jump-festa", "odaiba", "tokyo-station",
+             "tsukiji-natale", "to-kyoto", "museo-treni", "osaka", "usj", "omisoka", "gantan", "fukubukuro",
+             "nakano", "partenza", "vigilia"]:
+    PLANS[_pid]["rain_ok"] = True
+
 # I 23 giorni: il primo piano della lista è quello consigliato
 DAYS = [
     {"date": "2026-12-14", "chapter": "tokyo1", "plans": ["arrivo"]},

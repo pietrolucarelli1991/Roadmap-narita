@@ -13,7 +13,7 @@ from dati_viaggio import TRIP, CHAPTERS, PLANS, DAYS, TODO, FUJI
 
 # Ad ogni rilascio aumenta questo numero (e usa lo stesso per il tag git):
 # così i telefoni vedono "Nuova versione pronta" e scaricano l'app aggiornata.
-APP_VERSION = "4.4.0"
+APP_VERSION = "4.5.0"
 
 # Font e mappe usati da tutte le pagine (salvati anche per l'uso offline)
 FONTS_URL = ("https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;700;800"
@@ -199,7 +199,7 @@ def service_worker():
     pages = ["/", "/itinerario", "/frasi", "/sos", "/fuji", "/spesa"] + [r["path"] for r in ROUTES]
     assets = [static_v(f) for f in [
         "css/app.css", "css/style.css", "css/spesa.css",
-        "js/app.js", "js/planner.js", "js/oggi.js", "js/cielo.js", "js/percorso.js", "js/frasi.js", "js/itinerario.js", "js/fuji.js", "js/spesa.js",
+        "js/app.js", "js/planner.js", "js/meteo.js", "js/oggi.js", "js/cielo.js", "js/percorso.js", "js/frasi.js", "js/itinerario.js", "js/fuji.js", "js/spesa.js",
         "icons/icon-192.png", "icons/icon-512.png", "icons/apple-touch-icon.png",
     ]] + ["/manifest.webmanifest", FONTS_URL, LEAFLET_CSS, LEAFLET_JS]
     body = render_template("sw.js", pages=pages, assets=assets)

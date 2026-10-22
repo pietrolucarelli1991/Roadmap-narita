@@ -94,6 +94,7 @@
             }).join("") + "</ol>"
           : "") +
         (warn.length ? '<p class="today-warn">' + esc(warn[0].text) + (warn.length > 1 ? " E altri " + (warn.length - 1) + " avvisi." : "") + "</p>" : "") +
+        wetNote(t, plan) +
         '<div class="today-actions">' +
           '<button type="button" class="t-btn t-btn-primary" data-open="' + t + '">Apri il programma completo</button>' +
           (isStamped(t)
@@ -102,6 +103,17 @@
         "</div>" +
       "</article>" +
       (next ? '<p class="tomorrow">Domani: <a href="/itinerario#d-' + next.date + '">' + esc(P.chosenPlan(next.date, state).title) + "</a></p>" : "");
+  }
+
+  function wetNote(date, plan) {
+    var f = window.TripWeather && window.TripWeather.forDate(date);
+    if (!f) return "";
+    return '<p class="today-wx' + (f.wet ? " is-wet" : "") + '">' + f.icon +
+      "<span>" + (f.wet
+        ? "Oggi " + f.label + (f.pp !== null ? " (" + f.pp + "%)" : "") + ", " + f.tmin + "°/" + f.tmax + "°. " +
+          (plan.rain_ok ? "Buone notizie: il piano di oggi va bene anche con la pioggia." : (plan.rain ? "Piano per la pioggia: " + esc(plan.rain) : "Ombrelli pronti."))
+        : "Oggi " + f.label + ", " + f.tmin + "°/" + f.tmax + "°.") +
+      "</span></p>";
   }
 
   /* ---------- Da preparare ---------- */
@@ -143,6 +155,7 @@
           '<span class="cal-date"><span class="cal-wd">' + T.WD_SHORT[p.wd] + (p.m === 1 ? " gen" : "") + '</span><span class="cal-num">' + p.d + "</span></span>" +
           '<span class="seal seal-sm' + (isStamped(d.date) ? " is-stamped" : "") + '" lang="ja" aria-hidden="true">' + esc(plan.kanji) + "</span>" +
           '<span class="cal-title">' + esc(plan.title) + "</span>" +
+          (window.TripWeather ? window.TripWeather.mini(d.date) : "") +
           (warn.length ? '<span class="cal-warn" aria-hidden="true">!</span>' : "") +
         "</a></li>";
     }).join("");
@@ -355,6 +368,8 @@
     reader.readAsText(f);
     this.value = "";
   });
+
+  document.addEventListener("tokyo:meteo", function () { renderTop(); renderCal(); });
 
   /* ---------- Avvio ---------- */
   var fromLink = T.readBackupHash(location.hash);
